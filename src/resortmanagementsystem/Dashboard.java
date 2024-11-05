@@ -56,6 +56,7 @@ public class Dashboard extends JFrame implements ActionListener{
         admin.add(addPool);
         
         JMenuItem addService = new JMenuItem("ADD SERVICES");
+        addService.addActionListener(this);
         admin.add(addService);
         
         
@@ -77,9 +78,13 @@ public class Dashboard extends JFrame implements ActionListener{
         else if (ae.getActionCommand().equals("ADD POOLS")){
             new AddPools();
         }
+        else if (ae.getActionCommand().equals("ADD SERVICES")){
+            new AddServices();
+        }
         else if (ae.getActionCommand().equals("RECEPTION")){
             new Reception();
         }
+        
         
         
     

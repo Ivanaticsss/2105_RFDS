@@ -3,31 +3,35 @@ package resortmanagementsystem;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
 
-public class Reception extends JFrame{
+public class Reception extends JFrame implements ActionListener{
+    JButton newGuest, rooms, service;
     
     Reception(){
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
         
-        JButton newGuest = new JButton("New Guest Form");
+        newGuest = new JButton("New Guest Form");
         newGuest.setBounds(10, 30, 200, 30);
         newGuest.setBackground(Color.decode("#2a1c13"));
         newGuest.setForeground(Color.WHITE);
         add(newGuest);
         
-        JButton rooms = new JButton("Rooms");
+        rooms = new JButton("Rooms");
         rooms.setBounds(10, 70, 200, 30);
         rooms.setBackground(Color.decode("#2a1c13"));
         rooms.setForeground(Color.WHITE);
+        rooms.addActionListener(this);
         add(rooms);
         
-        JButton department = new JButton("Department");
-        department.setBounds(10, 110, 200, 30);
-        department.setBackground(Color.decode("#2a1c13"));
-        department.setForeground(Color.WHITE);
-        add(department);
+        service = new JButton("Service");
+        service.setBounds(10, 110, 200, 30);
+        service.setBackground(Color.decode("#2a1c13"));
+        service.setForeground(Color.WHITE);
+        service.addActionListener(this);
+        add(service);
         
         //10, 150, 200, 30
         //    190
@@ -77,6 +81,17 @@ public class Reception extends JFrame{
         setBounds(350, 200, 800, 570);
         setVisible(true);
         
+    }
+    
+    public void actionPerformed(ActionEvent ae){
+        if(ae.getSource() == rooms){
+            setVisible(false);
+            new Room();
+        }
+        else if(ae.getSource() == service){
+            setVisible(false);
+            new Service();
+        }
     }
     
     public static void main(String[] args){
