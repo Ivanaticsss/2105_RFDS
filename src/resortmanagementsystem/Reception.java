@@ -74,10 +74,6 @@ public class Reception extends JFrame{
         add(image);
         
         
-        
-        
-        
-        
         setBounds(350, 200, 800, 570);
         setVisible(true);
         
