@@ -7,7 +7,7 @@ import java.awt.event.*;
 
 
 public class Reception extends JFrame implements ActionListener{
-    JButton newGuest, rooms, service, cottages, GuestInfo;
+    JButton newGuest, rooms, service, cottages, guestInfo, searchRoom;
     
     Reception(){
         getContentPane().setBackground(Color.WHITE);
@@ -50,10 +50,11 @@ public class Reception extends JFrame implements ActionListener{
         service.addActionListener(this);
         add(service);
         
-        JButton guestInfo = new JButton("Guest Info");
+        guestInfo = new JButton("Guest Info");
         guestInfo.setBounds(10, 230, 200, 30);
         guestInfo.setBackground(Color.decode("#2a1c13"));
         guestInfo.setForeground(Color.WHITE);
+        guestInfo.addActionListener(this);
         add(guestInfo);
         
         JButton checkout = new JButton("Check Out");
@@ -68,10 +69,11 @@ public class Reception extends JFrame implements ActionListener{
         update.setForeground(Color.WHITE);
         add(update);
         
-        JButton searchRoom = new JButton("Search Room");
+        searchRoom = new JButton("Search Room");
         searchRoom.setBounds(10, 350, 200, 30);
         searchRoom.setBackground(Color.decode("#2a1c13"));
         searchRoom.setForeground(Color.WHITE);
+        searchRoom.addActionListener(this);
         add(searchRoom);
         
         JButton logout = new JButton("Log Out");
@@ -104,9 +106,17 @@ public class Reception extends JFrame implements ActionListener{
             setVisible(false);
             new Cottage();
         }
-        else if(ae.getSource() == GuestInfo){
+        else if(ae.getSource() == newGuest){
+            setVisible(false);
+            new AddGuest();
+        }
+        else if(ae.getSource() == guestInfo){
             setVisible(false);
             new GuestInfo();
+        }
+        else if(ae.getSource() == searchRoom){
+            setVisible(false);
+            new SearchRoom();
         }
     }
     
