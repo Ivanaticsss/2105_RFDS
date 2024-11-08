@@ -26,7 +26,7 @@ public class Reception extends JFrame implements ActionListener{
         rooms.addActionListener(this);
         add(rooms);
         
-        service = new JButton("Service");
+        service = new JButton("Cottages");
         service.setBounds(10, 110, 200, 30);
         service.setBackground(Color.decode("#2a1c13"));
         service.setForeground(Color.WHITE);
@@ -35,14 +35,15 @@ public class Reception extends JFrame implements ActionListener{
         
         //10, 150, 200, 30
         //    190
+        //Services, Customer INfo, Manager INfo, Check-out, Update Status, Search Room, Log out
         
-        JButton customers = new JButton("Customer Info");
+        JButton customers = new JButton("Pools");
         customers.setBounds(10, 150, 200, 30);
         customers.setBackground(Color.decode("#2a1c13"));
         customers.setForeground(Color.WHITE);
         add(customers);
         
-        JButton managerInfo = new JButton("Manager Info");
+        JButton managerInfo = new JButton("Guest Info");
         managerInfo.setBounds(10, 190, 200, 30);
         managerInfo.setBackground(Color.decode("#2a1c13"));
         managerInfo.setForeground(Color.WHITE);
