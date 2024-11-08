@@ -2,7 +2,7 @@ package resortmanagementsystem;
 
 /**
  *
- * @author Valiente, Theresa
+ * @author Valiente
  */
 
 import javax.swing.*;
@@ -10,36 +10,39 @@ import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class AddGuest extends JFrame {
-    AddGuest(){
+    AddGuest() {
         
-        JComboBox comboid;
-        JTextField tfnumber, tfname;
+        JComboBox<String> comboid;
+        JTextField tfnumber, tfname, tfdeposit;
         JRadioButton rmale, rfemale;
         Choice croom;
+        JLabel checkintime;
         
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
         
-        JLabel text = new JLabel ("NEW GUEST FORM");
-        text.setBounds(50, 20, 300, 30);
-        text.setFont(new Font("Raleway", Font.PLAIN, 24));
+        JLabel text = new JLabel("NEW GUEST FORM");
+        text.setBounds(80, 20, 300, 30);
+        text.setFont(new Font("Raleway", Font.PLAIN, 22));
         add(text);
         
-        JLabel lblid = new JLabel ("ID");
-        lblid.setBounds(100, 160, 150, 25);
+        JLabel lblid = new JLabel("ID");
+        lblid.setBounds(45, 160, 150, 25);
         lblid.setFont(new Font("Raleway", Font.PLAIN, 18));
         add(lblid);
         
         String options[] = {"Driver's License", "SSS ID", "Pag-ibig ID", "Voter's ID", "National ID", "Company ID", "Student's ID", "Passport/Visa"};
-        comboid = new JComboBox(options);
+        comboid = new JComboBox<>(options);
         comboid.setBounds(200, 160, 150, 25);
         comboid.setBackground(Color.WHITE);
         add(comboid);
         
-        JLabel lblnumber = new JLabel ("Number");
-        lblnumber.setBounds(100, 120, 150, 25);
+        JLabel lblnumber = new JLabel("Number");
+        lblnumber.setBounds(45, 120, 150, 25);
         lblnumber.setFont(new Font("Raleway", Font.PLAIN, 18));
         add(lblnumber);
         
@@ -67,8 +70,8 @@ public class AddGuest extends JFrame {
         
         add(tfnumber);
         
-        JLabel lblname = new JLabel ("Name");
-        lblname.setBounds(100, 80, 300, 30);
+        JLabel lblname = new JLabel("Name");
+        lblname.setBounds(45, 80, 300, 30);
         lblname.setFont(new Font("Raleway", Font.PLAIN, 18));
         add(lblname);
         
@@ -96,18 +99,18 @@ public class AddGuest extends JFrame {
         
         add(tfname);
         
-        JLabel lblgender = new JLabel ("Sex");
-        lblgender.setBounds(100, 200, 300, 30);
+        JLabel lblgender = new JLabel("Sex");
+        lblgender.setBounds(45, 190, 300, 30);
         lblgender.setFont(new Font("Raleway", Font.PLAIN, 18));
         add(lblgender);
         
-        rmale = new JRadioButton ("Male");
+        rmale = new JRadioButton("Male");
         rmale.setBackground(Color.WHITE);
-        rmale.setBounds(200, 190, 150, 25);
+        rmale.setBounds(200, 195, 70, 25);
         
-        rfemale = new JRadioButton ("Female");
+        rfemale = new JRadioButton("Female");
         rfemale.setBackground(Color.WHITE);
-        rfemale.setBounds(200, 210, 150, 25);
+        rfemale.setBounds(270, 195, 150, 25);
 
         ButtonGroup sexGroup = new ButtonGroup();
         sexGroup.add(rmale);
@@ -116,8 +119,8 @@ public class AddGuest extends JFrame {
         add(rmale);
         add(rfemale);
         
-        JLabel lblroom = new JLabel ("Room No.");
-        lblroom.setBounds(100, 240, 100, 30);
+        JLabel lblroom = new JLabel("Room No.");
+        lblroom.setBounds(45, 225, 100, 30);
         lblroom.setFont(new Font("Raleway", Font.PLAIN, 18));
         add(lblroom);
         
@@ -126,25 +129,65 @@ public class AddGuest extends JFrame {
         try {
             Conn conn = new Conn();
             String query = "select * from room";
-            conn.s.executeQuery(query);
             ResultSet rs = conn.s.executeQuery(query);
-            while (rs.next()){
+            while (rs.next()) {
                 croom.add(rs.getString("roomnumber"));
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         
-        croom.setBounds(200, 240, 150, 25);
+        croom.setBounds(200, 225, 150, 25);
         add(croom);
         
-        //room options DITOOOOOOOO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        JLabel lbltime = new JLabel("<html>Check-in<br>time</html>");
+        lbltime.setBounds(45, 255, 150, 60);
+        lbltime.setFont(new Font("Raleway", Font.PLAIN, 18));
+        add(lbltime);
+        
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd yyyy HH:mm");
+        String formattedDate = formatter.format(date);
+
+        checkintime = new JLabel(formattedDate);
+        checkintime.setBounds(200, 265, 300, 30);
+        checkintime.setFont(new Font("Raleway", Font.PLAIN, 17));
+        add(checkintime);
+        
+        JLabel lbldeposit = new JLabel("<html>Reservation<br>Fee</html>");
+        lbldeposit.setBounds(45, 325, 150, 40);
+        lbldeposit.setFont(new Font("Raleway", Font.PLAIN, 18));
+        add(lbldeposit);
+        
+        tfdeposit = new JTextField("Enter Amount");
+        tfdeposit.setBounds(200, 325, 150, 25);
+        tfdeposit.setForeground(Color.GRAY);
+        
+         tfdeposit.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (tfdeposit.getText().equals("Enter Amount")) {
+                    tfdeposit.setText("");
+                    tfdeposit.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (tfdeposit.getText().isEmpty()) {
+                    tfdeposit.setText("Enter Amount");
+                    tfdeposit.setForeground(Color.GRAY);
+                }
+            }
+        });
+        
+        add(tfdeposit);
         
         setBounds(300, 100, 800, 550);
-        setVisible (true);
+        setVisible(true);
     }
     
-    public static void main (String[] args) {
+    public static void main(String[] args) {
         new AddGuest();
     }
 }
