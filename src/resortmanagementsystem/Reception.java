@@ -7,7 +7,7 @@ import java.awt.event.*;
 
 
 public class Reception extends JFrame implements ActionListener{
-    JButton newGuest, rooms, service, cottages, guestInfo, searchRoom;
+    JButton newGuest, rooms, service, cottages, pools, guestInfo, searchRoom;
     
     Reception(){
         getContentPane().setBackground(Color.WHITE);
@@ -37,10 +37,11 @@ public class Reception extends JFrame implements ActionListener{
         //    190
         //Services, Customer INfo, Manager INfo, Check-out, Update Status, Search Room, Log out
         
-        JButton pools = new JButton("Pools");
+        pools = new JButton("Pools");
         pools.setBounds(10, 150, 200, 30);
         pools.setBackground(Color.decode("#2a1c13"));
         pools.setForeground(Color.WHITE);
+        pools.addActionListener(this);
         add(pools);
         
         service = new JButton("Services");
@@ -105,6 +106,10 @@ public class Reception extends JFrame implements ActionListener{
         else if(ae.getSource() == cottages){
             setVisible(false);
             new Cottage();
+        }
+        else if(ae.getSource() == pools){
+            setVisible(false);
+            new Pool();
         }
         else if(ae.getSource() == newGuest){
             setVisible(false);
