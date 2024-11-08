@@ -7,7 +7,7 @@ import java.awt.event.*;
 
 
 public class Reception extends JFrame implements ActionListener{
-    JButton newGuest, rooms, service, cottages;
+    JButton newGuest, rooms, service, cottages, GuestInfo;
     
     Reception(){
         getContentPane().setBackground(Color.WHITE);
@@ -103,6 +103,10 @@ public class Reception extends JFrame implements ActionListener{
         else if(ae.getSource() == cottages){
             setVisible(false);
             new Cottage();
+        }
+        else if(ae.getSource() == GuestInfo){
+            setVisible(false);
+            new GuestInfo();
         }
     }
     
