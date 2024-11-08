@@ -7,7 +7,7 @@ import java.awt.event.*;
 
 
 public class Reception extends JFrame implements ActionListener{
-    JButton newGuest, rooms, service;
+    JButton newGuest, rooms, service, cottages;
     
     Reception(){
         getContentPane().setBackground(Color.WHITE);
@@ -26,49 +26,56 @@ public class Reception extends JFrame implements ActionListener{
         rooms.addActionListener(this);
         add(rooms);
         
-        service = new JButton("Cottages");
-        service.setBounds(10, 110, 200, 30);
-        service.setBackground(Color.decode("#2a1c13"));
-        service.setForeground(Color.WHITE);
-        service.addActionListener(this);
-        add(service);
+        cottages = new JButton("Cottages");
+        cottages.setBounds(10, 110, 200, 30);
+        cottages.setBackground(Color.decode("#2a1c13"));
+        cottages.setForeground(Color.WHITE);
+        cottages.addActionListener(this);
+        add(cottages);
         
         //10, 150, 200, 30
         //    190
         //Services, Customer INfo, Manager INfo, Check-out, Update Status, Search Room, Log out
         
-        JButton customers = new JButton("Pools");
-        customers.setBounds(10, 150, 200, 30);
-        customers.setBackground(Color.decode("#2a1c13"));
-        customers.setForeground(Color.WHITE);
-        add(customers);
+        JButton pools = new JButton("Pools");
+        pools.setBounds(10, 150, 200, 30);
+        pools.setBackground(Color.decode("#2a1c13"));
+        pools.setForeground(Color.WHITE);
+        add(pools);
         
-        JButton managerInfo = new JButton("Guest Info");
-        managerInfo.setBounds(10, 190, 200, 30);
-        managerInfo.setBackground(Color.decode("#2a1c13"));
-        managerInfo.setForeground(Color.WHITE);
-        add(managerInfo);
+        service = new JButton("Services");
+        service.setBounds(10, 190, 200, 30);
+        service.setBackground(Color.decode("#2a1c13"));
+        service.setForeground(Color.WHITE);
+        service.addActionListener(this);
+        add(service);
         
-        JButton checkout = new JButton("Check-Out");
-        checkout.setBounds(10, 230, 200, 30);
+        JButton guestInfo = new JButton("Guest Info");
+        guestInfo.setBounds(10, 230, 200, 30);
+        guestInfo.setBackground(Color.decode("#2a1c13"));
+        guestInfo.setForeground(Color.WHITE);
+        add(guestInfo);
+        
+        JButton checkout = new JButton("Check Out");
+        checkout.setBounds(10, 270, 200, 30);
         checkout.setBackground(Color.decode("#2a1c13"));
         checkout.setForeground(Color.WHITE);
         add(checkout);
         
-        JButton update = new JButton("Update Status");
-        update.setBounds(10, 270, 200, 30);
-        update.setBackground(Color.decode("#2a1c13"));
+        JButton update  = new JButton("Update Status");
+        update.setBounds(10, 310, 200, 30);
+        update.setBackground(Color.decode("#2a1c13"));;
         update.setForeground(Color.WHITE);
         add(update);
         
         JButton searchRoom = new JButton("Search Room");
-        searchRoom.setBounds(10, 310, 200, 30);
-        searchRoom.setBackground(Color.decode("#2a1c13"));;
+        searchRoom.setBounds(10, 350, 200, 30);
+        searchRoom.setBackground(Color.decode("#2a1c13"));
         searchRoom.setForeground(Color.WHITE);
         add(searchRoom);
         
         JButton logout = new JButton("Log Out");
-        logout.setBounds(10, 350, 200, 30);
+        logout.setBounds(10, 390, 200, 30);
         logout.setBackground(Color.decode("#2a1c13"));
         logout.setForeground(Color.WHITE);
         add(logout);
@@ -92,6 +99,10 @@ public class Reception extends JFrame implements ActionListener{
         else if(ae.getSource() == service){
             setVisible(false);
             new Service();
+        }
+        else if(ae.getSource() == cottages){
+            setVisible(false);
+            new Cottage();
         }
     }
     
