@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.sql.*;
 
 public class AddGuest extends JFrame {
     AddGuest(){
@@ -121,6 +122,19 @@ public class AddGuest extends JFrame {
         add(lblroom);
         
         croom = new Choice();
+        
+        try {
+            Conn conn = new Conn();
+            String query = "select * from room";
+            conn.s.executeQuery(query);
+            ResultSet rs = conn.s.executeQuery(query);
+            while (rs.next()){
+                croom.add(rs.getString("roomnumber"));
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        
         croom.setBounds(200, 240, 150, 25);
         add(croom);
         
