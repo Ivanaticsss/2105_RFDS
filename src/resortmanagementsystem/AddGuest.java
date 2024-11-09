@@ -21,6 +21,7 @@ public class AddGuest extends JFrame {
         JRadioButton rmale, rfemale;
         Choice croom;
         JLabel checkintime;
+        JButton add, back;
         
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
@@ -182,6 +183,25 @@ public class AddGuest extends JFrame {
         });
         
         add(tfdeposit);
+        
+        add = new JButton ("Add");
+        add.setBackground(Color.BLACK);
+        add.setForeground(Color.WHITE);
+        add.setBounds (250, 410, 120, 25);
+        add (add);
+        
+        back = new JButton ("Back");
+        back.setBackground(Color.BLACK);
+        back.setForeground(Color.WHITE);
+        back.setBounds (400, 410, 120, 25);
+        add (back);
+        
+        ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icons/fifth,jpg"));
+        Image i2 = i1.getImage().getScaledInstance(300, 400, Image.SCALE_DEFAULT);
+        ImageIcon i3 = new ImageIcon(i2);
+        JLabel image = new JLabel(i3);
+        image.setBounds(400,50,300,400);
+        add(image);
         
         setBounds(300, 100, 800, 550);
         setVisible(true);
