@@ -26,30 +26,34 @@ public class AddGuest extends JFrame implements ActionListener {
         JButton add, back;
         
         AddGuest() {
-        
-        getContentPane().setBackground(Color.WHITE);
+        ImageIcon backgroundIcon = new ImageIcon(ClassLoader.getSystemResource("icons/formbg.jpg"));
+        JLabel background = new JLabel(backgroundIcon);
+        background.setBounds(0, 0, 800, 550);
+            
+        setContentPane(background); 
         setLayout(null);
         
         JLabel text = new JLabel("NEW GUEST FORM");
         text.setBounds(80, 20, 300, 30);
         text.setFont(new Font("Raleway", Font.PLAIN, 22));
-        add(text);
+        //add(text);
+        background.add(text);
         
         JLabel lblid = new JLabel("ID");
         lblid.setBounds(45, 160, 150, 25);
         lblid.setFont(new Font("Raleway", Font.PLAIN, 18));
-        add(lblid);
+        background.add(lblid);
         
         String options[] = {"Driver's License", "SSS ID", "Pag-ibig ID", "Voter's ID", "National ID", "Company ID", "Student's ID", "Passport/Visa"};
         comboid = new JComboBox<>(options);
         comboid.setBounds(200, 160, 150, 25);
         comboid.setBackground(Color.WHITE);
-        add(comboid);
+        background.add(comboid);
         
         JLabel lblnumber = new JLabel("Number");
         lblnumber.setBounds(45, 120, 150, 25);
         lblnumber.setFont(new Font("Raleway", Font.PLAIN, 18));
-        add(lblnumber);
+        background.add(lblnumber);
         
         tfnumber = new JTextField("Mobile Number");
         tfnumber.setBounds(200, 120, 150, 25);
@@ -73,12 +77,12 @@ public class AddGuest extends JFrame implements ActionListener {
             }
         });
         
-        add(tfnumber);
+        background.add(tfnumber);
         
         JLabel lblname = new JLabel("Name");
         lblname.setBounds(45, 80, 300, 30);
         lblname.setFont(new Font("Raleway", Font.PLAIN, 18));
-        add(lblname);
+        background.add(lblname);
         
         tfname = new JTextField("Enter Name");
         tfname.setBounds(200, 80, 150, 25);
@@ -102,12 +106,12 @@ public class AddGuest extends JFrame implements ActionListener {
             }
         });
         
-        add(tfname);
+        background.add(tfname);
         
         JLabel lblgender = new JLabel("Sex");
         lblgender.setBounds(45, 190, 300, 30);
         lblgender.setFont(new Font("Raleway", Font.PLAIN, 18));
-        add(lblgender);
+        background.add(lblgender);
         
         rmale = new JRadioButton("Male");
         rmale.setBackground(Color.WHITE);
@@ -121,13 +125,13 @@ public class AddGuest extends JFrame implements ActionListener {
         sexGroup.add(rmale);
         sexGroup.add(rfemale);
         
-        add(rmale);
-        add(rfemale);
+        background.add(rmale);
+        background.add(rfemale);
         
         JLabel lblroom = new JLabel("Room No.");
         lblroom.setBounds(45, 225, 100, 30);
         lblroom.setFont(new Font("Raleway", Font.PLAIN, 18));
-        add(lblroom);
+        background.add(lblroom);
         
         croom = new Choice();
         
@@ -143,12 +147,12 @@ public class AddGuest extends JFrame implements ActionListener {
         }
         
         croom.setBounds(200, 225, 150, 25);
-        add(croom);
+        background.add(croom);
         
         JLabel lbltime = new JLabel("<html>Check-in<br>time</html>");
         lbltime.setBounds(45, 255, 150, 60);
         lbltime.setFont(new Font("Raleway", Font.PLAIN, 18));
-        add(lbltime);
+        background.add(lbltime);
         
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd yyyy HH:mm");
@@ -157,12 +161,12 @@ public class AddGuest extends JFrame implements ActionListener {
         checkintime = new JLabel(formattedDate);
         checkintime.setBounds(200, 265, 300, 30);
         checkintime.setFont(new Font("Raleway", Font.PLAIN, 17));
-        add(checkintime);
+        background.add(checkintime);
         
         JLabel lbldeposit = new JLabel("Deposit");
         lbldeposit.setBounds(45, 325, 150, 40);
         lbldeposit.setFont(new Font("Raleway", Font.PLAIN, 18));
-        add(lbldeposit);
+        background.add(lbldeposit);
         
         tfdeposit = new JTextField("Enter Amount");
         tfdeposit.setBounds(200, 325, 150, 25);
@@ -186,28 +190,28 @@ public class AddGuest extends JFrame implements ActionListener {
             }
         });
         
-        add(tfdeposit);
+        background.add(tfdeposit);
         
         add = new JButton ("Add");
         add.setBackground(Color.BLACK);
         add.setForeground(Color.WHITE);
         add.setBounds (250, 410, 120, 25);
         add.addActionListener(this);
-        add (add);
+        background.add (add);
         
         back = new JButton ("Back");
         back.setBackground(Color.BLACK);
         back.setForeground(Color.WHITE);
         back.setBounds (400, 410, 120, 25);
         back.addActionListener(this);
-        add (back);
+        background.add (back);
         
-        ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icons/fifth.jpg"));
+        /*ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icons/fifth.jpg"));
         Image i2 = i1.getImage().getScaledInstance(300, 400, Image.SCALE_DEFAULT);
         ImageIcon i3 = new ImageIcon(i2);
         JLabel image = new JLabel(i3);
         image.setBounds(400,50,300,400);
-        add(image);
+        add(image);*/
         
         setBounds(300, 100, 800, 550);
         setVisible(true);
