@@ -51,7 +51,7 @@ public class UpdateCheck extends JFrame implements ActionListener {
         add(tfroom);
         
         JLabel lblname = new JLabel("Name");
-        lblname.setBounds(30, 120, 100, 20);
+        lblname.setBounds(30, 160, 100, 20);
         add(lblname);
         
         tfname = new JTextField();

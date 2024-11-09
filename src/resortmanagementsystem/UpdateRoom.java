@@ -68,7 +68,7 @@ public class UpdateRoom extends JFrame implements ActionListener {
         update = new JButton("Update");
         update.setBackground(Color.BLACK);
         update.setForeground(Color.WHITE);
-        update.setBounds(150, 340, 100, 30);
+        update.setBounds(150, 300, 100, 30);
         update.addActionListener(this);
         add(update);
         

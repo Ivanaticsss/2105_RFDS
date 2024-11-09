@@ -7,7 +7,7 @@ import java.awt.event.*;
 
 
 public class Reception extends JFrame implements ActionListener{
-    JButton newGuest, rooms, service, cottages, pools, guestInfo, searchRoom, update;
+    JButton newGuest, rooms, service, cottages, pools, guestInfo, searchRoom, update, roomStatus;
     
     Reception(){
         getContentPane().setBackground(Color.WHITE);
@@ -71,15 +71,22 @@ public class Reception extends JFrame implements ActionListener{
         update.addActionListener(this);
         add(update);
         
+        roomStatus = new JButton("Update Room Status");
+        roomStatus.setBounds(10, 350, 200, 30);
+        roomStatus.setBackground(Color.decode("#2a1c13"));
+        roomStatus.setForeground(Color.WHITE);
+        roomStatus.addActionListener(this);
+        add(roomStatus);
+        
         searchRoom = new JButton("Search Room");
-        searchRoom.setBounds(10, 350, 200, 30);
+        searchRoom.setBounds(10, 390, 200, 30);
         searchRoom.setBackground(Color.decode("#2a1c13"));
         searchRoom.setForeground(Color.WHITE);
         searchRoom.addActionListener(this);
         add(searchRoom);
         
         JButton logout = new JButton("Log Out");
-        logout.setBounds(10, 390, 200, 30);
+        logout.setBounds(10, 430, 200, 30);
         logout.setBackground(Color.decode("#2a1c13"));
         logout.setForeground(Color.WHITE);
         add(logout);
@@ -128,10 +135,10 @@ public class Reception extends JFrame implements ActionListener{
             setVisible(false);
             new UpdateCheck();
         }
-        /*else if(ae.getSource() == ){
+        else if(ae.getSource() == roomStatus){
             setVisible(false);
             new UpdateRoom();
-        }*/
+        }
     }
     
     public static void main(String[] args){
