@@ -196,7 +196,7 @@ public class AddGuest extends JFrame {
         back.setBounds (400, 410, 120, 25);
         add (back);
         
-        ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icons/fifth,jpg"));
+        ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icons/fifth.jpg"));
         Image i2 = i1.getImage().getScaledInstance(300, 400, Image.SCALE_DEFAULT);
         ImageIcon i3 = new ImageIcon(i2);
         JLabel image = new JLabel(i3);
