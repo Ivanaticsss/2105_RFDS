@@ -12,9 +12,9 @@ import java.awt.event.FocusEvent;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.awt.event.*;
 
-public class AddGuest extends JFrame {
-    AddGuest() {
+public class AddGuest extends JFrame implements ActionListener {
         
         JComboBox<String> comboid;
         JTextField tfnumber, tfname, tfdeposit;
@@ -22,6 +22,8 @@ public class AddGuest extends JFrame {
         Choice croom;
         JLabel checkintime;
         JButton add, back;
+        
+        AddGuest() {
         
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
@@ -188,12 +190,14 @@ public class AddGuest extends JFrame {
         add.setBackground(Color.BLACK);
         add.setForeground(Color.WHITE);
         add.setBounds (250, 410, 120, 25);
+        add.addActionListener(this);
         add (add);
         
         back = new JButton ("Back");
         back.setBackground(Color.BLACK);
         back.setForeground(Color.WHITE);
         back.setBounds (400, 410, 120, 25);
+        back.addActionListener(this);
         add (back);
         
         ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icons/fifth.jpg"));
@@ -205,6 +209,48 @@ public class AddGuest extends JFrame {
         
         setBounds(300, 100, 800, 550);
         setVisible(true);
+    }
+    
+    public void actionPerformed (ActionEvent ae){
+        if(ae.getSource() == add){
+            String name = tfname.getSelectedText();
+            String number = tfnumber.getText();
+            String id = (String) comboid.getSelectedItem();
+            String gender = null;
+            
+            if (rmale.isSelected()){
+                gender = "Male";
+            }
+            else{
+                gender = "Female";
+            }
+        
+           String room = croom.getSelectedItem();
+           String time = checkintime.getText();
+           String deposit = tfdeposit.getText();
+           
+           try {
+               String query = "Insert into customer values ('"+name+"', '"+number+"', '"+id+"', '"+gender+"', '"+room+"', '"+time+"', '"+deposit+"')."; 
+               String query2 = "Update room set availability = 'Occupied' when roomnumber = '"+room+"'.";
+               
+               Conn conn = new Conn();
+               
+               conn.s.executeUpdate(query);
+               conn.s.executeUpdate(query2);
+               
+               JOptionPane.showMessageDialog(null, "New Customer Aded Successfully!");
+               
+               setVisible(false);
+               new Reception();
+               
+            } catch (Exception e){
+               e.printStackTrace();
+            }
+        } else if (ae.getSource() == back){
+               setVisible(false);
+               new Reception();
+        }
+        
     }
     
     public static void main(String[] args) {

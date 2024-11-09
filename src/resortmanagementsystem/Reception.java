@@ -17,6 +17,7 @@ public class Reception extends JFrame implements ActionListener{
         newGuest.setBounds(10, 30, 200, 30);
         newGuest.setBackground(Color.decode("#2a1c13"));
         newGuest.setForeground(Color.WHITE);
+        newGuest.addActionListener(this);
         add(newGuest);
         
         rooms = new JButton("Rooms");
