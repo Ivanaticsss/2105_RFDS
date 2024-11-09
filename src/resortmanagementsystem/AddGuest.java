@@ -13,6 +13,8 @@ import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.awt.event.*;
+import java.math.BigDecimal;
+
 
 public class AddGuest extends JFrame implements ActionListener {
         
@@ -157,7 +159,7 @@ public class AddGuest extends JFrame implements ActionListener {
         checkintime.setFont(new Font("Raleway", Font.PLAIN, 17));
         add(checkintime);
         
-        JLabel lbldeposit = new JLabel("<html>Reservation<br>Fee</html>");
+        JLabel lbldeposit = new JLabel("Deposit");
         lbldeposit.setBounds(45, 325, 150, 40);
         lbldeposit.setFont(new Font("Raleway", Font.PLAIN, 18));
         add(lbldeposit);
@@ -211,7 +213,7 @@ public class AddGuest extends JFrame implements ActionListener {
         setVisible(true);
     }
     
-    public void actionPerformed (ActionEvent ae){
+    /*public void actionPerformed (ActionEvent ae){
         if(ae.getSource() == add){
             String name = tfname.getSelectedText();
             String number = tfnumber.getText();
@@ -251,7 +253,59 @@ public class AddGuest extends JFrame implements ActionListener {
                new Reception();
         }
         
+    }*/
+        
+       public void actionPerformed(ActionEvent ae) {
+    if (ae.getSource() == add) {
+        String name = tfname.getText();
+        String number = tfnumber.getText();
+        String id = (String) comboid.getSelectedItem();
+        String gender = rmale.isSelected() ? "Male" : "Female";
+        String room = croom.getSelectedItem();
+        String deposit = tfdeposit.getText();
+
+        try {
+            // Format the current date and time
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String time = formatter.format(new Date()); // Correctly formatted datetime string
+
+            String query = "INSERT INTO customer (name, number, document, gender, room, checkintime, deposit) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String query2 = "UPDATE room SET availability = 'Occupied' WHERE roomnumber = ?";
+
+            Conn conn = new Conn();
+            
+            // Prepare the first statement for inserting customer data
+            PreparedStatement stmt = conn.c.prepareStatement(query);
+            stmt.setString(1, name);
+            stmt.setString(2, number);
+            stmt.setString(3, id);
+            stmt.setString(4, gender);
+            stmt.setString(5, room);
+            stmt.setString(6, time); // Use formatted time here
+            stmt.setBigDecimal(7, new BigDecimal(deposit));
+            stmt.executeUpdate();
+            
+            // Prepare the second statement for updating room availability
+            PreparedStatement stmt2 = conn.c.prepareStatement(query2);
+            stmt2.setString(1, room);
+            stmt2.executeUpdate();
+
+            JOptionPane.showMessageDialog(null, "New Customer Added Successfully!");
+
+            setVisible(false);
+            new Reception();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    } else if (ae.getSource() == back) {
+        setVisible(false);
+        new Reception();
     }
+}
+
+
+
     
     public static void main(String[] args) {
         new AddGuest();
