@@ -28,7 +28,7 @@ public class CheckOut extends JFrame implements ActionListener{
         add(lblid);
         
         ccustomer = new Choice();
-        ccustomer.setBounds(200, 80, 150, 25);
+        ccustomer.setBounds(150, 80, 150, 25);
         add(ccustomer);
 
         ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icons/tick.png"));
@@ -91,7 +91,7 @@ public class CheckOut extends JFrame implements ActionListener{
         }
         
         
-        ImageIcon i4 = new ImageIcon(ClassLoader.getSystemResource("icons/sixth.png"));
+        ImageIcon i4 = new ImageIcon(ClassLoader.getSystemResource("icons/sixth.jpg"));
         Image i5 = i4.getImage().getScaledInstance(400, 250, Image.SCALE_DEFAULT);
         ImageIcon i6 = new ImageIcon(i5);
         JLabel image = new JLabel(i6);
@@ -107,7 +107,7 @@ public class CheckOut extends JFrame implements ActionListener{
     
     public void actionPerformed(ActionEvent ae){
         if (ae.getSource() == checkOut){
-            String query1 = "delete from customer where number = '"+ccustomer.getSelectedItem()+"'";
+            String query1 = "delete from customer where number = '"+ ccustomer.getSelectedItem()+"'";
             String query2 = "update room set availability = 'Available' where roomnumber = '"+lvlroomnumber.getText()+"'";
             
             try {
