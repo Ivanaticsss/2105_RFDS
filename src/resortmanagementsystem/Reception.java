@@ -7,7 +7,7 @@ import java.awt.event.*;
 
 
 public class Reception extends JFrame implements ActionListener{
-    JButton newGuest, rooms, service, cottages, pools, guestInfo, searchRoom, update, roomStatus;
+    JButton newGuest, rooms, service, cottages, pools, guestInfo, searchRoom, update, roomStatus, checkout, logout;
     
     Reception(){
         getContentPane().setBackground(Color.WHITE);
@@ -59,10 +59,11 @@ public class Reception extends JFrame implements ActionListener{
         guestInfo.addActionListener(this);
         add(guestInfo);
         
-        JButton checkout = new JButton("Check Out");
+        checkout = new JButton("Check Out");
         checkout.setBounds(10, 270, 200, 30);
         checkout.setBackground(Color.decode("#2a1c13"));
         checkout.setForeground(Color.WHITE);
+        checkout.addActionListener(this);
         add(checkout);
         
         update  = new JButton("Update Status");
@@ -86,10 +87,11 @@ public class Reception extends JFrame implements ActionListener{
         searchRoom.addActionListener(this);
         add(searchRoom);
         
-        JButton logout = new JButton("Log Out");
+        logout = new JButton("Log Out");
         logout.setBounds(10, 430, 200, 30);
         logout.setBackground(Color.decode("#2a1c13"));
         logout.setForeground(Color.WHITE);
+        logout.addActionListener(this);
         add(logout);
         
         ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icons/fourthbg.jpg"));
@@ -139,6 +141,14 @@ public class Reception extends JFrame implements ActionListener{
         else if(ae.getSource() == roomStatus){
             setVisible(false);
             new UpdateRoom();
+        }
+        else if(ae.getSource() == checkout){
+            setVisible(false);
+            new CheckOut();
+        }
+        else if(ae.getSource() == logout){
+            setVisible(false);
+            System.exit(0);
         }
     }
     
