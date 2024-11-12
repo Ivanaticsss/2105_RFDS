@@ -34,19 +34,19 @@ public class GuestInfo extends JFrame implements ActionListener{
         add(j1);
         
         JLabel j2 = new JLabel("Number");
-        j2.setBounds(160, 10, 100, 20);
+        j2.setBounds(70, 10, 100, 20);
         add(j2);
         
         JLabel j3 = new JLabel("ID");
-        j3.setBounds(290, 10, 100, 20);
+        j3.setBounds(150, 10, 100, 20);
         add(j3);
         
         JLabel j4 = new JLabel("Sex");
-        j4.setBounds(410, 10, 100, 20);
+        j4.setBounds(220, 10, 100, 20);
         add(j4);
         
         JLabel j5 = new JLabel("Room Number");
-        j5.setBounds(540, 10, 100, 20);
+        j5.setBounds(280, 10, 100, 20);
         add(j5);
         
         table = new JTable();

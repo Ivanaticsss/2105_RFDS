@@ -8,7 +8,7 @@ import java.awt.event.*;
 public class AddPools extends JFrame implements ActionListener {
     
     JButton add, cancel;
-    JTextField tfPoolNumber, tfPrice, tfSize;
+    JTextField tfPoolNumber, tfPrice, tfType;
     JComboBox availablecombo;
     
     AddPools() {
@@ -29,14 +29,14 @@ public class AddPools extends JFrame implements ActionListener {
         tfPoolNumber.setBounds(200, 80, 150, 30);
         add(tfPoolNumber);
         
-        JLabel lblSize = new JLabel("Pool Type");
-        lblSize.setFont(new Font("Tahoma", Font.PLAIN, 16));
-        lblSize.setBounds(60, 130, 120, 20);
-        add(lblSize);
+        JLabel lblType = new JLabel("Pool Type");
+        lblType.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        lblType.setBounds(60, 130, 120, 20);
+        add(lblType);
         
-        tfSize = new JTextField();
-        tfSize.setBounds(200, 130, 150, 30);
-        add(tfSize);
+        tfType = new JTextField();
+        tfType.setBounds(200, 130, 150, 30);
+        add(tfType);
         
         JLabel lblAvailable = new JLabel("Available");
         lblAvailable.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -84,26 +84,26 @@ public class AddPools extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == add) {
             String poolNumber = tfPoolNumber.getText();
-            String poolSize = tfSize.getText();
+            String poolType = tfType.getText();
             String availability = (String) availablecombo.getSelectedItem();
             String price = tfPrice.getText();
             
             // Validate input fields
-            if (poolNumber.isEmpty() || poolSize.isEmpty() || price.isEmpty()) {
+            if (poolNumber.isEmpty() || poolType.isEmpty() || price.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Please fill in all required fields.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             
             try {
                 Conn conn = new Conn();
-                String str = "insert into pool values('" + poolNumber + "', '" + poolSize + "', '" + availability + "', '" + price + "')";
+                String str = "insert into pool values('" + poolNumber + "', '" + poolType + "', '" + availability + "', '" + price + "')";
                 
                 conn.s.executeUpdate(str);
                 JOptionPane.showMessageDialog(null, "New Pool Added Successfully");
                 
                  // Clear fields for the next entry
                 tfPoolNumber.setText("");
-                tfSize.setText("");
+                tfType.setText("");
                 tfPrice.setText("");
                 availablecombo.setSelectedIndex(0);
                
