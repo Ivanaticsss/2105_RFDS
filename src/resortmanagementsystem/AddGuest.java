@@ -22,8 +22,26 @@ public class AddGuest extends JFrame implements ActionListener {
         JTextField tfnumber, tfname, tfdeposit;
         JRadioButton rmale, rfemale;
         Choice croom;
-        JLabel checkintime;
+        JLabel checkintime, lblGuestID;
         JButton add, back;
+        
+        private void fetchNextGuestID() {
+    try {
+        Conn conn = new Conn();
+        String query = "SELECT MAX(guestID) FROM guest";
+        ResultSet rs = conn.s.executeQuery(query);
+
+        if (rs.next()) {
+            int nextGuestID = rs.getInt(1) + 1;  // Get the current max ID and add 1
+            lblGuestID.setText("Guest ID: " + nextGuestID);
+        } else {
+            lblGuestID.setText("Guest ID: 1");  // Default to 1 if no IDs found
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        lblGuestID.setText("Guest ID not available");
+    }
+}
         
         AddGuest() {
         ImageIcon backgroundIcon = new ImageIcon(ClassLoader.getSystemResource("icons/formbg.jpg"));
@@ -39,24 +57,21 @@ public class AddGuest extends JFrame implements ActionListener {
         //add(text);
         background.add(text);
         
-        JLabel lblid = new JLabel("ID");
-        lblid.setBounds(45, 160, 150, 25);
-        lblid.setFont(new Font("Raleway", Font.PLAIN, 18));
-        background.add(lblid);
+        lblGuestID = new JLabel("Generating...");
+        lblGuestID.setBounds(200, 80, 150, 30);
+        lblGuestID.setFont(new Font("Raleway", Font.PLAIN, 18));
+        background.add(lblGuestID);
         
-        String options[] = {"Driver's License", "SSS ID", "Pag-ibig ID", "Voter's ID", "National ID", "Company ID", "Student's ID", "Passport/Visa"};
-        comboid = new JComboBox<>(options);
-        comboid.setBounds(200, 160, 150, 25);
-        comboid.setBackground(Color.WHITE);
-        background.add(comboid);
+        fetchNextGuestID();
         
-        JLabel lblnumber = new JLabel("Number");
-        lblnumber.setBounds(45, 120, 150, 25);
+        
+         /*JLabel lblnumber = new JLabel("Guest Number");
+        lblnumber.setBounds(45, 80, 300, 30);
         lblnumber.setFont(new Font("Raleway", Font.PLAIN, 18));
         background.add(lblnumber);
         
-        tfnumber = new JTextField("Mobile Number");
-        tfnumber.setBounds(200, 120, 150, 25);
+       tfnumber = new JTextField("Number");
+        tfnumber.setBounds(200, 80, 150, 25);
         tfnumber.setForeground(Color.GRAY);
         
         tfnumber.addFocusListener(new FocusAdapter() {
@@ -71,21 +86,22 @@ public class AddGuest extends JFrame implements ActionListener {
             @Override
             public void focusLost(FocusEvent e) {
                 if (tfnumber.getText().isEmpty()) {
-                    tfnumber.setText("Mobile Number");
+                    tfnumber.setText("Number");
                     tfnumber.setForeground(Color.GRAY);
                 }
             }
         });
         
         background.add(tfnumber);
+        */
         
-        JLabel lblname = new JLabel("Name");
-        lblname.setBounds(45, 80, 300, 30);
+         JLabel lblname = new JLabel("Name");
+        lblname.setBounds(45, 120, 300, 30);
         lblname.setFont(new Font("Raleway", Font.PLAIN, 18));
         background.add(lblname);
         
         tfname = new JTextField("Enter Name");
-        tfname.setBounds(200, 80, 150, 25);
+        tfname.setBounds(200, 120, 150, 25);
         tfname.setForeground(Color.GRAY);
         
         tfname.addFocusListener(new FocusAdapter() {
@@ -108,6 +124,21 @@ public class AddGuest extends JFrame implements ActionListener {
         
         background.add(tfname);
         
+        
+        JLabel lblid = new JLabel("ID");
+        lblid.setBounds(45, 160, 150, 25);
+        lblid.setFont(new Font("Raleway", Font.PLAIN, 18));
+        background.add(lblid);
+        
+        String options[] = {"Driver's License", "SSS ID", "Pag-ibig ID", "Voter's ID", "National ID", "Company ID", "Student's ID", "Passport/Visa"};
+        comboid = new JComboBox<>(options);
+        comboid.setBounds(200, 160, 150, 25);
+        comboid.setBackground(Color.WHITE);
+        background.add(comboid);
+        
+        
+        
+       
         JLabel lblgender = new JLabel("Sex");
         lblgender.setBounds(45, 190, 300, 30);
         lblgender.setFont(new Font("Raleway", Font.PLAIN, 18));
@@ -119,7 +150,7 @@ public class AddGuest extends JFrame implements ActionListener {
         
         rfemale = new JRadioButton("Female");
         rfemale.setBackground(Color.WHITE);
-        rfemale.setBounds(270, 195, 150, 25);
+        rfemale.setBounds(270, 195, 80, 25);
 
         ButtonGroup sexGroup = new ButtonGroup();
         sexGroup.add(rmale);
@@ -217,52 +248,12 @@ public class AddGuest extends JFrame implements ActionListener {
         setVisible(true);
     }
     
-    /*public void actionPerformed (ActionEvent ae){
-        if(ae.getSource() == add){
-            String name = tfname.getSelectedText();
-            String number = tfnumber.getText();
-            String id = (String) comboid.getSelectedItem();
-            String gender = null;
-            
-            if (rmale.isSelected()){
-                gender = "Male";
-            }
-            else{
-                gender = "Female";
-            }
-        
-           String room = croom.getSelectedItem();
-           String time = checkintime.getText();
-           String deposit = tfdeposit.getText();
-           
-           try {
-               String query = "Insert into customer values ('"+name+"', '"+number+"', '"+id+"', '"+gender+"', '"+room+"', '"+time+"', '"+deposit+"')."; 
-               String query2 = "Update room set availability = 'Occupied' when roomnumber = '"+room+"'.";
-               
-               Conn conn = new Conn();
-               
-               conn.s.executeUpdate(query);
-               conn.s.executeUpdate(query2);
-               
-               JOptionPane.showMessageDialog(null, "New Customer Aded Successfully!");
-               
-               setVisible(false);
-               new Reception();
-               
-            } catch (Exception e){
-               e.printStackTrace();
-            }
-        } else if (ae.getSource() == back){
-               setVisible(false);
-               new Reception();
-        }
-        
-    }*/
+
         
        public void actionPerformed(ActionEvent ae) {
     if (ae.getSource() == add) {
         String name = tfname.getText();
-        String number = tfnumber.getText();
+        //String number = tfnumber.getText();
         String id = (String) comboid.getSelectedItem();
         String gender = rmale.isSelected() ? "Male" : "Female";
         String room = croom.getSelectedItem();
@@ -273,21 +264,31 @@ public class AddGuest extends JFrame implements ActionListener {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String time = formatter.format(new Date()); // Correctly formatted datetime string
 
-            String query = "INSERT INTO customer (name, number, document, gender, room, checkintime, deposit) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO guest (name, document, gender, room, checkintime, deposit) VALUES (?, ?, ?, ?, ?, ?)";
             String query2 = "UPDATE room SET availability = 'Occupied' WHERE roomnumber = ?";
 
             Conn conn = new Conn();
             
             // Prepare the first statement for inserting customer data
-            PreparedStatement stmt = conn.c.prepareStatement(query);
+            //PreparedStatement stmt = conn.c.prepareStatement(query);
+            PreparedStatement stmt = conn.c.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
             stmt.setString(1, name);
-            stmt.setString(2, number);
-            stmt.setString(3, id);
-            stmt.setString(4, gender);
-            stmt.setString(5, room);
-            stmt.setString(6, time); // Use formatted time here
-            stmt.setBigDecimal(7, new BigDecimal(deposit));
+            //stmt.setString(2, number);
+            stmt.setString(2, id);
+            stmt.setString(3, gender);
+            stmt.setString(4, room);
+            stmt.setString(5, time); // Use formatted time here
+            stmt.setBigDecimal(6, new BigDecimal(deposit));
             stmt.executeUpdate();
+            
+            ResultSet generatedKeys = stmt.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                int guestID = generatedKeys.getInt(1);
+                lblGuestID.setText("Guest ID: " + guestID);  // Display the generated GuestID
+            } else {
+                lblGuestID.setText("Guest ID not available");
+            }
             
             // Prepare the second statement for updating room availability
             PreparedStatement stmt2 = conn.c.prepareStatement(query2);
