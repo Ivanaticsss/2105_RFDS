@@ -151,7 +151,7 @@ public class Reception extends JFrame implements ActionListener{
             new Cottage();
         } else if (ae.getActionCommand().equals("Search Cottages")) {
             setVisible(false);
-            new SearchCottages();
+            new SearchCottages(new AddGuest());
         } else if (ae.getActionCommand().equals("View Pools")) {
             setVisible(false);
             new Pool();

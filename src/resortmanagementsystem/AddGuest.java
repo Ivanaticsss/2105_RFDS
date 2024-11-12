@@ -19,11 +19,12 @@ import java.math.BigDecimal;
 public class AddGuest extends JFrame implements ActionListener {
         
         JComboBox<String> comboid;
-        JTextField tfnumber, tfname, tfdeposit;
+        JTextField tfCottage, tfname, tfdeposit;
+         
         JRadioButton rmale, rfemale;
         Choice croom;
         JLabel checkintime, lblGuestID;
-        JButton add, back;
+        JButton add, back, chooseCottage;
         
         private void fetchNextGuestID() {
     try {
@@ -237,6 +238,19 @@ public class AddGuest extends JFrame implements ActionListener {
         back.addActionListener(this);
         background.add (back);
         
+        chooseCottage = new JButton ("Add Cottage");
+        chooseCottage.setBackground(Color.BLACK);
+        chooseCottage.setForeground(Color.WHITE);
+        chooseCottage.setBounds (500, 120, 120, 25);
+        chooseCottage.addActionListener(this);
+        background.add (chooseCottage);
+        
+        
+    tfCottage = new JTextField("No Cottage Selected");
+    tfCottage.setBounds(500, 150, 150, 25); // Adjust the position and size as needed
+    tfCottage.setEditable(false); // Make it read-only
+    background.add(tfCottage);
+        
         /*ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icons/fifth.jpg"));
         Image i2 = i1.getImage().getScaledInstance(300, 400, Image.SCALE_DEFAULT);
         ImageIcon i3 = new ImageIcon(i2);
@@ -248,6 +262,12 @@ public class AddGuest extends JFrame implements ActionListener {
         setVisible(true);
     }
     
+        
+        // Add this method in AddGuest to set the cottage number
+        public void setCottageNumber(String cottageNumber) {
+        tfCottage.setText(cottageNumber);
+}
+
 
         
        public void actionPerformed(ActionEvent ae) {
@@ -303,6 +323,8 @@ public class AddGuest extends JFrame implements ActionListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    } else if (ae.getSource() == chooseCottage) {
+        new SearchCottages(this);
     } else if (ae.getSource() == back) {
         setVisible(false);
         new Reception();

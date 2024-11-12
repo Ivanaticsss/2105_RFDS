@@ -17,8 +17,12 @@ public class SearchCottages extends JFrame implements ActionListener{
     JButton back, submit;
     JComboBox cottageType;
     JCheckBox available;
+    private AddGuest addGuestInstance;
     
-    SearchCottages(){
+    SearchCottages(AddGuest addGuestInstance){
+        
+        
+        this.addGuestInstance = addGuestInstance;
         
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
@@ -88,44 +92,53 @@ public class SearchCottages extends JFrame implements ActionListener{
         back.setBounds(500, 510, 120, 30);
         add(back);
         
+        
+        table.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+        int row = table.getSelectedRow();
+        if (row != -1) { // Ensure a row is selected
+            String cottageNumber = table.getValueAt(row, 0).toString(); // Assuming the cottage number is in the first column
+            addGuestInstance.setCottageNumber(cottageNumber); // Pass the cottage number back to AddGuest
+            setVisible(false); // Close SearchCottages after selection
+        }
+    }
+});
+
+        
         setBounds(300, 200, 1000, 600);
         setVisible(true);
         }
     
     public void actionPerformed(ActionEvent ae){
-        if(ae.getSource() == submit){
-            try{
-                String query1 = "select * from cottage where cottage_type = '"+cottageType.getSelectedItem()+"'";
-                String query2 = "select * from room cottage availability = 'Available' AND cottage_type = '"+cottageType.getSelectedItem()+"'";
-                
-                Conn conn = new Conn();
-                ResultSet rs;
-                if(available.isSelected()){
-                    rs = conn.s.executeQuery(query2);
-                } 
-                else{
-                     rs = conn.s.executeQuery(query1);
-                }
-                table.setModel(DbUtils.resultSetToTableModel(rs));
-                
-                
-                
-                
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
+    if(ae.getSource() == submit){
+        try{
+            String query1 = "select * from cottage where cottage_type = '"+cottageType.getSelectedItem()+"'";
+            String query2 = "select * from cottage WHERE availability = 'Available' AND cottage_type = '"+cottageType.getSelectedItem()+"'";
             
+            Conn conn = new Conn();
+            ResultSet rs;
+            if(available.isSelected()){
+                rs = conn.s.executeQuery(query2);
+            } else {
+                rs = conn.s.executeQuery(query1);
+            }
+            table.setModel(DbUtils.resultSetToTableModel(rs));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        else{
+    } else {
         setVisible(false);
         new Reception();
-        }
     }
+}
+
     
     public static void main(String[] args){
-            new SearchCottages();
-    }
+    AddGuest addGuest = new AddGuest(); // Create an instance of AddGuest
+    new SearchCottages(addGuest); // Pass it to the SearchCottages constructor
+}
+
     
     
 }
