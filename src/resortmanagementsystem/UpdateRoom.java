@@ -33,9 +33,9 @@ public class UpdateRoom extends JFrame implements ActionListener {
 
         try {
             Conn c = new Conn();
-            ResultSet rs = c.s.executeQuery("select * from customer");
+            ResultSet rs = c.s.executeQuery("select * from guest");
             while(rs.next()){
-                ccustomer.add(rs.getString("Number"));
+                ccustomer.add(rs.getString("guestID"));
             }
             
         }catch(Exception e){

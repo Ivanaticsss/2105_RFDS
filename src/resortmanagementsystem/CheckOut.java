@@ -23,7 +23,7 @@ public class CheckOut extends JFrame implements ActionListener{
         text.setFont(new Font("Tamoha", Font.PLAIN, 20));
         add(text);
         
-        JLabel lblid = new JLabel("Customer ID");
+        JLabel lblid = new JLabel("Guest ID");
         lblid.setBounds(30, 80, 100, 30);
         add(lblid);
         
@@ -79,9 +79,9 @@ public class CheckOut extends JFrame implements ActionListener{
         
         try {
             Conn c = new Conn();
-            ResultSet rs = c.s.executeQuery("select * from customer");
+            ResultSet rs = c.s.executeQuery("select * from guest");
             while(rs.next()){
-                ccustomer.add(rs.getString("Number"));
+                ccustomer.add(rs.getString("guestID"));
                 lvlroomnumber.setText(rs.getString("room"));
                 lvlcheckintime.setText(rs.getString("checkintime"));
             }

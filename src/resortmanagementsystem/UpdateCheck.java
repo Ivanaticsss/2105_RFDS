@@ -23,7 +23,7 @@ public class UpdateCheck extends JFrame implements ActionListener {
         text.setForeground(Color.BLUE);
         add(text);
         
-        JLabel lblid = new JLabel("Customer ID");
+        JLabel lblid = new JLabel("Guest ID");
         lblid.setBounds(30, 80, 100, 20);
         add(lblid);
         
@@ -33,9 +33,9 @@ public class UpdateCheck extends JFrame implements ActionListener {
 
         try {
             Conn c = new Conn();
-            ResultSet rs = c.s.executeQuery("select * from customer");
+            ResultSet rs = c.s.executeQuery("select * from guest");
             while(rs.next()){
-                ccustomer.add(rs.getString("Number"));
+                ccustomer.add(rs.getString("guestID"));
             }
             
         }catch(Exception e){

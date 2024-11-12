@@ -29,11 +29,11 @@ public class GuestInfo extends JFrame implements ActionListener{
         add(image);
         
         
-        JLabel j1 = new JLabel("Name");
-        j1.setBounds(10, 10, 100, 20);
+        JLabel j1 = new JLabel("GuestID");
+        j1.setBounds(5, 10, 100, 20);
         add(j1);
         
-        JLabel j2 = new JLabel("Number");
+        JLabel j2 = new JLabel("Name");
         j2.setBounds(70, 10, 100, 20);
         add(j2);
         
@@ -55,7 +55,7 @@ public class GuestInfo extends JFrame implements ActionListener{
         
         try{
             Conn c = new Conn();
-            ResultSet rs = c.s.executeQuery("select * from customer");
+            ResultSet rs = c.s.executeQuery("select * from guest");
             table.setModel(DbUtils.resultSetToTableModel(rs));
         }catch (Exception e){
             e.printStackTrace();
