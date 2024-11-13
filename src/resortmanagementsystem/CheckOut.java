@@ -9,7 +9,7 @@ import java.awt.event.*;
 
 public class CheckOut extends JFrame implements ActionListener{
     
-    Choice ccustomer;
+    Choice guest;
     JLabel lvlroomnumber, lvlcheckintime, lvlcheckouttime;
     JButton checkOut, back;
     CheckOut(){
@@ -27,9 +27,9 @@ public class CheckOut extends JFrame implements ActionListener{
         lblid.setBounds(30, 80, 100, 30);
         add(lblid);
         
-        ccustomer = new Choice();
-        ccustomer.setBounds(150, 80, 150, 25);
-        add(ccustomer);
+        guest = new Choice();
+        guest.setBounds(150, 80, 150, 25);
+        add(guest);
 
         ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icons/tick.png"));
         Image i2 = i1.getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT);
@@ -81,7 +81,7 @@ public class CheckOut extends JFrame implements ActionListener{
             Conn c = new Conn();
             ResultSet rs = c.s.executeQuery("select * from guest");
             while(rs.next()){
-                ccustomer.add(rs.getString("guestID"));
+                guest.add(rs.getString("guestID"));
                 lvlroomnumber.setText(rs.getString("room"));
                 lvlcheckintime.setText(rs.getString("checkintime"));
             }
@@ -107,7 +107,7 @@ public class CheckOut extends JFrame implements ActionListener{
     
     public void actionPerformed(ActionEvent ae){
         if (ae.getSource() == checkOut){
-            String query1 = "delete from customer where number = '"+ ccustomer.getSelectedItem()+"'";
+            String query1 = "delete from guest where guestID = '"+ guest.getSelectedItem()+"'";
             String query2 = "update room set availability = 'Available' where roomnumber = '"+lvlroomnumber.getText()+"'";
             
             try {
