@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 public class CheckIn extends JFrame implements ActionListener {
         
         JComboBox<String> comboid;
-        JTextField tfCottage, tfname, tfdeposit;
+        JTextField tfCottage, tfname, tfdeposit, tfaddress, tfnumber;
          
         JRadioButton rmale, rfemale;
         Choice croom;
@@ -53,63 +53,29 @@ public class CheckIn extends JFrame implements ActionListener {
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
         
-       /* ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("400x150.png"));
-        Image i2 = i1.getImage().getScaledInstance(400, 150, Image.SCALE_DEFAULT);
+        ImageIcon i1 = new ImageIcon(getClass().getResource("/icons/logobg.png"));
+        Image i2 = i1.getImage().getScaledInstance(400, 150, Image.SCALE_SMOOTH); // Use smoother scaling
         ImageIcon i3 = new ImageIcon(i2);
         JLabel image = new JLabel(i3);
-        image.setBounds(80,20,400,150);
+        image.setBounds(400,10,400,150);
         add(image);
-        /*JLabel text = new JLabel("NEW GUEST FORM");
-        text.setBounds(80, 20, 300, 30);
-        text.setFont(new Font("Raleway", Font.PLAIN, 22));
-        add(text);*/
-       
+        
         
         lblGuestID = new JLabel("Generating...");
-        lblGuestID.setBounds(200, 80, 150, 30);
-        lblGuestID.setFont(new Font("Raleway", Font.PLAIN, 18));
+        lblGuestID.setBounds(200, 120, 150, 25);
+        lblGuestID.setFont(new Font("Helvetica", Font.BOLD, 18));
         add(lblGuestID);
         
         fetchNextGuestID();
         
-        
-         /*JLabel lblnumber = new JLabel("Guest Number");
-        lblnumber.setBounds(45, 80, 300, 30);
-        lblnumber.setFont(new Font("Raleway", Font.PLAIN, 18));
-        background.add(lblnumber);
-        
-       tfnumber = new JTextField("Number");
-        tfnumber.setBounds(200, 80, 150, 25);
-        tfnumber.setForeground(Color.GRAY);
-        
-        tfnumber.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (tfnumber.getText().equals("Mobile Number")) {
-                    tfnumber.setText("");
-                    tfnumber.setForeground(Color.BLACK);
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (tfnumber.getText().isEmpty()) {
-                    tfnumber.setText("Number");
-                    tfnumber.setForeground(Color.GRAY);
-                }
-            }
-        });
-        
-        background.add(tfnumber);
-        */
-        
-         JLabel lblname = new JLabel("Name");
-        lblname.setBounds(45, 120, 300, 30);
-        lblname.setFont(new Font("Raleway", Font.PLAIN, 18));
+        //Name Input
+        JLabel lblname = new JLabel("Full Name     :");
+        lblname.setBounds(45, 160, 300, 30);
+        lblname.setFont(new Font("Helvetica", Font.PLAIN, 17));
         add(lblname);
         
         tfname = new JTextField("Enter Name");
-        tfname.setBounds(200, 120, 150, 25);
+        tfname.setBounds(200, 165, 200, 25);
         tfname.setForeground(Color.GRAY);
         
         tfname.addFocusListener(new FocusAdapter() {
@@ -132,44 +98,75 @@ public class CheckIn extends JFrame implements ActionListener {
         
         add(tfname);
         
+        //Address input
+        JLabel lbladress = new JLabel("Full Adress   :");
+        lbladress.setBounds(45, 190, 300, 30);
+        lbladress.setFont(new Font("Helvetica", Font.PLAIN, 17));
+        add(lbladress);
         
-        JLabel lblid = new JLabel("ID");
-        lblid.setBounds(45, 160, 150, 25);
-        lblid.setFont(new Font("Raleway", Font.PLAIN, 18));
-        add(lblid);
+        tfaddress = new JTextField("Enter Address");
+        tfaddress.setBounds(200, 195, 300, 25);
+        tfaddress.setForeground(Color.GRAY);
         
-        String options[] = {"Driver's License", "SSS ID", "Pag-ibig ID", "Voter's ID", "National ID", "Company ID", "Student's ID", "Passport/Visa"};
-        comboid = new JComboBox<>(options);
-        comboid.setBounds(200, 160, 150, 25);
-        comboid.setBackground(Color.WHITE);
-        add(comboid);
-        
-        JLabel lblgender = new JLabel("Sex");
-        lblgender.setBounds(45, 190, 300, 30);
-        lblgender.setFont(new Font("Raleway", Font.PLAIN, 18));
-        add(lblgender);
-        
-        rmale = new JRadioButton("Male");
-        rmale.setBackground(Color.WHITE);
-        rmale.setBounds(200, 195, 70, 25);
-        
-        rfemale = new JRadioButton("Female");
-        rfemale.setBackground(Color.WHITE);
-        rfemale.setBounds(270, 195, 80, 25);
+        tfaddress.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (tfaddress.getText().equals("Enter Address")) {
+                    tfaddress.setText("");
+                    tfaddress.setForeground(Color.BLACK);
+                }
+            }
 
-        ButtonGroup sexGroup = new ButtonGroup();
-        sexGroup.add(rmale);
-        sexGroup.add(rfemale);
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (tfaddress.getText().isEmpty()) {
+                    tfaddress.setText("Enter Address");
+                    tfaddress.setForeground(Color.GRAY);
+                }
+            }
+        });
         
-        add(rmale);
-        add(rfemale);
+        add(tfaddress);
         
+        //Phone Number input
+        JLabel lblnumber = new JLabel("Mobile Number:");
+        lblnumber.setBounds(45, 220, 300, 30);
+        lblnumber.setFont(new Font("Helvetica", Font.PLAIN, 17));
+        add(lblnumber);
+        
+        tfnumber = new JTextField("Number");
+        tfnumber.setBounds(200, 225, 200, 25);
+        tfnumber.setForeground(Color.GRAY);
+        
+        tfnumber.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (tfnumber.getText().equals("Number")) {
+                    tfnumber.setText("");
+                    tfnumber.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (tfnumber.getText().isEmpty()) {
+                    tfnumber.setText("Number");
+                    tfnumber.setForeground(Color.GRAY);
+                }
+            }
+        });
+        
+        add(tfnumber);
+        
+        
+        //Choose Room
         JLabel lblroom = new JLabel("Room No.");
-        lblroom.setBounds(45, 225, 100, 30);
-        lblroom.setFont(new Font("Raleway", Font.PLAIN, 18));
+        lblroom.setBounds(45, 265, 100, 30);
+        lblroom.setFont(new Font("Helvetica", Font.PLAIN, 17));
         add(lblroom);
         
         croom = new Choice();
+        croom.setFont(new Font("Helvetica", Font.BOLD, 14)); 
         
         try {
             Conn conn = new Conn();
@@ -182,11 +179,50 @@ public class CheckIn extends JFrame implements ActionListener {
             e.printStackTrace();
         }
         
-        croom.setBounds(200, 225, 150, 25);
+        croom.setBounds(200, 270, 150, 25);
         add(croom);
         
+        
+        
+        //===Second Column===//
+        //ID input
+        
+        JLabel lblid = new JLabel("ID");
+        lblid.setBounds(550, 165, 150, 25);
+        lblid.setFont(new Font("HELVETICA", Font.PLAIN, 17));
+        add(lblid);
+        
+        String options[] = {"Driver's License", "SSS ID", "Pag-ibig ID", "Voter's ID", "National ID", "Company ID", "Student's ID", "Passport/Visa"};
+        comboid = new JComboBox<>(options);
+        comboid.setBounds(650, 165, 150, 25);
+        comboid.setBackground(Color.WHITE);
+        add(comboid);
+        
+        //SEX input
+        JLabel lblgender = new JLabel("Sex");
+        lblgender.setBounds(550, 190, 300, 30);
+        lblgender.setFont(new Font("Helvetica", Font.PLAIN, 18));
+        add(lblgender);
+        
+        rmale = new JRadioButton("Male");
+        rmale.setBackground(Color.WHITE);
+        rmale.setBounds(650, 195, 70, 25);
+        
+        rfemale = new JRadioButton("Female");
+        rfemale.setBackground(Color.WHITE);
+        rfemale.setBounds(720, 195, 80, 25);
+
+        ButtonGroup sexGroup = new ButtonGroup();
+        sexGroup.add(rmale);
+        sexGroup.add(rfemale);
+        
+        add(rmale);
+        add(rfemale);
+        
+        
+        //CHECK IN TIME 
         JLabel lbltime = new JLabel("<html>Check-in<br>time</html>");
-        lbltime.setBounds(45, 255, 150, 60);
+        lbltime.setBounds(550, 255, 150, 60);
         lbltime.setFont(new Font("Raleway", Font.PLAIN, 18));
         add(lbltime);
         
@@ -195,7 +231,7 @@ public class CheckIn extends JFrame implements ActionListener {
         String formattedDate = formatter.format(date);
 
         checkintime = new JLabel(formattedDate);
-        checkintime.setBounds(200, 265, 300, 30);
+        checkintime.setBounds(650, 265, 300, 30);
         checkintime.setFont(new Font("Raleway", Font.PLAIN, 17));
         add(checkintime);
         
@@ -257,8 +293,9 @@ public class CheckIn extends JFrame implements ActionListener {
         
         
         
-        setBounds(300, 100, 1200, 600);
+        setBounds(300, 100, 1200, 800);
         setVisible(true);
+        setLocationRelativeTo(null); 
     }
     
         
