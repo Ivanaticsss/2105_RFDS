@@ -21,7 +21,7 @@ public class AddGuest extends JFrame implements ActionListener {
         JComboBox<String> comboid;
         JTextField tfCottage, tfname, tfdeposit;
          
-        JRadioButton rmale, rfemale;
+        JRadioButton rmale, rfemale, rStandard, rVIP, rVVIP;
         Choice croom;
         JLabel checkintime, lblGuestID;
         JButton add, back, chooseCottage;
@@ -159,6 +159,28 @@ public class AddGuest extends JFrame implements ActionListener {
         
         background.add(rmale);
         background.add(rfemale);
+        
+        //choose room
+        
+        JLabel lblroomtype = new JLabel("Room Type:");
+        lblroomtype.setBounds(45, 225, 100, 30);
+        lblroomtype.setFont(new Font("Helvetica", Font.PLAIN, 18));
+        background.add(lblroomtype);
+        
+        rStandard = new JRadioButton("Standard");
+        rStandard.setBackground(Color.WHITE);
+        rStandard.setBounds(200, 225, 150, 25);
+        
+        
+        rVIP = new JRadioButton("VIP");
+        rVIP.setBackground(Color.WHITE);
+        rVIP.setBounds(200, 225, 150, 25);
+        
+        rVVIP = new JRadioButton("VVIP");
+        rVVIP.setBackground(Color.WHITE);
+        rVVIP.setBounds(200, 225, 150, 25);
+                
+           
         
         JLabel lblroom = new JLabel("Room No.");
         lblroom.setBounds(45, 225, 100, 30);
