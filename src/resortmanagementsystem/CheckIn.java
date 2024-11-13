@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 public class CheckIn extends JFrame implements ActionListener {
         
         JComboBox<String> comboid;
-        JTextField tfCottage, tfname, tfdeposit, tfaddress, tfnumber;
+        JTextField tfCottage, tfname, tfdeposit, tfaddress, tfnumber, tfbedType;
          
         JRadioButton rmale, rfemale;
         Choice croom;
@@ -161,16 +161,34 @@ public class CheckIn extends JFrame implements ActionListener {
         
         //Choose Room
         JLabel lblroom = new JLabel("Room No.");
-        lblroom.setBounds(45, 265, 100, 30);
+        lblroom.setBounds(45, 280, 100, 30);
         lblroom.setFont(new Font("Helvetica", Font.PLAIN, 17));
         add(lblroom);
         
-        croom = new Choice();
-        croom.setFont(new Font("Helvetica", Font.BOLD, 14)); 
         
+        //Show Room details
+        
+                
+        JLabel lblBedType = new JLabel("Bed Type");
+        lblBedType.setBounds(45, 320, 100, 30);
+        lblBedType.setFont(new Font("Helvetica", Font.PLAIN, 17));
+        add(lblBedType);
+
+        JTextField tfBedType = new JTextField();
+        tfBedType.setBounds(200, 320, 150, 25);
+        tfBedType.setEditable(false); // Make it read-only
+        add(tfBedType);
+
+        
+        croom = new Choice();
+        croom.setFont(new Font("Helvetica", Font.BOLD, 14));
+        croom.setBounds(200, 285, 150, 25);
+        add(croom);
+
+        // Populate Room Number Choice
         try {
             Conn conn = new Conn();
-            String query = "select * from room";
+            String query = "select roomnumber from room";
             ResultSet rs = conn.s.executeQuery(query);
             while (rs.next()) {
                 croom.add(rs.getString("roomnumber"));
@@ -178,11 +196,27 @@ public class CheckIn extends JFrame implements ActionListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         
-        croom.setBounds(200, 270, 150, 25);
-        add(croom);
-        
-        
+        croom.addItemListener(e -> {
+            String selectedRoom = croom.getSelectedItem();
+            try {
+                Conn conn = new Conn();
+                String query = "SELECT bed_type FROM room WHERE roomnumber = ?";
+                PreparedStatement stmt = conn.c.prepareStatement(query);
+                stmt.setString(1, selectedRoom);
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next()) {
+                    String bedType = rs.getString("bed_type");
+                    tfBedType.setText(bedType); // Set bed type in text field
+                } else {
+                    tfBedType.setText(""); // Clear if no bed type is found
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
         
         //===Second Column===//
         //ID input
@@ -236,12 +270,12 @@ public class CheckIn extends JFrame implements ActionListener {
         add(checkintime);
         
         JLabel lbldeposit = new JLabel("Deposit");
-        lbldeposit.setBounds(45, 325, 150, 40);
+        lbldeposit.setBounds(400, 325, 150, 40);
         lbldeposit.setFont(new Font("Raleway", Font.PLAIN, 18));
         add(lbldeposit);
         
         tfdeposit = new JTextField("Enter Amount");
-        tfdeposit.setBounds(200, 325, 150, 25);
+        tfdeposit.setBounds(500, 325, 150, 25);
         tfdeposit.setForeground(Color.GRAY);
         
          tfdeposit.addFocusListener(new FocusAdapter() {
@@ -281,13 +315,13 @@ public class CheckIn extends JFrame implements ActionListener {
         chooseCottage = new JButton ("Add Cottage");
         chooseCottage.setBackground(Color.BLACK);
         chooseCottage.setForeground(Color.WHITE);
-        chooseCottage.setBounds (500, 120, 120, 25);
+        chooseCottage.setBounds (500, 500, 120, 25);
         chooseCottage.addActionListener(this);
         add (chooseCottage);
         
         
     tfCottage = new JTextField("No Cottage Selected");
-    tfCottage.setBounds(500, 150, 150, 25); // Adjust the position and size as needed
+    tfCottage.setBounds(500, 500, 150, 25); // Adjust the position and size as needed
     tfCottage.setEditable(false); // Make it read-only
     add(tfCottage);
         
