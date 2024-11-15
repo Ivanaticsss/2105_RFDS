@@ -21,8 +21,8 @@ import javax.swing.border.LineBorder;
 public class CheckIn extends JFrame implements ActionListener {
         
         private JComboBox<String> comboid, comboCottageType, comboCottageNumber, comboPoolSizes;
-        private JTextField tfCottage, tfname, tfdeposit, tfaddress, tfnumber,tfFacilities, tfBedType, tfPrice, tflength,
-                tfcountry, tfCottagePrice, tfPoolPrice, tfSpaPrice, tfRestoPrice, tfTourPrice, tfServicesCost;
+        private JTextField  tfname, tfdeposit, tfaddress, tfnumber,tfFacilities, tfBedType, tfPrice, tflength,
+                tfcountry, tfTotalCost, tfServicesCost;
          
         private JCheckBox checkboxPoolSize;
         private JRadioButton rmale, rfemale, rStandard, rVIP, rVVIP;
@@ -30,9 +30,8 @@ public class CheckIn extends JFrame implements ActionListener {
         private JLabel checkintime, lblGuestID;
         private JButton add, back, chooseCottage, availServices;
         private JTextArea textArea;
-        
-      
-
+        double roomPrice; 
+        int serviceCost; 
         
         private void fetchNextGuestID() {
     try {
@@ -253,6 +252,12 @@ public class CheckIn extends JFrame implements ActionListener {
         tfPrice.setForeground(Color.BLACK); 
         tfPrice.setBorder(new LineBorder(Color.decode("#D3A376"), 1));
         add(tfPrice);
+        tfPrice.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                updateTotalCost();
+            }
+        });
 
         
         croom = new Choice();
@@ -298,24 +303,52 @@ public class CheckIn extends JFrame implements ActionListener {
         tflength.setForeground(Color.BLACK); 
         tflength.setBorder(new LineBorder(Color.decode("#D3A376"), 1));
         add(tflength);
+        tflength.addFocusListener(new FocusAdapter() {
+                @Override
+                public void focusLost(FocusEvent e) {
+                    updateTotalCost();
+                }
+            });
+        
         
         JLabel lblDays = new JLabel("days");
         lblDays.setBounds(250, 440, 200, 30);
         lblDays.setFont(new Font("Helvetica", Font.PLAIN, 17));
         add(lblDays);
         
-        JLabel lbldeposit = new JLabel("Deposit:");
-        lbldeposit.setBounds(45, 490, 200, 40);
-        lbldeposit.setFont(new Font("Raleway", Font.PLAIN, 18));
-        add(lbldeposit);
+        
+        JLabel lblTotalCost = new JLabel("Total Cost:");
+        lblTotalCost.setBounds(45, 490, 200, 40);
+        lblTotalCost.setFont(new Font("Helvetica", Font.PLAIN, 18));
+        add(lblTotalCost);
         
         JLabel lblpeso = new JLabel("₱");
         lblpeso.setBounds(205, 485, 200, 40);
         lblpeso.setFont(new Font("Raleway", Font.PLAIN, 20));
         add(lblpeso);
         
+        tfTotalCost = new JTextField("0");
+        tfTotalCost.setBounds(220, 495, 150, 25);
+        tfTotalCost.setFont(new Font("Helvetica", Font.PLAIN, 17));
+        tfTotalCost.setBackground(Color.WHITE);
+        tfTotalCost.setForeground(Color.GRAY);
+        tfTotalCost.setEditable(false); 
+        tfTotalCost.setBorder(new LineBorder(Color.decode("#D3A376"), 1));
+        add(tfTotalCost);
+        
+        
+        JLabel lbldeposit = new JLabel("Deposit:");
+        lbldeposit.setBounds(45, 540, 200, 40);
+        lbldeposit.setFont(new Font("Raleway", Font.PLAIN, 18));
+        add(lbldeposit);
+        
+        
+        lblpeso.setBounds(205, 545, 200, 40);
+        lblpeso.setFont(new Font("Raleway", Font.PLAIN, 20));
+        add(lblpeso);
+        
         tfdeposit = new JTextField("Enter Amount");
-        tfdeposit.setBounds(220, 495, 150, 25);
+        tfdeposit.setBounds(220, 545, 150, 25);
         tfdeposit.setFont(new Font("Helvetica", Font.PLAIN, 17)); 
         tfdeposit.setBackground(Color.WHITE); 
         tfdeposit.setForeground(Color.GRAY);
@@ -419,10 +452,6 @@ public class CheckIn extends JFrame implements ActionListener {
         add (availServices);
             String services = null;
         
-        JLabel lblServices = new JLabel("Selected Services: " + services);
-        lblServices.setBounds(45, 525, 400, 30); // Set the position and size
-        lblServices.setFont(new Font("Helvetica", Font.PLAIN, 17));
-        add(lblServices);
         textArea = new JTextArea();
         textArea.setBounds(520, 360, 200, 100);
         textArea.setFont(new Font("Helvetica", Font.PLAIN, 15));
@@ -449,11 +478,65 @@ public class CheckIn extends JFrame implements ActionListener {
         back.addActionListener(this);
         add (back);
         
-        
         setBounds(300, 100, 1200, 800);
         setVisible(true);
         setLocationRelativeTo(null); 
     }
+        
+        public void updateTotalCost() {
+    try {
+        // Fetch the room price
+        String roomNumber = croom.getSelectedItem();
+        Conn conn = new Conn();
+        String query = "SELECT price FROM room WHERE roomnumber = ?";
+        PreparedStatement stmt = conn.c.prepareStatement(query);
+        stmt.setString(1, roomNumber);
+        ResultSet rs = stmt.executeQuery();
+
+        double roomPrice = 0;
+        if (rs.next()) {
+            roomPrice = rs.getDouble("price"); // Fetch the room price
+        }
+
+        // Get the service price
+        double servicePrice = 0;
+        String servicesText = textArea.getText(); 
+        String[] parts = servicesText.split("Total Cost: ");
+
+        if (parts.length > 1) {
+            try {
+                // Parse the Total Cost from the text
+                servicePrice = Double.parseDouble(parts[1].trim());
+                System.out.println("Parsed Service Cost: " + servicePrice);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid number format in Total Cost.");
+            }
+        }
+
+        System.out.println("Service:" + servicePrice);
+        int lengthOfStay = Integer.parseInt(tflength.getText());
+        
+        System.out.println(lengthOfStay);
+        // Calculate the total cost
+        double totalCost = (roomPrice + servicePrice) * lengthOfStay;
+        // Display the total cost in the TextField
+        tfTotalCost.setText(String.format("%.2f", totalCost));
+
+        double deposit = totalCost * 0.1; // Assuming deposit is 10% of the total cost
+        tfdeposit.setText(String.format("%.2f", deposit));
+
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    }
+}
+
+
+
+        public int getLengthOfStay() {
+        // Return the length of stay value from your form (make sure it's an integer)
+        return Integer.parseInt(tflength.getText());
+    }
+
  
          public void displayServices(String services) {
         textArea.setText(services);  
@@ -583,11 +666,7 @@ public class CheckIn extends JFrame implements ActionListener {
     } else if (ae.getSource() == availServices) {  
         new AvailServices(this);
     } 
-    
-        
 }
-
-
     public static void main(String[] args) {
         new CheckIn();
     }

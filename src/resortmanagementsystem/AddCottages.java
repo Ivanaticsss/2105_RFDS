@@ -85,37 +85,46 @@ public class AddCottages extends JFrame implements ActionListener {
     }
     
     public void actionPerformed(ActionEvent ae) {
-        if (ae.getSource() == add) {
-            String cottageNumber = tfCottageNumber.getText();
-            String availability = (String) availablecombo.getSelectedItem();
-            String price = tfPrice.getText();
-            String type = (String) typecombo.getSelectedItem();
-            
-        if (cottageNumber.isEmpty() || price.isEmpty() || availability == null || type == null) {
+    if (ae.getSource() == add) {
+        String cottageNumber = tfCottageNumber.getText();
+        String availability = (String) availablecombo.getSelectedItem();
+        String priceText = tfPrice.getText();
+        String type = (String) typecombo.getSelectedItem();
+
+        // Validate input fields
+        if (cottageNumber.isEmpty() || priceText.isEmpty() || availability == null || type == null) {
             JOptionPane.showMessageDialog(null, "Please fill in all required fields.", "Error", JOptionPane.ERROR_MESSAGE);
             return; // Exit the method if any field is empty
         }
+
+        try {
+            // Parse the price as a double
+            double price = Double.parseDouble(priceText);
+
+            // Establish connection and execute query
+            Conn conn = new Conn();
+            String str = "INSERT INTO cottage (cottageNumber, availability, price, cottage_type) VALUES ('"
+                         + cottageNumber + "', '" + availability + "', " + price + ", '" + type + "')";
             
-            try {
-                Conn conn = new Conn();
-                String str = "insert into cottage values('" + cottageNumber + "', '" + availability + "', '" + price + "', '" + type + "')";
-                
-                conn.s.executeUpdate(str);
-                JOptionPane.showMessageDialog(null, "New Cottage Added Successfully");
-                
-                 // Clear fields for the next entry
-                tfCottageNumber.setText("");
-                tfPrice.setText("");
-                availablecombo.setSelectedIndex(0);
-                typecombo.setSelectedIndex(0);
-                
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            setVisible(false);
+            conn.s.executeUpdate(str);
+            JOptionPane.showMessageDialog(null, "New Cottage Added Successfully");
+
+            // Clear fields for the next entry
+            tfCottageNumber.setText("");
+            tfPrice.setText("");
+            availablecombo.setSelectedIndex(0);
+            typecombo.setSelectedIndex(0);
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Please enter a valid numeric value for price.", "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    } else {
+        setVisible(false);
     }
+}
+
     
     public static void main(String[] args) {
         new AddCottages();

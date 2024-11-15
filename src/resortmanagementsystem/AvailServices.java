@@ -17,6 +17,7 @@ public class AvailServices extends JFrame {
     Choice ccottage;
      private CheckIn checkIn;
     
+    
     AvailServices(CheckIn checkIn) {
         this.checkIn = checkIn;
         getContentPane().setBackground(Color.WHITE);
@@ -34,10 +35,17 @@ public class AvailServices extends JFrame {
         chkCottage.addItemListener(e -> {
         boolean isSelected = (e.getStateChange() == ItemEvent.SELECTED);
         comboCottageType.setEnabled(isSelected);
-        comboCottageNumber.setEnabled(isSelected);  // Enable/disable based on checkbox
+        comboCottageNumber.setEnabled(isSelected);
         tfCottagePrice.setEnabled(isSelected);
-        calculateTotalCost();  // Recalculate total cost when service is selected/deselected
+
+        if (isSelected) {
+            // Automatically update the cottage numbers and price when selected
+            String selectedType = (String) comboCottageType.getSelectedItem();
+            updateCottageNumbers(selectedType); // Load cottage numbers based on selected type
+            calculateTotalCost(); // Recalculate total cost
+        }
     });
+
 
         add(chkCottage);
 
@@ -53,17 +61,19 @@ public class AvailServices extends JFrame {
         comboCottageNumber.setEnabled(false);  // Disabled initially
         add(comboCottageNumber);
         
-        // ActionListener for updating the cottage price
         comboCottageNumber.addActionListener(e -> {
-            String selectedCottage = (String) comboCottageNumber.getSelectedItem();
-            if (selectedCottage != null && !selectedCottage.isEmpty()) {
-                try {
-                    updateCottagePrice(selectedCottage);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+        String selectedCottage = (String) comboCottageNumber.getSelectedItem();
+        if (selectedCottage != null && !selectedCottage.isEmpty()) {
+            try {
+                updateCottagePrice(selectedCottage); 
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
-        });
+        } else {
+            tfCottagePrice.setText("Not Selected");
+        }
+    });
+
 
         // ItemListener for updating the cottage numbers
         comboCottageType.addItemListener(e -> {
@@ -80,7 +90,6 @@ public class AvailServices extends JFrame {
         tfCottagePrice = new JTextField();
         tfCottagePrice.setBounds(420, 60, 150, 30);
         tfCottagePrice.setEnabled(false);
-        tfCottagePrice.setEditable(false); // read-only
         add(tfCottagePrice);
 
         // Checkbox for Pool
@@ -92,6 +101,7 @@ public class AvailServices extends JFrame {
             chkKiddie.setEnabled(isSelected);
             chkAdult.setEnabled(isSelected);
             chkInfinity.setEnabled(isSelected);
+            tfPoolPrice.setEnabled(isSelected);
             calculateTotalCost();  // Recalculate total cost when service is selected/deselected
         });
         add(chkPool);
@@ -218,6 +228,7 @@ public class AvailServices extends JFrame {
     private void confirmAction(){
    
     StringBuilder services = new StringBuilder();
+    checkIn.updateTotalCost();
 
     // Cottage
     if (chkCottage.isSelected()) {
@@ -255,6 +266,7 @@ public class AvailServices extends JFrame {
     services.append("Total Cost: ").append(tfServicesCost.getText());
 
     checkIn.displayServices(services.toString()); 
+    
 
     setVisible(false);
 }
@@ -262,6 +274,7 @@ public class AvailServices extends JFrame {
     
     
     private void cancelAction(){
+        
         setVisible(false);
         
     }
@@ -275,7 +288,7 @@ public class AvailServices extends JFrame {
         tfTourPrice.setText("");
         tfServicesCost.setText("");
         comboCottageType.setSelectedIndex(0);
-        comboCottageNumber.setSelectedIndex(0); // Reset to default
+        comboCottageNumber.setSelectedIndex(-1); 
         // Resetting checkboxes 
         chkCottage.setSelected(false);
         chkPool.setSelected(false);
@@ -288,31 +301,26 @@ public class AvailServices extends JFrame {
     }
 
        private void updateCottagePrice(String cottageNumber) {
-        System.out.println("Updating details for cottage number: " + cottageNumber); // Debugging: Check if the method is called with the correct room number
-        try {
-            Conn conn = new Conn();
-            String query = "SELECT price FROM cottage WHERE cottagenumber = ?";
-            PreparedStatement stmt = conn.c.prepareStatement(query);
-            stmt.setString(1, cottageNumber);
-            ResultSet rs = stmt.executeQuery();
+            try {
+                Conn conn = new Conn();
+                String query = "SELECT price FROM cottage WHERE cottagenumber = ?";
+                PreparedStatement stmt = conn.c.prepareStatement(query);
+                stmt.setString(1, cottageNumber);
+                ResultSet rs = stmt.executeQuery();
 
-            if (rs.next()) {
-                String price = rs.getString("price");
-
-                System.out.println("Price: " + price);
-
-              
-                tfCottagePrice.setText(price);
-            } else {
-                // Clear the fields if no room is found
-                 System.out.println("Cottage not found, updating text fields...");
-                tfCottagePrice.setText("Not Found");
+                if (rs.next()) {
+                    double price = rs.getDouble("price"); // Fetch as double
+                    tfCottagePrice.setText(String.format("%.2f", price)); // Display with 2 decimal places
+                } else {
+                    tfCottagePrice.setText("0.0"); // Default to zero if no cottage is found
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                tfCottagePrice.setText("Error");
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
         }
-    }
-        private void updateCottageNumbers(String roomType) {
+       
+ private void updateCottageNumbers(String roomType) {
         comboCottageNumber.removeAllItems();  
 
         try {
@@ -339,54 +347,52 @@ public class AvailServices extends JFrame {
 
 
     private void calculateTotalCost() {
-    double totalCost = 0.0;
-
-    // Cottage price
-    if (chkCottage.isSelected()) {
-        totalCost += Double.parseDouble(tfCottagePrice.getText());  // Add cottage price
-        
+         double totalCost = 0.0;
+            
+         if (chkCottage.isSelected()) {
+        double cottagePrice = Double.parseDouble(tfCottagePrice.getText().isEmpty() ? "0.0" : tfCottagePrice.getText());
+        totalCost += cottagePrice;
     }
-    
-    // Pool price logic
-    double poolPrice = 0.0;
-    if (chkPool.isSelected()) {
+            // Pool price logic
+            if (chkPool.isSelected()) {
         if (chkKiddie.isSelected()) {
-            poolPrice = 200;  // Kiddie pool price
-        } else if (chkAdult.isSelected()) {
-            poolPrice = 500;  // Adult pool price
-        } else if (chkInfinity.isSelected()) {
-            poolPrice = 1500;  // Infinity pool price
+            tfPoolPrice.setText("200.00");
+            totalCost += Double.parseDouble(tfPoolPrice.getText());
+        }
+        if (chkAdult.isSelected()) {
+            tfPoolPrice.setText("500.00");
+            totalCost += Double.parseDouble(tfPoolPrice.getText());
+        }
+        if (chkInfinity.isSelected()) {
+            tfPoolPrice.setText("1500.00");
+            totalCost += Double.parseDouble(tfPoolPrice.getText());
         }
     }
-    tfPoolPrice.setText(String.format("%.2f", poolPrice));  // Display the pool price
 
-    totalCost += poolPrice;  // Add pool price to total cost
+            // Spa price
+            if (chkSpa.isSelected()) {
+                tfSpaPrice.setText("5000.00");  // Display spa price
+                totalCost += Double.parseDouble(tfSpaPrice.getText());
+            }
 
-    // Spa price
-    if (chkSpa.isSelected()) {
-        totalCost += 5000.00;  // Spa price
-        tfSpaPrice.setText("5000.00");  // Display spa price
-    }
+            // Buffet price
+            if (chkResto.isSelected()) {
+                
+                tfRestoPrice.setText("8000.00");  // Display buffet price
+                totalCost += Double.parseDouble(tfRestoPrice.getText());
+            }
 
-    // Buffet price
-    if (chkResto.isSelected()) {
-        totalCost += 8000.00;  // Buffet price
-        tfRestoPrice.setText("8000.00");  // Display buffet price
-    }
+            // Tour price
+            if (chkTour.isSelected()) {
+                totalCost += 2000.00;  // Tour price
+                tfTourPrice.setText("2000.00");  // Display tour price
+            }
 
-    // Tour price
-    if (chkTour.isSelected()) {
-        totalCost += 2000.00;  // Tour price
-        tfTourPrice.setText("2000.00");  // Display tour price
-    }
+            // Update total cost field
+            tfServicesCost.setText(String.format("%.2f", totalCost));  // Update the total cost field
+        }
+        
 
-    // Update total cost field
-    tfServicesCost.setText(String.format("%.2f", totalCost));  // Update the total cost field
-}
-
-    
-
-    
     public static void main(String[] args) {
     CheckIn checkIn = new CheckIn(); 
     new AvailServices(checkIn);     
