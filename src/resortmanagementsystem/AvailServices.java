@@ -16,10 +16,12 @@ public class AvailServices extends JFrame {
     JButton add, back, chooseCottage;
     Choice ccottage;
      private CheckIn checkIn;
+     private int guestID; 
     
     
-    AvailServices(CheckIn checkIn) {
+    AvailServices(CheckIn checkIn, int guestID) {
         this.checkIn = checkIn;
+        this.guestID = guestID;
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);  // Using null layout for custom positioning
         
@@ -225,51 +227,120 @@ public class AvailServices extends JFrame {
    
     }
     
-    private void confirmAction(){
-   
+  private void confirmAction() {
     StringBuilder services = new StringBuilder();
-    checkIn.updateTotalCost();
+    double totalCost = 0.0;  
+    double deposit = 0.0;    
+
+    checkIn.updateTotalCost(); // Ensure this updates totalCost appropriately
 
     // Cottage
     if (chkCottage.isSelected()) {
         services.append("Cottage Type: ").append(comboCottageType.getSelectedItem()).append(", ");
         services.append("Cottage Number: ").append(comboCottageNumber.getSelectedItem()).append("\n");
+        totalCost += getCottagePrice(comboCottageType.getSelectedItem().toString());
     }
 
     // Pool
     if (chkPool.isSelected()) {
-        if (chkKiddie.isSelected()) {
-            services.append("Pool: Kiddie\n");
-        } else if (chkAdult.isSelected()) {
-            services.append("Pool: Adult\n");
-        } else if (chkInfinity.isSelected()) {
-            services.append("Pool: Infinity\n");
-        }
+        String poolType = chkKiddie.isSelected() ? "Kiddie" : (chkAdult.isSelected() ? "Adult" : "Infinity");
+        services.append("Pool: ").append(poolType).append("\n");
+        totalCost += getPoolPrice(); 
     }
 
     // Spa
     if (chkSpa.isSelected()) {
         services.append("Spa: Yes\n");
+        totalCost += getSpaPrice(); 
     }
 
     // Buffet
     if (chkResto.isSelected()) {
         services.append("Buffet: Yes\n");
+        totalCost += getBuffetPrice(); 
     }
 
     // Tour
     if (chkTour.isSelected()) {
         services.append("Tour: Yes\n");
+        totalCost += getTourPrice(); 
     }
 
-    // Total Price
-    services.append("Total Cost: ").append(tfServicesCost.getText());
 
-    checkIn.displayServices(services.toString()); 
-    
+    // Append the total cost and deposit
+    services.append("Total Cost: ").append(totalCost).append("\n");
+    services.append("Deposit: ").append(deposit).append("\n");
 
-    setVisible(false);
+    try {
+        Conn conn = new Conn();
+        
+        // Insert services into the services table
+        String query = "INSERT INTO services (guestID, serviceName, price) VALUES (?, ?, ?)";
+        PreparedStatement stmt = conn.c.prepareStatement(query);
+
+        // Cottage
+        if (chkCottage.isSelected()) {
+            stmt.setInt(1, guestID);  
+            stmt.setString(2, "Cottage Type: " + comboCottageType.getSelectedItem() + ", Cottage Number: " + comboCottageNumber.getSelectedItem());
+            stmt.setDouble(3, getCottagePrice(comboCottageType.getSelectedItem().toString()));
+            stmt.executeUpdate();
+        }
+
+        // Pool
+        if (chkPool.isSelected()) {
+            String poolType = chkKiddie.isSelected() ? "Kiddie" : (chkAdult.isSelected() ? "Adult" : "Infinity");
+            stmt.setInt(1, guestID);  
+            stmt.setString(2, "Pool: " + poolType);
+            stmt.setDouble(3, getPoolPrice()); 
+            stmt.executeUpdate();
+        }
+
+        // Spa
+        if (chkSpa.isSelected()) {
+            stmt.setInt(1, guestID);  
+            stmt.setString(2, "Spa: Yes");
+            stmt.setDouble(3, getSpaPrice()); 
+            stmt.executeUpdate();
+        }
+
+        // Buffet
+        if (chkResto.isSelected()) {
+            stmt.setInt(1, guestID);  
+            stmt.setString(2, "Buffet: Yes");
+            stmt.setDouble(3, getBuffetPrice()); 
+            stmt.executeUpdate();
+        }
+
+        // Tour
+        if (chkTour.isSelected()) {
+            stmt.setInt(1, guestID); 
+            stmt.setString(2, "Tour: Yes");
+            stmt.setDouble(3, getTourPrice()); 
+            stmt.executeUpdate();
+        }
+
+        // Update guest total cost and deposit
+        String guestQuery = "UPDATE guest SET totalCost = ?, deposit = ? WHERE guestID = ?";
+        PreparedStatement guestStmt = conn.c.prepareStatement(guestQuery);
+        guestStmt.setDouble(1, totalCost);
+        guestStmt.setDouble(2, deposit);
+        guestStmt.setInt(3, guestID); // Use the guestID to update the correct record
+
+        guestStmt.executeUpdate();
+
+        JOptionPane.showMessageDialog(this, "Services and guest details successfully updated!");
+
+        // Optionally display the updated services in CheckIn class
+        checkIn.displayServices(services.toString());
+
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(this, "An error occurred while saving the data.");
+    }
+
+    setVisible(false); // Close the AvailServices window
 }
+
 
     
     
@@ -344,6 +415,58 @@ public class AvailServices extends JFrame {
             ex.printStackTrace();
         }
  }
+ 
+        private double getCottagePrice(String cottageType) {
+            double price = 0.0;
+            if (cottageType == null || cottageType.isEmpty()) {
+                return 0.0; // Return a default price or handle error
+            }
+            try {
+                Conn conn = new Conn();
+              
+                String query = "SELECT price FROM cottage WHERE cottage_type = ?"; 
+                PreparedStatement stmt = conn.c.prepareStatement(query);
+                stmt.setString(1, cottageType);  
+                ResultSet rs = stmt.executeQuery();
+
+                if (rs.next()) {
+                    price = rs.getDouble("price"); 
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return price;
+        }
+        
+                private double getPoolPrice() {
+            double price = 0.0;
+
+            if (chkKiddie.isSelected()) {
+                price += 200.00; 
+            }
+            if (chkAdult.isSelected()) {
+                price += 500.00; 
+            }
+            if (chkInfinity.isSelected()) {
+                price += 1500.00; 
+            }
+
+            return price;
+        }
+           
+                
+          private double getSpaPrice() {
+                return 500.0; 
+            }
+
+          private double getTourPrice() {
+            return 2000.0; // Example fixed price for tour service
+        }
+          private double getBuffetPrice() {
+            return 8000.0; // Example fixed price for tour service
+        }
+
+
 
 
     private void calculateTotalCost() {
@@ -353,49 +476,44 @@ public class AvailServices extends JFrame {
         double cottagePrice = Double.parseDouble(tfCottagePrice.getText().isEmpty() ? "0.0" : tfCottagePrice.getText());
         totalCost += cottagePrice;
     }
-            // Pool price logic
-            if (chkPool.isSelected()) {
-        if (chkKiddie.isSelected()) {
-            tfPoolPrice.setText("200.00");
-            totalCost += Double.parseDouble(tfPoolPrice.getText());
-        }
-        if (chkAdult.isSelected()) {
-            tfPoolPrice.setText("500.00");
-            totalCost += Double.parseDouble(tfPoolPrice.getText());
-        }
-        if (chkInfinity.isSelected()) {
-            tfPoolPrice.setText("1500.00");
-            totalCost += Double.parseDouble(tfPoolPrice.getText());
-        }
+
+    // Pool price logic (add prices for all selected pool types)
+    if (chkPool.isSelected()) {
+        double poolPrice = getPoolPrice(); // Total price for selected pool types
+        tfPoolPrice.setText(String.format("%.2f", poolPrice));
+        totalCost += poolPrice;
     }
 
             // Spa price
-            if (chkSpa.isSelected()) {
-                tfSpaPrice.setText("5000.00");  // Display spa price
-                totalCost += Double.parseDouble(tfSpaPrice.getText());
-            }
+       if (chkSpa.isSelected()) {
+        double spaPrice = getSpaPrice();  
+        tfSpaPrice.setText(String.format("%.2f", spaPrice));  
+        totalCost += spaPrice;
+    }
 
             // Buffet price
-            if (chkResto.isSelected()) {
-                
-                tfRestoPrice.setText("8000.00");  // Display buffet price
-                totalCost += Double.parseDouble(tfRestoPrice.getText());
-            }
+        if (chkResto.isSelected()) {
+        double buffetPrice = getBuffetPrice(); // Get buffet price
+        tfRestoPrice.setText(String.format("%.2f", buffetPrice));  // Display buffet price
+        totalCost += buffetPrice;
+    }
 
             // Tour price
-            if (chkTour.isSelected()) {
-                totalCost += 2000.00;  // Tour price
-                tfTourPrice.setText("2000.00");  // Display tour price
-            }
-
-            // Update total cost field
-            tfServicesCost.setText(String.format("%.2f", totalCost));  // Update the total cost field
-        }
+        if (chkTour.isSelected()) {
+        double tourPrice = getTourPrice(); // Get tour price
+        tfTourPrice.setText(String.format("%.2f", tourPrice));  // Display tour price
+        totalCost += tourPrice;
+    }
+        
+        tfServicesCost.setText(String.format("%.2f", totalCost)); 
+    }
+    
         
 
     public static void main(String[] args) {
-    CheckIn checkIn = new CheckIn(); 
-    new AvailServices(checkIn);     
+        CheckIn checkIn = new CheckIn(); 
+        int guestID = checkIn.getGuestID(); 
+        new AvailServices(checkIn, guestID);     
 
     }
 }

@@ -20,18 +20,19 @@ import javax.swing.border.LineBorder;
 
 public class CheckIn extends JFrame implements ActionListener {
         
-        private JComboBox<String> comboid, comboCottageType, comboCottageNumber, comboPoolSizes;
+        private JComboBox<String> comboid, comboPayment;
         private JTextField  tfname, tfdeposit, tfaddress, tfnumber,tfFacilities, tfBedType, tfPrice, tflength,
-                tfcountry, tfTotalCost, tfServicesCost;
+                tfcountry, tfTotalCost, tfServicesCost, tfchange;
          
         private JCheckBox checkboxPoolSize;
         private JRadioButton rmale, rfemale, rStandard, rVIP, rVVIP;
         private Choice croom;
-        private JLabel checkintime, lblGuestID;
+        private JLabel checkintime, lblGuestID, lblDepositRange;
         private JButton add, back, chooseCottage, availServices;
         private JTextArea textArea;
         double roomPrice; 
         int serviceCost; 
+        private int guestID;
         
         private void fetchNextGuestID() {
     try {
@@ -49,6 +50,12 @@ public class CheckIn extends JFrame implements ActionListener {
         e.printStackTrace();
         lblGuestID.setText("Guest ID not available");
     }
+    
+    // Fetch the integer part from the label text
+    String guestIDText = lblGuestID.getText();
+    
+    guestID = Integer.parseInt(guestIDText.replaceAll("[^0-9]", ""));
+    System.out.println("Next Guest ID: " + guestID);
 }
         
         CheckIn() {
@@ -311,7 +318,7 @@ public class CheckIn extends JFrame implements ActionListener {
             });
         
         
-        JLabel lblDays = new JLabel("days");
+        JLabel lblDays = new JLabel("day/s");
         lblDays.setBounds(250, 440, 200, 30);
         lblDays.setFont(new Font("Helvetica", Font.PLAIN, 17));
         add(lblDays);
@@ -322,10 +329,10 @@ public class CheckIn extends JFrame implements ActionListener {
         lblTotalCost.setFont(new Font("Helvetica", Font.PLAIN, 18));
         add(lblTotalCost);
         
-        JLabel lblpeso = new JLabel("₱");
-        lblpeso.setBounds(205, 485, 200, 40);
-        lblpeso.setFont(new Font("Raleway", Font.PLAIN, 20));
-        add(lblpeso);
+        JLabel lblPesoTotalCost = new JLabel("₱"); 
+        lblPesoTotalCost.setBounds(200, 485, 20, 40);
+        lblPesoTotalCost.setFont(new Font("Raleway", Font.PLAIN, 20));
+        add(lblPesoTotalCost);
         
         tfTotalCost = new JTextField("0");
         tfTotalCost.setBounds(220, 495, 150, 25);
@@ -343,15 +350,17 @@ public class CheckIn extends JFrame implements ActionListener {
         add(lbldeposit);
         
         
-        lblpeso.setBounds(205, 545, 200, 40);
-        lblpeso.setFont(new Font("Raleway", Font.PLAIN, 20));
-        add(lblpeso);
+        JLabel lblPesoDeposit = new JLabel("₱"); // Separate JLabel for Deposit peso sign
+        lblPesoDeposit.setBounds(200, 535, 20, 40);
+        lblPesoDeposit.setFont(new Font("Raleway", Font.PLAIN, 20));
+        add(lblPesoDeposit);
         
         tfdeposit = new JTextField("Enter Amount");
         tfdeposit.setBounds(220, 545, 150, 25);
         tfdeposit.setFont(new Font("Helvetica", Font.PLAIN, 17)); 
         tfdeposit.setBackground(Color.WHITE); 
         tfdeposit.setForeground(Color.GRAY);
+        tfdeposit.setEditable(true);
         tfdeposit.setBorder(new LineBorder(Color.decode("#D3A376"), 1));
         
         
@@ -374,6 +383,39 @@ public class CheckIn extends JFrame implements ActionListener {
         });
         
         add(tfdeposit);
+        tfdeposit.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                updateTotalCost(); // Trigger total cost and change calculation
+            }
+        });
+
+        
+        // Label to display the deposit range
+        lblDepositRange = new JLabel("Range: ₱0.00 - ₱0.00");
+        lblDepositRange.setBounds(200, 570, 250, 25); // Adjust position as needed
+        lblDepositRange.setFont(new Font("Helvetica", Font.PLAIN, 14));
+        lblDepositRange.setForeground(Color.DARK_GRAY);
+        add(lblDepositRange);
+        
+        JLabel lblchange = new JLabel("Change:");
+        lblchange.setBounds(45, 585, 200, 40);
+        lblchange.setFont(new Font("Raleway", Font.PLAIN, 18));
+        add(lblchange);
+        
+        
+        JLabel lblPesoChange = new JLabel("₱"); // Separate JLabel for Deposit peso sign
+        lblPesoChange.setBounds(200, 585, 20, 40);
+        lblPesoChange.setFont(new Font("Raleway", Font.PLAIN, 20));
+        add(lblPesoChange);
+        
+        tfchange = new JTextField("Enter Amount");
+        tfchange.setBounds(220, 595, 150, 25);
+        tfchange.setFont(new Font("Helvetica", Font.PLAIN, 17)); 
+        tfchange.setBackground(Color.WHITE); 
+        tfchange.setForeground(Color.GRAY);
+        tfchange.setBorder(new LineBorder(Color.decode("#D3A376"), 1));
+        add(tfchange);
         
         //===Second Column===//
         //ID input
@@ -393,10 +435,10 @@ public class CheckIn extends JFrame implements ActionListener {
         add(comboid);
         
         //SEX input
-        JLabel lblgender = new JLabel("Sex");
-        lblgender.setBounds(450, 190, 300, 30);
-        lblgender.setFont(new Font("Helvetica", Font.PLAIN, 18));
-        add(lblgender);
+        JLabel lblsex = new JLabel("Sex");
+        lblsex.setBounds(450, 190, 300, 30);
+        lblsex.setFont(new Font("Helvetica", Font.PLAIN, 18));
+        add(lblsex);
         
         rmale = new JRadioButton("Male");
         rmale.setBackground(Color.WHITE);
@@ -463,6 +505,22 @@ public class CheckIn extends JFrame implements ActionListener {
         scrollPane.setBounds(520,360, 200, 100);
         add(scrollPane);
         
+        JLabel lblpaymentMethod = new JLabel("Payment Method");
+        lblpaymentMethod.setBounds(400, 545, 150, 25);
+        lblpaymentMethod.setFont(new Font("HELVETICA", Font.PLAIN, 17));
+        add(lblpaymentMethod);
+        
+        String paymentOptions[] = {"Cash", "Credit Card (VISA, Mastercard, etc.)", "Debit Card", "E-Wallet"};
+        comboPayment = new JComboBox<>(paymentOptions);
+        comboPayment.setBounds(530, 545, 200, 25);
+        comboPayment.setBackground(Color.WHITE);
+        comboPayment.setFont(new Font("HELVETICA", Font.PLAIN, 15));
+        Border paymentBorder = BorderFactory.createLineBorder(Color.decode("#D3A376"), 2);  // Change 'Color.BLUE' to your desired color
+        comboPayment.setBorder(paymentBorder);
+        add(comboPayment);
+        
+        
+        
         
         add = new JButton ("Add");
         add.setBackground(Color.BLACK);
@@ -505,7 +563,7 @@ public class CheckIn extends JFrame implements ActionListener {
 
         if (parts.length > 1) {
             try {
-                // Parse the Total Cost from the text
+                
                 servicePrice = Double.parseDouble(parts[1].trim());
                 System.out.println("Parsed Service Cost: " + servicePrice);
             } catch (NumberFormatException e) {
@@ -519,11 +577,28 @@ public class CheckIn extends JFrame implements ActionListener {
         System.out.println(lengthOfStay);
         // Calculate the total cost
         double totalCost = (roomPrice + servicePrice) * lengthOfStay;
-        // Display the total cost in the TextField
         tfTotalCost.setText(String.format("%.2f", totalCost));
 
-        double deposit = totalCost * 0.1; // Assuming deposit is 10% of the total cost
-        tfdeposit.setText(String.format("%.2f", deposit));
+        double minDeposit = totalCost * 0.1; // 10% minimum deposit
+        double maxDeposit = totalCost;  //maximum deposit
+        // Update deposit range label
+        lblDepositRange.setText(String.format("Range: ₱%.2f - ₱%.2f", minDeposit, maxDeposit));
+        double depositAmount = 0;
+        try {
+            depositAmount = Double.parseDouble(tfdeposit.getText().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid deposit amount.");
+        }
+
+        double change = 0;
+        if (depositAmount > totalCost) {
+            change = depositAmount - totalCost;
+        }
+
+        
+        tfchange.setText(String.format("%.2f", change));
+        tfchange.setForeground(change > 0 ? Color.BLACK : Color.GRAY);
+
 
     } catch (Exception ex) {
         ex.printStackTrace();
@@ -605,38 +680,56 @@ public class CheckIn extends JFrame implements ActionListener {
                 ex.printStackTrace();
             }
         }
-
+        public int getGuestID() {
+                return guestID;
+            }
         
-       public void actionPerformed(ActionEvent ae) {
-    if (ae.getSource() == add) {
+      public void actionPerformed(ActionEvent ae) {
+    if (ae.getSource() == availServices) {
         String name = tfname.getText();
-        
-        String id = (String) comboid.getSelectedItem();
-        String gender = rmale.isSelected() ? "Male" : "Female";
-        String room = croom.getSelectedItem();
-        String deposit = tfdeposit.getText();
+        String address = tfaddress.getText();  
+        String number = tfnumber.getText();    
+        String id = (String) comboid.getSelectedItem();  
+        String sex = rmale.isSelected() ? "Male" : "Female"; 
+        String room = croom.getSelectedItem();  
+        String country = tfcountry.getText();   
+        String deposit = tfdeposit.getText();  
+        String paymentMethod = (String)comboPayment.getSelectedItem();  
+        String totalCost = tfTotalCost.getText();  
 
         try {
             // Format the current date and time
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String time = formatter.format(new Date()); 
+            String time = formatter.format(new Date());  // Get current time
 
-            String query = "INSERT INTO guest (name, document, gender, room, checkintime, deposit) VALUES (?, ?, ?, ?, ?, ?)";
+            // Query to insert the new guest into the guest table
+            String query = "INSERT INTO guest (name, address, number, document, sex, country, room, checkInTime, totalCost, deposit, paymentMethod) " +
+                           "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+            // Query to update the room availability
             String query2 = "UPDATE room SET availability = 'Occupied' WHERE roomnumber = ?";
 
+            guestID = Integer.parseInt(id);  // Assuming guestID is obtained and stored
+            //guestDetails = new Guest(name, address, number, id, sex, room, country, deposit, paymentMethod, totalCost); // You can create a Guest object for this
+            // Establish connection
             Conn conn = new Conn();
-            
-            PreparedStatement stmt = conn.c.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
+            // Prepare the statement for guest insertion
+            PreparedStatement stmt = conn.c.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, name);
-            //stmt.setString(2, number);
-            stmt.setString(2, id);
-            stmt.setString(3, gender);
-            stmt.setString(4, room);
-            stmt.setString(5, time); // Use formatted time here
-            stmt.setBigDecimal(6, new BigDecimal(deposit));
+            stmt.setString(2, address);
+            stmt.setString(3, number);
+            stmt.setString(4, id);
+            stmt.setString(5, sex);
+            stmt.setString(6, country);
+            stmt.setString(7, room);
+            stmt.setString(8, time);  // Use formatted time here
+            stmt.setBigDecimal(9, new BigDecimal(totalCost));  // Total cost
+            stmt.setBigDecimal(10, new BigDecimal(deposit));  // Deposit amount
+            stmt.setString(11, paymentMethod);  // Payment method
             stmt.executeUpdate();
-            
+
+            // Retrieve the generated guest ID
             ResultSet generatedKeys = stmt.getGeneratedKeys();
             if (generatedKeys.next()) {
                 int guestID = generatedKeys.getInt(1);
@@ -644,14 +737,16 @@ public class CheckIn extends JFrame implements ActionListener {
             } else {
                 lblGuestID.setText("Guest ID not available");
             }
-            
-            // Prepare the second statement for updating room availability
+
+            // Prepare the statement to update room availability
             PreparedStatement stmt2 = conn.c.prepareStatement(query2);
             stmt2.setString(1, room);
             stmt2.executeUpdate();
 
+            // Show success message
             JOptionPane.showMessageDialog(null, "New Customer Added Successfully!");
 
+            // Close current window and open Reception
             setVisible(false);
             new Reception();
 
@@ -659,14 +754,15 @@ public class CheckIn extends JFrame implements ActionListener {
             e.printStackTrace();
         }
     } else if (ae.getSource() == chooseCottage) {
-        //new SearchCottages(this);
+        // new SearchCottages(this);
     } else if (ae.getSource() == back) {
         setVisible(false);
         new Reception();
-    } else if (ae.getSource() == availServices) {  
-        new AvailServices(this);
-    } 
+    } else if (ae.getSource() == availServices) {
+        new AvailServices(this, guestID);
+    }
 }
+
     public static void main(String[] args) {
         new CheckIn();
     }
