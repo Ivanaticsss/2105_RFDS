@@ -20,15 +20,19 @@ import javax.swing.border.LineBorder;
 
 public class CheckIn extends JFrame implements ActionListener {
         
-        JComboBox<String> comboid, comboCottageType, comboCottageNumber, comboPoolSizes;
-        JTextField tfCottage, tfname, tfdeposit, tfaddress, tfnumber,tfFacilities, tfBedType, tfPrice, tflength,
+        private JComboBox<String> comboid, comboCottageType, comboCottageNumber, comboPoolSizes;
+        private JTextField tfCottage, tfname, tfdeposit, tfaddress, tfnumber,tfFacilities, tfBedType, tfPrice, tflength,
                 tfcountry, tfCottagePrice, tfPoolPrice, tfSpaPrice, tfRestoPrice, tfTourPrice, tfServicesCost;
          
-        JCheckBox checkboxPoolSize;
-        JRadioButton rmale, rfemale, rStandard, rVIP, rVVIP;
-        Choice croom;
-        JLabel checkintime, lblGuestID;
-        JButton add, back, chooseCottage;
+        private JCheckBox checkboxPoolSize;
+        private JRadioButton rmale, rfemale, rStandard, rVIP, rVVIP;
+        private Choice croom;
+        private JLabel checkintime, lblGuestID;
+        private JButton add, back, chooseCottage, availServices;
+        private JTextArea textArea;
+        
+      
+
         
         private void fetchNextGuestID() {
     try {
@@ -49,11 +53,8 @@ public class CheckIn extends JFrame implements ActionListener {
 }
         
         CheckIn() {
-        /*ImageIcon backgroundIcon = new ImageIcon(ClassLoader.getSystemResource("icons/formbg.jpg"));
-        JLabel background = new JLabel(backgroundIcon);
-        background.setBounds(0, 0, 800, 550);
-            
-        setContentPane(background); */
+       
+        
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
         
@@ -281,6 +282,7 @@ public class CheckIn extends JFrame implements ActionListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        
 
        
         JLabel lblLength = new JLabel("Length of Stay:");
@@ -408,143 +410,29 @@ public class CheckIn extends JFrame implements ActionListener {
         checkintime.setFont(new Font("Helvetica", Font.BOLD, 17));
         add(checkintime);
         
-        JLabel lblServices = new JLabel("Avail Services: ");
-        lblServices.setBounds(500, 300, 150, 60);
-        lblServices.setFont(new Font("Helvetica", Font.PLAIN, 18));
-        add(lblServices);
-
-        // Checkbox for Cottage
-        JCheckBox chkCottage = new JCheckBox("Cottage");
-        chkCottage.setBounds(500, 360, 100, 30);
-        chkCottage.setFont(new Font("Helvetica", Font.PLAIN, 16));
-        chkCottage.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-               
-                boolean isSelected = (e.getStateChange() == ItemEvent.SELECTED);
-                comboCottageType.setEnabled(isSelected);
-                comboCottageNumber.setEnabled(isSelected);
-                tfCottagePrice.setEnabled(isSelected);
-            }
-        });
-        add(chkCottage);
-
+        availServices = new JButton ("Avail Services");
+        availServices.setBackground(Color.decode("#D3A376"));
+        availServices.setForeground(Color.WHITE);
+        availServices.setFont(new Font("Helvetica", Font.BOLD, 18));
+        availServices.setBounds (520, 320, 200, 40);
+        availServices.addActionListener(this);
+        add (availServices);
+            String services = null;
         
-        // Checkbox for Pool
-        JCheckBox chkPool = new JCheckBox("Pool");
-        chkPool.setBounds(500, 400, 100, 30);
-        chkPool.setFont(new Font("Helvetica", Font.PLAIN, 16));
-        chkPool.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                // Enable/Disable Pool related fields based on checkbox
-                boolean isSelected = (e.getStateChange() == ItemEvent.SELECTED);
-                checkboxPoolSize.setEnabled(isSelected);
-                tfPoolPrice.setEnabled(isSelected);
-            }
-        });
-        add(chkPool);
-
-        // Checkbox for Spa Service
-        JCheckBox chkSpa = new JCheckBox("Spa");
-        chkSpa.setBounds(500, 440, 100, 30);
-        chkSpa.setFont(new Font("Helvetica", Font.PLAIN, 16));
-        chkSpa.addItemListener((ItemEvent e) -> {
-            // Enable/Disable Spa price field based on checkbox
-            boolean isSelected = (e.getStateChange() == ItemEvent.SELECTED);
-            tfSpaPrice.setEnabled(isSelected);
-        });
-        add(chkSpa);
-
-        // Checkbox for Restaurant Service
-        JCheckBox chkResto = new JCheckBox("Restaurant");
-        chkResto.setBounds(500, 480, 120, 30);
-        chkResto.setFont(new Font("Helvetica", Font.PLAIN, 16));
-        chkResto.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                // Enable/Disable Resto price field based on checkbox
-                boolean isSelected = (e.getStateChange() == ItemEvent.SELECTED);
-                tfRestoPrice.setEnabled(isSelected);
-            }
-        });
-        add(chkResto);
-
-        // Checkbox for Tour Service
-        JCheckBox chkTour = new JCheckBox("Tour");
-        chkTour.setBounds(500, 520, 100, 30);
-        chkTour.setFont(new Font("Helvetica", Font.PLAIN, 16));
-        chkTour.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                // Enable/Disable Tour price field based on checkbox
-                boolean isSelected = (e.getStateChange() == ItemEvent.SELECTED);
-                tfTourPrice.setEnabled(isSelected);
-            }
-        });
-        add(chkTour);
-
-        // ComboBox for Cottage Type (Initially disabled)
-        String[] cottageTypes = {"Standard", "VIP", "VVIP"};
-        JComboBox<String> comboCottageType = new JComboBox<>(cottageTypes);
-        comboCottageType.setBounds(650, 360, 150, 30);
-        comboCottageType.setEnabled(false);  // Disabled by default
-        add(comboCottageType);
-
-        // ComboBox for Cottage Number (Initially disabled)
-        String[] cottageNumbers = {"1", "2", "3", "4", "5"};
-        JComboBox<String> comboCottageNumber = new JComboBox<>(cottageNumbers);
-        comboCottageNumber.setBounds(810, 360, 150, 30);
-        comboCottageNumber.setEnabled(false);  // Disabled by default
-        add(comboCottageNumber);
-
-        // TextField for Cottage Price (Initially disabled)
-        JTextField textFieldCottagePrice = new JTextField();
-        textFieldCottagePrice.setBounds(970, 360, 150, 30);
-        textFieldCottagePrice.setEnabled(false);  // Disabled by default
-        add(textFieldCottagePrice);
-
-        // Checkbox for Pool Sizes (Initially disabled)
-        String[] poolSizes =  {"Kiddie", "Adult", "Infinity"};
-        JComboBox<String> comboPoolSizes = new JComboBox<>(poolSizes);
-        comboPoolSizes.setBounds(650, 400, 150, 30);
-        comboPoolSizes.setEnabled(false);  // Disabled by default
-        add(comboPoolSizes);
-
-        // TextField for Pool Price (Initially disabled)
-        JTextField textFieldPoolPrice = new JTextField();
-        textFieldPoolPrice.setBounds(810, 400, 150, 30);
-        textFieldPoolPrice.setEnabled(false);  // Disabled by default
-        add(textFieldPoolPrice);
-
-        // TextField for Spa Price (Initially disabled)
-        JTextField textFieldSpaPrice = new JTextField();
-        textFieldSpaPrice.setBounds(650, 440, 150, 30);
-        textFieldSpaPrice.setEnabled(false);  // Disabled by default
-        add(textFieldSpaPrice);
-
-        // TextField for Restaurant Price (Initially disabled)
-        JTextField textFieldRestoPrice = new JTextField();
-        textFieldRestoPrice.setBounds(650, 480, 150, 30);
-        textFieldRestoPrice.setEnabled(false);  // Disabled by default
-        add(textFieldRestoPrice);
-
-        // TextField for Tour Price (Initially disabled)
-        JTextField textFieldTourPrice = new JTextField();
-        textFieldTourPrice.setBounds(650, 520, 150, 30);
-        textFieldTourPrice.setEnabled(false);  // Disabled by default
-        add(textFieldTourPrice);
-
-        JLabel lblServicesCost = new JLabel("Total: ");
-        lblServicesCost.setBounds(550, 570, 200, 30);
-        lblServicesCost.setFont(new Font("Helvetica", Font.PLAIN, 17));
-        add(lblServicesCost);
-
-        tfServicesCost = new JTextField();
-        tfServicesCost.setBounds(650, 570, 150, 25);
-        tfServicesCost.setEditable(true); 
-        tfServicesCost.setFont(new Font("Helvetica", Font.PLAIN, 17)); 
-        tfServicesCost.setBackground(Color.WHITE); 
-        tfServicesCost.setForeground(Color.BLACK); 
-        tfServicesCost.setBorder(new LineBorder(Color.decode("#D3A376"), 1));
-        add(tfServicesCost);
+        JLabel lblServices = new JLabel("Selected Services: " + services);
+        lblServices.setBounds(45, 525, 400, 30); // Set the position and size
+        lblServices.setFont(new Font("Helvetica", Font.PLAIN, 17));
+        add(lblServices);
+        textArea = new JTextArea();
+        textArea.setBounds(520, 360, 200, 100);
+        textArea.setFont(new Font("Helvetica", Font.PLAIN, 15));
+        textArea.setForeground(Color.BLACK);
+        textArea.setBorder(new LineBorder(Color.decode("#D3A376"), 1));
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        scrollPane.setBounds(520,360, 200, 100);
+        add(scrollPane);
         
         
         add = new JButton ("Add");
@@ -566,12 +454,10 @@ public class CheckIn extends JFrame implements ActionListener {
         setVisible(true);
         setLocationRelativeTo(null); 
     }
-    
-        
-        // Add this method in AddGuest to set the cottage number
-        public void setCottageNumber(String cottageNumber) {
-        tfCottage.setText(cottageNumber);
-}
+ 
+         public void displayServices(String services) {
+        textArea.setText(services);  
+         }
         
            private void updateRoomDetails(String roomNumber) {
         System.out.println("Updating details for room number: " + roomNumber); // Debugging: Check if the method is called with the correct room number
@@ -694,7 +580,9 @@ public class CheckIn extends JFrame implements ActionListener {
     } else if (ae.getSource() == back) {
         setVisible(false);
         new Reception();
-    }
+    } else if (ae.getSource() == availServices) {  
+        new AvailServices(this);
+    } 
     
         
 }
