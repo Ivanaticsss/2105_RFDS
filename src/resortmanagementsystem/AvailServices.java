@@ -229,10 +229,9 @@ public class AvailServices extends JFrame {
     
   private void confirmAction() {
     StringBuilder services = new StringBuilder();
-    double totalCost = 0.0;  
-    double deposit = 0.0;    
+    double totalCost = 0.0;   
 
-    checkIn.updateTotalCost(); // Ensure this updates totalCost appropriately
+    checkIn.updateTotalCost(); 
 
     // Cottage
     if (chkCottage.isSelected()) {
@@ -266,10 +265,7 @@ public class AvailServices extends JFrame {
         totalCost += getTourPrice(); 
     }
 
-
-    // Append the total cost and deposit
     services.append("Total Cost: ").append(totalCost).append("\n");
-    services.append("Deposit: ").append(deposit).append("\n");
 
     try {
         Conn conn = new Conn();
@@ -318,15 +314,6 @@ public class AvailServices extends JFrame {
             stmt.setDouble(3, getTourPrice()); 
             stmt.executeUpdate();
         }
-
-        // Update guest total cost and deposit
-        String guestQuery = "UPDATE guest SET totalCost = ?, deposit = ? WHERE guestID = ?";
-        PreparedStatement guestStmt = conn.c.prepareStatement(guestQuery);
-        guestStmt.setDouble(1, totalCost);
-        guestStmt.setDouble(2, deposit);
-        guestStmt.setInt(3, guestID); // Use the guestID to update the correct record
-
-        guestStmt.executeUpdate();
 
         JOptionPane.showMessageDialog(this, "Services and guest details successfully updated!");
 

@@ -355,7 +355,7 @@ public class CheckIn extends JFrame implements ActionListener {
         lblPesoDeposit.setFont(new Font("Raleway", Font.PLAIN, 20));
         add(lblPesoDeposit);
         
-        tfdeposit = new JTextField("Enter Amount");
+        tfdeposit = new JTextField("0.0");
         tfdeposit.setBounds(220, 545, 150, 25);
         tfdeposit.setFont(new Font("Helvetica", Font.PLAIN, 17)); 
         tfdeposit.setBackground(Color.WHITE); 
@@ -364,7 +364,7 @@ public class CheckIn extends JFrame implements ActionListener {
         tfdeposit.setBorder(new LineBorder(Color.decode("#D3A376"), 1));
         
         
-         tfdeposit.addFocusListener(new FocusAdapter() {
+         /*tfdeposit.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
                 if (tfdeposit.getText().equals("Enter Amount")) {
@@ -381,7 +381,7 @@ public class CheckIn extends JFrame implements ActionListener {
                 }
             }
         });
-        
+        */
         add(tfdeposit);
         tfdeposit.addFocusListener(new FocusAdapter() {
             @Override
@@ -555,12 +555,10 @@ public class CheckIn extends JFrame implements ActionListener {
         if (rs.next()) {
             roomPrice = rs.getDouble("price"); // Fetch the room price
         }
-
         // Get the service price
         double servicePrice = 0;
         String servicesText = textArea.getText(); 
         String[] parts = servicesText.split("Total Cost: ");
-
         if (parts.length > 1) {
             try {
                 
@@ -570,7 +568,6 @@ public class CheckIn extends JFrame implements ActionListener {
                 System.out.println("Invalid number format in Total Cost.");
             }
         }
-
         System.out.println("Service:" + servicePrice);
         int lengthOfStay = Integer.parseInt(tflength.getText());
         
@@ -594,8 +591,6 @@ public class CheckIn extends JFrame implements ActionListener {
         if (depositAmount > totalCost) {
             change = depositAmount - totalCost;
         }
-
-        
         tfchange.setText(String.format("%.2f", change));
         tfchange.setForeground(change > 0 ? Color.BLACK : Color.GRAY);
 
@@ -605,14 +600,9 @@ public class CheckIn extends JFrame implements ActionListener {
     }
 }
 
-
-
         public int getLengthOfStay() {
-        // Return the length of stay value from your form (make sure it's an integer)
         return Integer.parseInt(tflength.getText());
     }
-
- 
          public void displayServices(String services) {
         textArea.setText(services);  
          }
@@ -705,16 +695,10 @@ public class CheckIn extends JFrame implements ActionListener {
             // Query to insert the new guest into the guest table
             String query = "INSERT INTO guest (name, address, number, document, sex, country, room, checkInTime, totalCost, deposit, paymentMethod) " +
                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-            // Query to update the room availability
             String query2 = "UPDATE room SET availability = 'Occupied' WHERE roomnumber = ?";
 
-            guestID = Integer.parseInt(id);  // Assuming guestID is obtained and stored
-            //guestDetails = new Guest(name, address, number, id, sex, room, country, deposit, paymentMethod, totalCost); // You can create a Guest object for this
-            // Establish connection
             Conn conn = new Conn();
 
-            // Prepare the statement for guest insertion
             PreparedStatement stmt = conn.c.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, name);
             stmt.setString(2, address);
@@ -729,26 +713,14 @@ public class CheckIn extends JFrame implements ActionListener {
             stmt.setString(11, paymentMethod);  // Payment method
             stmt.executeUpdate();
 
-            // Retrieve the generated guest ID
-            ResultSet generatedKeys = stmt.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                int guestID = generatedKeys.getInt(1);
-                lblGuestID.setText("Guest ID: " + guestID);  // Display the generated GuestID
-            } else {
-                lblGuestID.setText("Guest ID not available");
-            }
-
+          
+            
             // Prepare the statement to update room availability
             PreparedStatement stmt2 = conn.c.prepareStatement(query2);
             stmt2.setString(1, room);
             stmt2.executeUpdate();
-
-            // Show success message
-            JOptionPane.showMessageDialog(null, "New Customer Added Successfully!");
-
-            // Close current window and open Reception
-            setVisible(false);
-            new Reception();
+             new AvailServices(this, guestID);
+            
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -758,10 +730,54 @@ public class CheckIn extends JFrame implements ActionListener {
     } else if (ae.getSource() == back) {
         setVisible(false);
         new Reception();
-    } else if (ae.getSource() == availServices) {
-        new AvailServices(this, guestID);
+    } 
+    
+            else if (ae.getSource() == add) {
+        try {
+            Conn conn = new Conn(); // Initialize your connection object
+
+            // Parse total cost and deposit values
+            double totalCost = Double.parseDouble(tfTotalCost.getText().trim());
+            double deposit = Double.parseDouble(tfdeposit.getText().trim());
+
+            // Validate deposit range
+            if (deposit < totalCost * 0.1 || deposit > totalCost) {
+                throw new IllegalArgumentException("Deposit must be within the valid range.");
+            }
+
+            // Update the guest table in the database
+            String query = "UPDATE guest SET totalCost = ?, deposit = ? WHERE guestID = ?";
+            PreparedStatement pstmt = conn.c.prepareStatement(query);
+            pstmt.setDouble(1, totalCost);
+            pstmt.setDouble(2, deposit);
+            pstmt.setInt(3, guestID); // Ensure guestID is set correctly
+
+            // Execute the update
+            int rowsUpdated = pstmt.executeUpdate();
+
+            // Check if the update was successful
+            if (rowsUpdated > 0) {
+                JOptionPane.showMessageDialog(this, "Check-In Finalized Successfully!");
+            } else {
+                JOptionPane.showMessageDialog(this, "Guest not found. Check-In not finalized.");
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Please enter valid numeric values for total cost and deposit.");
+            return; // Stop 
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+            return; // Stop 
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error finalizing Check-In.");
+            return; // Stop 
+        }
+
+        // Close the current window and return to Reception
+        setVisible(false);
+        new Reception();
     }
-}
+          }
 
     public static void main(String[] args) {
         new CheckIn();

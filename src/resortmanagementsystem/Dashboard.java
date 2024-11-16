@@ -59,12 +59,7 @@ public class Dashboard extends JFrame implements ActionListener{
         addService.addActionListener(this);
         admin.add(addService);
         
-        
-        
-        
-        
-        
-        
+
         setVisible(true);
     }
     

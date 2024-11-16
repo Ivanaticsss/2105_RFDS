@@ -160,7 +160,7 @@ public class Reception extends JFrame implements ActionListener{
             new SearchPool();
         } else if (ae.getSource() == newGuest) {
             setVisible(false);
-            new AddGuest();
+            new CheckIn();
         } else if (ae.getSource() == guestInfo) {
             setVisible(false);
             new GuestInfo();
