@@ -34,7 +34,7 @@ public class CheckOut extends JFrame implements ActionListener{
         ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icons/tick.png"));
         Image i2 = i1.getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT);
         ImageIcon i3 = new ImageIcon(i2);
-        JLabel tick = new JLabel();
+        JLabel tick = new JLabel(i3);
         tick.setBounds(310, 80, 20, 20);
         add(tick);
         

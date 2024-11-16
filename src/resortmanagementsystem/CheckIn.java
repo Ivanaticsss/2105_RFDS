@@ -634,7 +634,7 @@ public class CheckIn extends JFrame implements ActionListener {
 
             try {
                 Conn conn = new Conn();
-                String query = "SELECT roomnumber FROM room WHERE roomtype = ?";
+                String query = "SELECT roomnumber FROM room WHERE roomtype = ? AND availability = 'Available'";
                 PreparedStatement stmt = conn.c.prepareStatement(query);
                 stmt.setString(1, roomType);
                 ResultSet rs = stmt.executeQuery();
@@ -648,9 +648,9 @@ public class CheckIn extends JFrame implements ActionListener {
                     updateRoomDetails(croom.getItem(0));
                 } else {
                     
-                    tfBedType.setText("Not Available");
-                    tfFacilities.setText("Not Available");
-                    tfPrice.setText("Not Available");
+                    tfBedType.setText("No Rooms Available");
+                    tfFacilities.setText("No Rooms Available");
+                    tfPrice.setText("No Rooms Available");
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
