@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.awt.event.*;
 import java.math.BigDecimal;
+import java.util.Calendar;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
@@ -363,25 +364,8 @@ public class CheckIn extends JFrame implements ActionListener {
         tfdeposit.setEditable(true);
         tfdeposit.setBorder(new LineBorder(Color.decode("#D3A376"), 1));
         
+   
         
-         /*tfdeposit.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (tfdeposit.getText().equals("Enter Amount")) {
-                    tfdeposit.setText("");
-                    tfdeposit.setForeground(Color.BLACK);
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (tfdeposit.getText().isEmpty()) {
-                    tfdeposit.setText("Enter Amount");
-                    tfdeposit.setForeground(Color.GRAY);
-                }
-            }
-        });
-        */
         add(tfdeposit);
         tfdeposit.addFocusListener(new FocusAdapter() {
             @Override
@@ -484,6 +468,8 @@ public class CheckIn extends JFrame implements ActionListener {
         checkintime.setBounds(650, 280, 300, 30);
         checkintime.setFont(new Font("Helvetica", Font.BOLD, 17));
         add(checkintime);
+        
+
         
         availServices = new JButton ("Avail Services");
         availServices.setBackground(Color.decode("#D3A376"));
@@ -686,15 +672,30 @@ public class CheckIn extends JFrame implements ActionListener {
         String deposit = tfdeposit.getText();  
         String paymentMethod = (String)comboPayment.getSelectedItem();  
         String totalCost = tfTotalCost.getText();  
+        
+        // Get the length of stay (you can get it from user input or calculate it based on dates)
+        String lengthOfStay =  tflength.getText(); 
 
         try {
             // Format the current date and time
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String time = formatter.format(new Date());  // Get current time
-
+            SimpleDateFormat inputFormat = new SimpleDateFormat("EEE MMM dd yyyy HH:mm");
+            String checkInDate = checkintime.getText();
+            
+            Date checkInParsedDate = inputFormat.parse(checkInDate);
+            
+            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String formattedCheckInDate = outputFormat.format(checkInParsedDate);
+           
+            // Calculate check-out date based on length of stay
+            int stayLength = Integer.parseInt(lengthOfStay);  // Convert length of stay to integer
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(checkInParsedDate);  // Set check-in date as the starting point
+            cal.add(Calendar.DAY_OF_YEAR, stayLength);  // Add length of stay
+            String checkOutDate = outputFormat.format(cal.getTime());
+            
             // Query to insert the new guest into the guest table
-            String query = "INSERT INTO guest (name, address, number, document, sex, country, room, checkInTime, totalCost, deposit, paymentMethod) " +
-                           "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO guest (name, address, number, document, sex, country, room, check_in_date, check_out_date, totalCost, deposit, paymentMethod, length_of_stay) " +
+                           "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             String query2 = "UPDATE room SET availability = 'Occupied' WHERE roomnumber = ?";
 
             Conn conn = new Conn();
@@ -707,10 +708,12 @@ public class CheckIn extends JFrame implements ActionListener {
             stmt.setString(5, sex);
             stmt.setString(6, country);
             stmt.setString(7, room);
-            stmt.setString(8, time);  // Use formatted time here
-            stmt.setBigDecimal(9, new BigDecimal(totalCost));  // Total cost
-            stmt.setBigDecimal(10, new BigDecimal(deposit));  // Deposit amount
-            stmt.setString(11, paymentMethod);  // Payment method
+            stmt.setString(8, formattedCheckInDate);  // Use formatted check-in date here
+            stmt.setString(9, checkOutDate);  // Use calculated check-out date here
+            stmt.setBigDecimal(10, new BigDecimal(totalCost));  // Total cost
+            stmt.setBigDecimal(11, new BigDecimal(deposit));  // Deposit amount
+            stmt.setString(12, paymentMethod);  // Payment method
+            stmt.setInt(13, stayLength);  // Length of stay
             stmt.executeUpdate();
 
           
