@@ -158,18 +158,18 @@ public class UpdateCheck extends JFrame implements ActionListener {
 
 
         private Object[][] fetchGuestData() {
-         Object[][] data = new Object[0][8];  // Adjusted to 8 columns (including the new column for Payment Status)
+         Object[][] data = new Object[0][8];  
          try {
              Conn c = new Conn();
              Statement stmt = c.c.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
              ResultSet rs = stmt.executeQuery("SELECT guestID, name, room, check_in_date, check_out_date, totalCost, deposit, payment_status FROM guest");
 
-             // Move the cursor to the last row to get the row count
+          
              rs.last();
              int rowCount = rs.getRow();
-             rs.beforeFirst();  // Move cursor back to the first row
+             rs.beforeFirst();  
 
-             data = new Object[rowCount][8];  // Updated to 8 columns
+             data = new Object[rowCount][8];  
              int i = 0;
              while (rs.next()) {
                  data[i][0] = rs.getString("guestID");

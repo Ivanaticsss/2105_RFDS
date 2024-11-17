@@ -35,24 +35,24 @@ public class CheckIn extends JFrame implements ActionListener {
         int serviceCost; 
         private int guestID;
         
-        private void fetchNextGuestID() {
+             private void fetchNextGuestID() {
     try {
         Conn conn = new Conn();
         String query = "SELECT MAX(guestID) FROM guest";
         ResultSet rs = conn.s.executeQuery(query);
 
         if (rs.next()) {
-            int nextGuestID = rs.getInt(1) + 1;  // Get the current max ID and add 1
+            int nextGuestID = rs.getInt(1) + 1;  
             lblGuestID.setText("Guest ID: " + nextGuestID);
         } else {
-            lblGuestID.setText("Guest ID: 1");  // Default to 1 if no IDs found
+            lblGuestID.setText("Guest ID: 1");  
         }
     } catch (Exception e) {
         e.printStackTrace();
         lblGuestID.setText("Guest ID not available");
     }
     
-    // Fetch the integer part from the label text
+    
     String guestIDText = lblGuestID.getText();
     
     guestID = Integer.parseInt(guestIDText.replaceAll("[^0-9]", ""));

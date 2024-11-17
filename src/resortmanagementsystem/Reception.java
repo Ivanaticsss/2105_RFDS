@@ -7,18 +7,37 @@ import java.awt.event.*;
 
 public class Reception extends JFrame implements ActionListener{
     JButton newGuest, rooms, service, cottages, pools, guestInfo, searchRoom, update, roomStatus, checkout, logout;
-    JPopupMenu roomsMenu, poolsMenu, cottagesMenu;
+    JPopupMenu roomsMenu, poolsMenu, cottagesMenu, guestMenu;
     
     Reception(){
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
-        
         newGuest = new JButton("New Guest Form");
         newGuest.setBounds(10, 50, 230, 40);
         newGuest.setBackground(Color.decode("#2a1c13"));
         newGuest.setForeground(Color.WHITE);
         newGuest.addActionListener(this);
         add(newGuest);
+
+        guestMenu = new JPopupMenu();
+        guestMenu.setBackground(new Color(204, 153, 102));
+
+        JMenuItem checkIn = new JMenuItem("Check-In Form");
+        JMenuItem reservation = new JMenuItem("Reservation Form");
+        JMenuItem dayPass = new JMenuItem("Day Pass Form");
+
+        checkIn.addActionListener(this);
+        reservation.addActionListener(this);
+        dayPass.addActionListener(this);
+
+        guestMenu.add(checkIn);
+        guestMenu.add(reservation);
+        guestMenu.add(dayPass);
+
+        // Set preferred size to match the button width
+        guestMenu.setPreferredSize(new Dimension(newGuest.getWidth(), 100));
+
+        
         
         //pop up menu for Rooms button
         rooms = new JButton("Rooms");
@@ -29,16 +48,12 @@ public class Reception extends JFrame implements ActionListener{
         add(rooms);
         
         roomsMenu = new JPopupMenu();
-        roomsMenu.setBackground(new Color(204, 153, 102)); 
+        roomsMenu.setBackground(new Color(204, 153, 102));
         
-        
-        JMenuItem viewRooms = new JMenuItem("View Rooms");
         JMenuItem searchRooms = new JMenuItem("Search Rooms");
         JMenuItem updateRoomStatus = new JMenuItem("Update Room Status");
-        viewRooms.addActionListener(this);
         searchRooms.addActionListener(this);
         updateRoomStatus.addActionListener(this);
-        roomsMenu.add(viewRooms);
         roomsMenu.add(searchRooms);
         roomsMenu.add(updateRoomStatus);
         
@@ -130,17 +145,25 @@ public class Reception extends JFrame implements ActionListener{
     }
     
     public void actionPerformed(ActionEvent ae) {
-          if (ae.getSource() == rooms) {
+         if (ae.getSource() == newGuest) {
+            guestMenu.show(newGuest, 0, newGuest.getHeight());
+        }else if (ae.getSource() == rooms) {
             roomsMenu.show(rooms, 0, rooms.getHeight());
-            
-        } else if (ae.getSource() == cottages) {
+        }else if (ae.getSource() == cottages) {
             cottagesMenu.show(cottages, 0, cottages.getHeight());
         } else if (ae.getSource() == pools) {
             poolsMenu.show(pools, 0, pools.getHeight());
-        } else if (ae.getActionCommand().equals("View Rooms")) {
+        } else if (ae.getActionCommand().equals("Check-In Form")) {
             setVisible(false);
-            new Room();
-        } else if (ae.getActionCommand().equals("Search Rooms")) {
+            new CheckIn();
+        }else if (ae.getActionCommand().equals("Reservation")) {
+            setVisible(false);
+            new CheckIn();
+        }else if (ae.getActionCommand().equals("Day Pass")) {
+            setVisible(false);
+            new CheckIn();
+        }
+        else if (ae.getActionCommand().equals("Search Rooms")) {
             setVisible(false);
             new SearchRoom();
         } else if (ae.getActionCommand().equals("Update Room Status")) {
@@ -151,16 +174,13 @@ public class Reception extends JFrame implements ActionListener{
             new Cottage();
         } else if (ae.getActionCommand().equals("Search Cottages")) {
             setVisible(false);
-            new SearchCottages(new AddGuest());
+            new SearchCottages();
         } else if (ae.getActionCommand().equals("View Pools")) {
             setVisible(false);
             new Pool();
         } else if (ae.getActionCommand().equals("Search Pools")) {
             setVisible(false);
             new SearchPool();
-        } else if (ae.getSource() == newGuest) {
-            setVisible(false);
-            new CheckIn();
         } else if (ae.getSource() == guestInfo) {
             setVisible(false);
             new GuestInfo();
