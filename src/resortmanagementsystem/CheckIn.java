@@ -505,9 +505,7 @@ public class CheckIn extends JFrame implements ActionListener {
         comboPayment.setBorder(paymentBorder);
         add(comboPayment);
         
-        
-        
-        
+
         add = new JButton ("Add");
         add.setBackground(Color.BLACK);
         add.setForeground(Color.WHITE);
@@ -744,7 +742,7 @@ public class CheckIn extends JFrame implements ActionListener {
             double deposit = Double.parseDouble(tfdeposit.getText().trim());
 
             // Validate deposit range
-            if (deposit < totalCost * 0.1 || deposit > totalCost) {
+            if (deposit < totalCost * 0.1) {
                 throw new IllegalArgumentException("Deposit must be within the valid range.");
             }
 
@@ -753,8 +751,7 @@ public class CheckIn extends JFrame implements ActionListener {
             PreparedStatement pstmt = conn.c.prepareStatement(query);
             pstmt.setDouble(1, totalCost);
             pstmt.setDouble(2, deposit);
-            pstmt.setInt(3, guestID); // Ensure guestID is set correctly
-
+            pstmt.setInt(3, guestID); 
             // Execute the update
             int rowsUpdated = pstmt.executeUpdate();
 

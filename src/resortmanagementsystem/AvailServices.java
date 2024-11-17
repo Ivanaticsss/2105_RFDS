@@ -269,8 +269,6 @@ public class AvailServices extends JFrame {
 
     try {
         Conn conn = new Conn();
-        
-        // Insert services into the services table
         String query = "INSERT INTO services (guestID, serviceName, price) VALUES (?, ?, ?)";
         PreparedStatement stmt = conn.c.prepareStatement(query);
 
@@ -284,12 +282,29 @@ public class AvailServices extends JFrame {
 
         // Pool
         if (chkPool.isSelected()) {
-            String poolType = chkKiddie.isSelected() ? "Kiddie" : (chkAdult.isSelected() ? "Adult" : "Infinity");
-            stmt.setInt(1, guestID);  
-            stmt.setString(2, "Pool: " + poolType);
-            stmt.setDouble(3, getPoolPrice()); 
-            stmt.executeUpdate();
+            StringBuilder poolTypes = new StringBuilder();
+
+            // Check each checkbox and append the selected types
+            if (chkKiddie.isSelected()) {
+                poolTypes.append("Kiddie");
+            }
+            if (chkAdult.isSelected()) {
+                if (poolTypes.length() > 0) poolTypes.append(", "); // Add a comma if there's already a type
+                poolTypes.append("Adult");
+            }
+            if (chkInfinity.isSelected()) {
+                if (poolTypes.length() > 0) poolTypes.append(", "); // Add a comma if there's already a type
+                poolTypes.append("Infinity");
+            }
+
+            if (poolTypes.length() > 0) { // Proceed only if at least one type is selected
+                stmt.setInt(1, guestID);
+                stmt.setString(2, "Pool: " + poolTypes.toString()); // Combine types into a single string
+                stmt.setDouble(3, getPoolPrice());
+                stmt.executeUpdate();
+            }
         }
+
 
         // Spa
         if (chkSpa.isSelected()) {

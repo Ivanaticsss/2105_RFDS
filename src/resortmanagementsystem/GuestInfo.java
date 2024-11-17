@@ -43,7 +43,7 @@ public class GuestInfo extends JFrame implements ActionListener{
         add(j5);
         
         table = new JTable();
-        table.setBounds(0, 40, 500, 400);
+        table.setBounds(0, 40, 1000, 400);
         add(table);
         
         try{
@@ -61,9 +61,8 @@ public class GuestInfo extends JFrame implements ActionListener{
         back.setBounds(200, 500, 120, 30);
         add(back);
         
-        
-        
         setBounds(300, 200, 1050, 600);
+        setLocationRelativeTo(null); 
         setVisible(true);
         }
     
