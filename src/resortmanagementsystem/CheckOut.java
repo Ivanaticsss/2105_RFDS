@@ -8,7 +8,7 @@ import java.sql.*;
 public class CheckOut extends JFrame implements ActionListener {
 
     JTextField searchField, guestIDField, roomNumberField, checkInField, checkOutField, paymentField;
-    JButton checkOut, back, searchButton;
+    JButton checkOut, back, searchButton, generateBill;
     JTable guestTable;
     JScrollPane scrollPane;
 
@@ -106,6 +106,14 @@ public class CheckOut extends JFrame implements ActionListener {
         back.setBounds(170, 380, 120, 30);
         back.addActionListener(this);
         add(back);
+        
+        generateBill = new JButton ("Generate Bill");
+        generateBill.setBackground(Color.BLACK);
+        generateBill.setForeground(Color.WHITE);
+        generateBill.setBounds (295, 380, 120, 30);
+        generateBill.addActionListener(this);
+        add (generateBill);
+        
 
         // Set up the table with guest data
         String[] columnNames = {"Guest ID", "Name", "Room Number", "Check-In Time", "Check-Out Time", "Payment Status"};
@@ -169,7 +177,11 @@ public class CheckOut extends JFrame implements ActionListener {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(null, "An error occurred during check-out");
             }
-        } else if (ae.getSource() == back) {
+        } else if (ae.getSource() == generateBill) {
+           
+            new GenerateBill();
+            
+        }else if (ae.getSource() == back) {
             setVisible(false);
             new Reception();
         }

@@ -191,43 +191,54 @@ public class UpdateCheck extends JFrame implements ActionListener {
 
             public void actionPerformed(ActionEvent ae) {
             if (ae.getSource() == check) {
-                String id = ccustomer.getSelectedItem();
-                String query = "SELECT * FROM guest WHERE guestID = '" + id + "'";
-                try {
-                    Conn c = new Conn();
-                    ResultSet rs = c.s.executeQuery(query);
-                    while (rs.next()) {
-                        tfroom.setText(rs.getString("room"));
-                        tfname.setText(rs.getString("name"));
-                        tfcheckin.setText(rs.getString("check_in_date"));
-                        tfpaid.setText(rs.getString("deposit"));
-                        tftotalCost.setText(rs.getString("totalCost"));
-                        double pending = Double.parseDouble(rs.getString("totalCost")) - Double.parseDouble(rs.getString("deposit"));
-                        tfpending.setText(String.format("%.2f", pending));
-                        tfchange.setText("0.00"); // Reset change field
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else if (ae.getSource() == calculate) {
-                try {
-                    double cost = Double.parseDouble(tftotalCost.getText());
-                    double newDeposit = Double.parseDouble(tfdeposit.getText());
-                    double paid = Double.parseDouble(tfpaid.getText());
-                    double totalPaid = paid + newDeposit;
-                    double pending = cost - totalPaid;
+        String id = ccustomer.getSelectedItem();
+        String query = "SELECT * FROM guest WHERE guestID = '" + id + "'";
+        try {
+            Conn c = new Conn();
+            ResultSet rs = c.s.executeQuery(query);
+            while (rs.next()) {
+                tfroom.setText(rs.getString("room"));
+                tfname.setText(rs.getString("name"));
+                tfcheckin.setText(rs.getString("check_in_date"));
+                tfpaid.setText(rs.getString("deposit"));
+                tftotalCost.setText(rs.getString("totalCost"));
 
-                    if (pending > 0) {
-                        tfpending.setText(String.format("%.2f", pending));
-                        tfchange.setText("0.00");
-                    } else {
-                        tfpending.setText("0.00");
-                        tfchange.setText(String.format("%.2f", Math.abs(pending)));
-                    }
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(null, "Invalid input! Please enter valid numbers.", "Error", JOptionPane.ERROR_MESSAGE);
+                double cost = Double.parseDouble(rs.getString("totalCost"));
+                double paid = Double.parseDouble(rs.getString("deposit"));
+                double pending = cost - paid;
+
+                if (pending > 0) {
+                    tfpending.setText(String.format("%.2f", pending));
+                    tfchange.setText("0.00");
+                } else {
+                    tfpending.setText("0.00");
+                    tfchange.setText(String.format("%.2f", Math.abs(pending))); // Calculate change
                 }
-            } else if (ae.getSource() == update) {
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+ else if (ae.getSource() == calculate) {
+            try {
+                double cost = Double.parseDouble(tftotalCost.getText());
+                double newDeposit = Double.parseDouble(tfdeposit.getText());
+                double paid = Double.parseDouble(tfpaid.getText());
+                double totalPaid = paid + newDeposit;
+                double pending = cost - totalPaid;
+
+                if (pending > 0) {
+                    tfpending.setText(String.format("%.2f", pending));
+                    tfchange.setText("0.00");
+                } else {
+                    tfpending.setText("0.00"); // Ensure pending is 0 if fully paid
+                    tfchange.setText(String.format("%.2f", Math.abs(pending))); // Calculate change
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Invalid input! Please enter valid numbers.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        else if (ae.getSource() == update) {
                 String number = ccustomer.getSelectedItem();
                 String room = tfroom.getText();
                 String name = tfname.getText();

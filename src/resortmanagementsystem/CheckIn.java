@@ -29,8 +29,10 @@ public class CheckIn extends JFrame implements ActionListener {
         private JRadioButton rmale, rfemale, rStandard, rVIP, rVVIP;
         private Choice croom;
         private JLabel checkintime, lblGuestID, lblDepositRange;
-        private JButton add, back, chooseCottage, availServices;
+        private JButton add, back, chooseCottage, availServices, reset, generateBill, searchRooms, 
+                searchCottages, services, guestInfo,searchServices;
         private JTextArea textArea;
+        private ButtonGroup roomType;
         double roomPrice; 
         int serviceCost; 
         private int guestID;
@@ -176,9 +178,6 @@ public class CheckIn extends JFrame implements ActionListener {
         
         add(tfnumber);
         
-        
-        //Choose Room
-        
         //Show Room details
         
         JLabel lblroomtype = new JLabel("Room Type:");
@@ -205,7 +204,7 @@ public class CheckIn extends JFrame implements ActionListener {
         rVIP.addItemListener(e -> updateRoomNumbers("VIP"));
         rVVIP.addItemListener(e -> updateRoomNumbers("VVIP"));
 
-        ButtonGroup roomType = new ButtonGroup();
+        roomType = new ButtonGroup();
         roomType.add(rStandard);
         roomType.add(rVIP);
         roomType.add(rVVIP);
@@ -351,7 +350,7 @@ public class CheckIn extends JFrame implements ActionListener {
         add(lbldeposit);
         
         
-        JLabel lblPesoDeposit = new JLabel("₱"); // Separate JLabel for Deposit peso sign
+        JLabel lblPesoDeposit = new JLabel("₱"); 
         lblPesoDeposit.setBounds(200, 535, 20, 40);
         lblPesoDeposit.setFont(new Font("Raleway", Font.PLAIN, 20));
         add(lblPesoDeposit);
@@ -520,6 +519,45 @@ public class CheckIn extends JFrame implements ActionListener {
         back.addActionListener(this);
         add (back);
         
+        reset = new JButton ("Reset");
+        reset.setBackground(Color.BLACK);
+        reset.setForeground(Color.WHITE);
+        reset.setBounds (650, 700, 120, 25);
+        reset.addActionListener(this);
+        add (reset);
+        
+        searchRooms = new JButton ("Rooms");
+        searchRooms.setBackground(Color.decode("#2a1c13"));
+        searchRooms.setForeground(Color.WHITE);
+        searchRooms.setBounds (950, 200, 230, 40);
+        searchRooms.addActionListener(this);
+        add (searchRooms);
+        
+        searchCottages = new JButton ("Cottages");
+        searchCottages.setBackground(Color.decode("#2a1c13"));
+        searchCottages.setForeground(Color.WHITE);
+        searchCottages.setBounds (950, 250, 230, 40);
+        searchCottages.addActionListener(this);
+        add (searchCottages);
+                
+        searchServices = new JButton ("Services");
+        searchServices.setBackground(Color.decode("#2a1c13"));
+        searchServices.setForeground(Color.WHITE);
+        searchServices.setBounds (950, 300, 230, 40);
+        searchServices.addActionListener(this);
+        add (searchServices);
+        
+        guestInfo = new JButton ("Guest Info");
+        guestInfo.setBackground(Color.BLACK);
+        guestInfo.setForeground(Color.WHITE);
+        guestInfo.setBounds (950, 350, 230, 40);
+        guestInfo.addActionListener(this);
+        add (guestInfo);
+        
+        
+        
+        
+        
         setBounds(300, 100, 1200, 800);
         setVisible(true);
         setLocationRelativeTo(null); 
@@ -562,7 +600,7 @@ public class CheckIn extends JFrame implements ActionListener {
 
         double minDeposit = totalCost * 0.1; // 10% minimum deposit
         double maxDeposit = totalCost;  //maximum deposit
-        // Update deposit range label
+       
         lblDepositRange.setText(String.format("Range: ₱%.2f - ₱%.2f", minDeposit, maxDeposit));
         double depositAmount = 0;
         try {
@@ -592,7 +630,7 @@ public class CheckIn extends JFrame implements ActionListener {
          }
         
            private void updateRoomDetails(String roomNumber) {
-        System.out.println("Updating details for room number: " + roomNumber); // Debugging: Check if the method is called with the correct room number
+        System.out.println("Updating details for room number: " + roomNumber); 
         try {
             Conn conn = new Conn();
             String query = "SELECT bed_type, facilities, price FROM room WHERE roomnumber = ?";
@@ -658,6 +696,33 @@ public class CheckIn extends JFrame implements ActionListener {
                 return guestID;
             }
         
+        
+        
+        private void resetForm() {
+
+        tfname.setText("Enter Name");
+        tfname.setForeground(Color.GRAY);
+        tfaddress.setText("Enter Address");
+        tfaddress.setForeground(Color.GRAY);
+        tfnumber.setText("Number");
+        tfnumber.setForeground(Color.GRAY);
+        tfBedType.setText("");
+        tfFacilities.setText("");
+        tfPrice.setText("");
+        tfTotalCost.setText("0");
+        tfdeposit.setText("0.0");
+        tflength.setText("");
+
+    
+    croom.select(0); 
+    roomType.clearSelection(); 
+  
+    //lblDepositRange.setText("Range: ₱0.00 - ₱0.00");
+    //updateTotalCost(); 
+}
+
+        
+        
       public void actionPerformed(ActionEvent ae) {
     if (ae.getSource() == availServices) {
         String name = tfname.getText();
@@ -680,15 +745,14 @@ public class CheckIn extends JFrame implements ActionListener {
             String checkInDate = checkintime.getText();
             
             Date checkInParsedDate = inputFormat.parse(checkInDate);
-            
             SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String formattedCheckInDate = outputFormat.format(checkInParsedDate);
            
             // Calculate check-out date based on length of stay
-            int stayLength = Integer.parseInt(lengthOfStay);  // Convert length of stay to integer
+            int stayLength = Integer.parseInt(lengthOfStay);  
             Calendar cal = Calendar.getInstance();
-            cal.setTime(checkInParsedDate);  // Set check-in date as the starting point
-            cal.add(Calendar.DAY_OF_YEAR, stayLength);  // Add length of stay
+            cal.setTime(checkInParsedDate);  
+            cal.add(Calendar.DAY_OF_YEAR, stayLength);  
             String checkOutDate = outputFormat.format(cal.getTime());
             
             // Query to insert the new guest into the guest table
@@ -713,49 +777,55 @@ public class CheckIn extends JFrame implements ActionListener {
             stmt.setString(12, paymentMethod);  // Payment method
             stmt.setInt(13, stayLength);  // Length of stay
             stmt.executeUpdate();
-
-          
             
-            // Prepare the statement to update room availability
             PreparedStatement stmt2 = conn.c.prepareStatement(query2);
             stmt2.setString(1, room);
             stmt2.executeUpdate();
              new AvailServices(this, guestID);
             
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-    } else if (ae.getSource() == chooseCottage) {
-        // new SearchCottages(this);
-    } else if (ae.getSource() == back) {
+        
+    } else if (ae.getSource() == searchCottages) {
+        new SearchCottages();
+    } else if (ae.getSource() == searchRooms) {
+        new SearchRoom();
+    }else if (ae.getSource() == guestInfo) {
+        new GuestInfo();
+    }else if (ae.getSource() == searchServices) {
+        new Service();
+    }else if (ae.getSource() == back) {
         setVisible(false);
         new Reception();
-    } 
-    
+    } else if (ae.getSource() == reset) {
+         resetForm();
+    }
             else if (ae.getSource() == add) {
         try {
-            Conn conn = new Conn(); // Initialize your connection object
-
-            // Parse total cost and deposit values
+            Conn conn = new Conn();
+             String services = textArea.getText(); 
             double totalCost = Double.parseDouble(tfTotalCost.getText().trim());
             double deposit = Double.parseDouble(tfdeposit.getText().trim());
 
-            // Validate deposit range
             if (deposit < totalCost * 0.1) {
                 throw new IllegalArgumentException("Deposit must be within the valid range.");
             }
 
-            // Update the guest table in the database
-            String query = "UPDATE guest SET totalCost = ?, deposit = ? WHERE guestID = ?";
-            PreparedStatement pstmt = conn.c.prepareStatement(query);
-            pstmt.setDouble(1, totalCost);
-            pstmt.setDouble(2, deposit);
-            pstmt.setInt(3, guestID); 
-            // Execute the update
-            int rowsUpdated = pstmt.executeUpdate();
+             
+        String paymentStatus = (deposit >= totalCost) ? "Paid" : "Pending";
 
-            // Check if the update was successful
+        // Update the guest table in the database
+        String query = "UPDATE guest SET totalCost = ?, deposit = ?, payment_status = ?, availedServices = ? WHERE guestID = ?";
+        PreparedStatement pstmt = conn.c.prepareStatement(query);
+        pstmt.setDouble(1, totalCost);
+        pstmt.setDouble(2, deposit);
+        pstmt.setString(3, paymentStatus);
+        pstmt.setString(4, services);
+        pstmt.setInt(5, guestID); 
+
+        
+        int rowsUpdated = pstmt.executeUpdate();
             if (rowsUpdated > 0) {
                 JOptionPane.showMessageDialog(this, "Check-In Finalized Successfully!");
             } else {
@@ -773,7 +843,7 @@ public class CheckIn extends JFrame implements ActionListener {
             return; // Stop 
         }
 
-        // Close the current window and return to Reception
+       
         setVisible(false);
         new Reception();
     }

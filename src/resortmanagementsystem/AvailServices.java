@@ -458,7 +458,7 @@ public class AvailServices extends JFrame {
            
                 
           private double getSpaPrice() {
-                return 500.0; 
+                return 5000.0; 
             }
 
           private double getTourPrice() {
