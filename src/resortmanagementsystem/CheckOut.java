@@ -7,7 +7,8 @@ import java.sql.*;
 
 public class CheckOut extends JFrame implements ActionListener {
 
-    JTextField searchField, guestIDField, roomNumberField, checkInField, checkOutField, paymentField;
+    JTextField searchField, guestIDField, roomNumberField, checkInField, checkOutField, paymentField
+            ;
     JButton checkOut, back, searchButton, generateBill;
     JTable guestTable;
     JScrollPane scrollPane;
@@ -177,11 +178,91 @@ public class CheckOut extends JFrame implements ActionListener {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(null, "An error occurred during check-out");
             }
-        } else if (ae.getSource() == generateBill) {
-           
-            new GenerateBill();
-            
-        }else if (ae.getSource() == back) {
+        }else if (ae.getSource() == generateBill) {
+        String guestID = guestIDField.getText();
+
+        if (guestID.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please search for a guest first!");
+            return;
+        }
+
+        try {
+            Conn c = new Conn();
+
+            // Query to get all necessary guest details based on guestID
+            String query = "SELECT g.name, g.address, g.number, g.country, g.document, g.room, g.length_of_stay, g.check_in_date, g.check_out_date, " +
+                    "r.roomType, r.facilities, r.bed_type, r.price, g.availedServices, g.totalCost, g.deposit, g.payment_status " +
+                    "FROM guest g " +
+                    "LEFT JOIN room r ON g.room = r.roomnumber " + // Use LEFT JOIN to handle guests who might not have a room
+                    "WHERE g.guestID = ?";
+
+            PreparedStatement ps = c.c.prepareStatement(query);
+            ps.setString(1, guestID);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                // Retrieve all necessary details
+                String name = rs.getString("name");
+                String address = rs.getString("address");
+                String number = rs.getString("number");
+                String country = rs.getString("country");
+                String id = rs.getString("document");
+                String roomNumber = rs.getString("room");
+                String roomType = rs.getString("roomType");
+                String roomFacilities = rs.getString("facilities");
+                String bedType = rs.getString("bed_type");
+                int lengthOfStay = rs.getInt("length_of_stay");
+                Date checkInDate = rs.getDate("check_in_date");  // Date object
+                Date checkOutDate = rs.getDate("check_out_date");  // Date object
+                String servicesAvailed = rs.getString("availedServices");
+                double roomPrice = rs.getDouble("price");
+                double totalCost = rs.getDouble("totalCost");
+                double totalPayment = rs.getDouble("deposit");
+                String paymentStatus = rs.getString("payment_status");
+
+                // Now retrieve the services availed from the services table
+                String serviceQuery = "SELECT s.serviceName, s.price " +
+                                      "FROM services s " +
+                                      "WHERE s.guestID = ?";
+                PreparedStatement servicePs = c.c.prepareStatement(serviceQuery);
+                servicePs.setString(1, guestID);
+                ResultSet serviceRs = servicePs.executeQuery();
+
+                StringBuilder servicesDetails = new StringBuilder();
+                double servicesTotal = 0;
+                while (serviceRs.next()) {
+                    String serviceName = serviceRs.getString("serviceName");
+                    double servicePrice = serviceRs.getDouble("price");
+                    servicesDetails.append(serviceName).append(" - ₱").append(servicePrice).append("\n");
+                    servicesTotal += servicePrice;
+                }
+
+                // Add the services' total cost to the total cost
+                totalCost += servicesTotal;
+
+                // Call GenerateBill and pass all these values, with Date types for check-in and check-out dates
+                if (roomNumber != null && !roomNumber.isEmpty()) {
+                    // If a room is reserved, pass room details as well
+                    new GenerateBill(name, address, number, country, id, roomNumber, roomType, roomFacilities, bedType,
+                                     lengthOfStay, checkInDate, checkOutDate, servicesDetails.toString(),
+                                     roomPrice, servicesTotal, totalCost, totalPayment, paymentStatus);
+                } else {
+                    // If no room is reserved, pass only services details
+                    new GenerateBill(name, address, number, country, id, null, null, null, null,
+                                     0, null, null, servicesDetails.toString(), 0, servicesTotal, totalCost, totalPayment, paymentStatus);
+                }
+
+            } else {
+            JOptionPane.showMessageDialog(null, "No guest found with this ID");
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "An error occurred while fetching guest details");
+    }
+}
+
+
+else if (ae.getSource() == back) {
             setVisible(false);
             new Reception();
         }
