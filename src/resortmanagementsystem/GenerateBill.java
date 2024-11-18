@@ -13,7 +13,7 @@ public class GenerateBill {
                         double roomPrice, double servicesTotal, double totalCost, 
                         double totalPayment, String paymentStatus) {
 
-        // JFrame setup for displaying the bill
+       
         JFrame billFrame = new JFrame("Guest Bill - Serenity Cove");
         billFrame.setSize(500, 700);
         billFrame.setLayout(null);
@@ -72,56 +72,110 @@ public class GenerateBill {
                 .append(" Payment Status: ").append(paymentStatus.equalsIgnoreCase("paid") ? "Fully Paid" : "Pending").append("\n\n")
                 .append("\tWe hope to see you again soon!\n");
 
-        // Set the text in the JTextArea
+     
         billDetails.setText(billText.toString());
 
-        // Add the text area to a scroll pane
+        
         JScrollPane scrollPane = new JScrollPane(billDetails);
         scrollPane.setBounds(20, 20, 440, 620);
 
-        // Add the scroll pane to the frame
+       
         billFrame.add(scrollPane);
 
-        // Add the print button
+       
         JButton printButton = new JButton("Print Bill");
         printButton.setBounds(180, 650, 120, 30);
         printButton.addActionListener(e -> printBill(billText.toString()));  // Print bill on button click
         billFrame.add(printButton);
 
-        // Display the frame
+       
         billFrame.setVisible(true);
         billFrame.setSize(500, 750);  
 
     }
 
-    // Method to handle printing the bill
-    private void printBill(String billContent) {
-        PrinterJob printerJob = PrinterJob.getPrinterJob();
-        printerJob.setPrintable(new Printable() {
-            @Override
-            public int print(Graphics g, PageFormat pf, int page) throws PrinterException {
-                if (page > 0) {  
-                    return NO_SUCH_PAGE;
+ private void printBill(String billContent) {
+    PrinterJob printerJob = PrinterJob.getPrinterJob();
+    printerJob.setPrintable(new Printable() {
+        @Override
+        public int print(Graphics g, PageFormat pf, int page) throws PrinterException {
+            if (page > 0) {
+                return NO_SUCH_PAGE;  // Only print the first page
+            }
+
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.translate(pf.getImageableX(), pf.getImageableY());
+            g2d.setFont(new Font("Serif", Font.PLAIN, 12));
+            FontMetrics metrics = g2d.getFontMetrics();
+
+            // Set line height and margins
+            int lineHeight = metrics.getHeight();
+            int margin = 20;
+            int x = margin;
+            int y = margin + lineHeight;
+
+           
+            String[] lines = billContent.split("\n");  // Split by line breaks
+            for (String line : lines) {
+               
+                if (metrics.stringWidth(line) > pf.getImageableWidth() - 2 * margin) {
+                    
+                    String[] wrappedLines = wrapText(line, g2d, pf.getImageableWidth() - 2 * margin);
+                    for (String wrappedLine : wrappedLines) {
+                        g2d.drawString(wrappedLine, x, y);
+                        y += lineHeight; 
+                    }
+                } else {
+                    
+                    g2d.drawString(line, x, y);
+                    y += lineHeight;  // Move to the next line
                 }
 
-                Graphics2D g2d = (Graphics2D) g;
-                g2d.translate(pf.getImageableX(), pf.getImageableY());
-                g2d.setFont(new Font("Serif", Font.PLAIN, 12));
-
-                // Print the bill content
-                g.drawString(billContent, 100, 100);  
-
-                return PAGE_EXISTS;
+                // If the content reaches the end of the page, move to the next page
+                if (y > pf.getImageableHeight() - lineHeight) {
+                    return PAGE_EXISTS;
+                }
             }
-        });
 
-        if (printerJob.printDialog()) {
-            try {
-                printerJob.print();
-            } catch (PrinterException e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(null, "Error printing the bill.");
+            return PAGE_EXISTS;
+        }
+    });
+
+    if (printerJob.printDialog()) {
+        try {
+            printerJob.print();
+        } catch (PrinterException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error printing the bill.");
+        }
+    }
+}
+
+    // Helper method to wrap text within the page width
+    private String[] wrapText(String text, Graphics2D g2d, double pageWidth) {
+        FontMetrics metrics = g2d.getFontMetrics();
+        int lineLength = (int) (pageWidth / metrics.charWidth('M'));  
+        String[] words = text.split(" ");
+        StringBuilder currentLine = new StringBuilder();
+        StringBuilder wrappedText = new StringBuilder();
+
+        for (String word : words) {
+            if (metrics.stringWidth(currentLine.toString() + " " + word) <= pageWidth) {
+                if (currentLine.length() > 0) {
+                    currentLine.append(" ");
+                }
+                currentLine.append(word);
+            } else {
+                wrappedText.append(currentLine).append("\n");
+                currentLine = new StringBuilder(word);
             }
         }
+
+        // Append the last line if any
+        if (currentLine.length() > 0) {
+            wrappedText.append(currentLine);
+        }
+
+        return wrappedText.toString().split("\n");
     }
 }
