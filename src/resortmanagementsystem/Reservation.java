@@ -6,18 +6,20 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+//import javax.swing.JOptionPane;
 import javax.swing.*;
 import java.time.LocalDate;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-public class Reservation extends JFrame {
+public class Reservation extends JFrame{
     private JLabel lblName, lblAddress, lblNumber, lblCountry, lblSex, lblCheckIn, lblLengthOfStay, lblDateGuide, lblId, lblCheckOut, lblpaymentMethod;
     private JTextField tfName, tfAddress, tfNumber, tfCountry, tfLengthOfStay;
     private JPanel background;
     private JRadioButton rMale, rFemale;
     private JComboBox<String> checkInMonth, checkInDay, checkInYear, comboId, comboPayment;
+    private JButton jBAdd, jBBack, jBReset;
 
     public Reservation() {
         setTitle("Book Reservation");
@@ -28,6 +30,7 @@ public class Reservation extends JFrame {
         background = new JPanel(null);
         background.setBounds(0, 0, 800, 700);
         add(background);
+        
 
         lblName = new JLabel("Full Name:");
         lblName.setBounds(45, 120, 300, 30);
@@ -265,6 +268,29 @@ public class Reservation extends JFrame {
         //Border paymentBorder = BorderFactory.createLineBorder(Color.decode("#D3A376"), 2);  // Change 'Color.BLUE' to your desired color
         //comboPayment.setBorder(paymentBorder);
         background.add(comboPayment);
+        
+        jBAdd = new JButton ("Add");
+        jBAdd.setBackground(Color.BLACK);
+        jBAdd.setForeground(Color.WHITE);
+        jBAdd.setBounds (250, 500, 120, 25);
+        //jBAdd.addActionListener(this);
+        background.add (jBAdd);
+        
+        jBBack = new JButton ("Back");
+        jBBack.setBackground(Color.BLACK);
+        jBBack.setForeground(Color.WHITE);
+        jBBack.setBounds (400, 500, 120, 25);
+        //jBBack.addActionListener(this);
+        background.add (jBBack);
+        
+        jBReset = new JButton ("Reset");
+        jBReset.setBackground(Color.BLACK);
+        jBReset.setForeground(Color.WHITE);
+        jBReset.setBounds (650, 500, 120, 25);
+        //jBReset.addActionListener(this);
+        background.add (jBReset);
+
+
         
         //NANDINEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
         setBounds(230, 70, 900, 600); //ITO FIT SA SCREEN KOOOOOOOOOOOOOOOOOOOOOOOOOO
