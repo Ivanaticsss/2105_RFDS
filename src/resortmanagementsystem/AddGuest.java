@@ -18,13 +18,13 @@ import java.math.BigDecimal;
 
 public class AddGuest extends JFrame implements ActionListener {
         
-        JComboBox<String> comboid;
-        JTextField tfCottage, tfname, tfdeposit;
+        private JComboBox<String> comboid;
+        private JTextField tfCottage, tfname, tfdeposit;
          
-        JRadioButton rmale, rfemale, rStandard, rVIP, rVVIP;
-        Choice croom;
-        JLabel checkintime, lblGuestID;
-        JButton add, back, chooseCottage;
+        private JRadioButton rmale, rfemale, rStandard, rVIP, rVVIP;
+        private Choice croom;
+        private JLabel checkintime, lblGuestID, text, lblname, lblid, lblgender, lblroomtype, lblroom, lbltime, lbldeposit;
+        private JButton add, back, chooseCottage;
         
         private void fetchNextGuestID() {
     try {
@@ -52,7 +52,7 @@ public class AddGuest extends JFrame implements ActionListener {
         setContentPane(background); 
         setLayout(null);
         
-        JLabel text = new JLabel("NEW GUEST FORM");
+        text = new JLabel("NEW GUEST FORM");
         text.setBounds(80, 20, 300, 30);
         text.setFont(new Font("Raleway", Font.PLAIN, 22));
         //add(text);
@@ -66,37 +66,7 @@ public class AddGuest extends JFrame implements ActionListener {
         fetchNextGuestID();
         
         
-         /*JLabel lblnumber = new JLabel("Guest Number");
-        lblnumber.setBounds(45, 80, 300, 30);
-        lblnumber.setFont(new Font("Raleway", Font.PLAIN, 18));
-        background.add(lblnumber);
-        
-       tfnumber = new JTextField("Number");
-        tfnumber.setBounds(200, 80, 150, 25);
-        tfnumber.setForeground(Color.GRAY);
-        
-        tfnumber.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (tfnumber.getText().equals("Mobile Number")) {
-                    tfnumber.setText("");
-                    tfnumber.setForeground(Color.BLACK);
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (tfnumber.getText().isEmpty()) {
-                    tfnumber.setText("Number");
-                    tfnumber.setForeground(Color.GRAY);
-                }
-            }
-        });
-        
-        background.add(tfnumber);
-        */
-        
-         JLabel lblname = new JLabel("Name");
+        lblname = new JLabel("Name");
         lblname.setBounds(45, 120, 300, 30);
         lblname.setFont(new Font("Raleway", Font.PLAIN, 18));
         background.add(lblname);
@@ -126,7 +96,7 @@ public class AddGuest extends JFrame implements ActionListener {
         background.add(tfname);
         
         
-        JLabel lblid = new JLabel("ID");
+        lblid = new JLabel("ID");
         lblid.setBounds(45, 160, 150, 25);
         lblid.setFont(new Font("Raleway", Font.PLAIN, 18));
         background.add(lblid);
@@ -140,7 +110,7 @@ public class AddGuest extends JFrame implements ActionListener {
         
         
        
-        JLabel lblgender = new JLabel("Sex");
+        lblgender = new JLabel("Sex");
         lblgender.setBounds(45, 190, 300, 30);
         lblgender.setFont(new Font("Raleway", Font.PLAIN, 18));
         background.add(lblgender);
@@ -162,7 +132,7 @@ public class AddGuest extends JFrame implements ActionListener {
         
         //choose room
         
-        JLabel lblroomtype = new JLabel("Room Type:");
+        lblroomtype = new JLabel("Room Type:");
         lblroomtype.setBounds(45, 225, 100, 30);
         lblroomtype.setFont(new Font("Helvetica", Font.PLAIN, 18));
         background.add(lblroomtype);
@@ -182,7 +152,7 @@ public class AddGuest extends JFrame implements ActionListener {
                 
            
         
-        JLabel lblroom = new JLabel("Room No.");
+        lblroom = new JLabel("Room No.");
         lblroom.setBounds(45, 225, 100, 30);
         lblroom.setFont(new Font("Raleway", Font.PLAIN, 18));
         background.add(lblroom);
@@ -203,7 +173,7 @@ public class AddGuest extends JFrame implements ActionListener {
         croom.setBounds(200, 225, 150, 25);
         background.add(croom);
         
-        JLabel lbltime = new JLabel("<html>Check-in<br>time</html>");
+        lbltime = new JLabel("<html>Check-in<br>time</html>");
         lbltime.setBounds(45, 255, 150, 60);
         lbltime.setFont(new Font("Raleway", Font.PLAIN, 18));
         background.add(lbltime);
@@ -217,7 +187,7 @@ public class AddGuest extends JFrame implements ActionListener {
         checkintime.setFont(new Font("Raleway", Font.PLAIN, 17));
         background.add(checkintime);
         
-        JLabel lbldeposit = new JLabel("Deposit");
+        lbldeposit = new JLabel("Deposit");
         lbldeposit.setBounds(45, 325, 150, 40);
         lbldeposit.setFont(new Font("Raleway", Font.PLAIN, 18));
         background.add(lbldeposit);

@@ -7,20 +7,21 @@ import java.awt.event.*;
 
 public class AddPools extends JFrame implements ActionListener {
     
-    JButton add, cancel;
-    JTextField tfPoolNumber, tfPrice, tfType;
-    JComboBox availablecombo;
+    private JButton add, cancel;
+    private JTextField tfPoolNumber, tfPrice, tfType;
+    private JComboBox availablecombo;
+    private JLabel heading, lblPoolNo, lblType, lblAvailable, lblPrice;
     
     AddPools() {
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
         
-        JLabel heading = new JLabel("Add Pools");
+        heading = new JLabel("Add Pools");
         heading.setFont(new Font("Tahoma", Font.BOLD, 18));
         heading.setBounds(150, 20, 200, 20);
         add(heading);
         
-        JLabel lblPoolNo = new JLabel("Pool Number");
+        lblPoolNo = new JLabel("Pool Number");
         lblPoolNo.setFont(new Font("Tahoma", Font.PLAIN, 16));
         lblPoolNo.setBounds(60, 80, 120, 20);
         add(lblPoolNo);
@@ -29,7 +30,7 @@ public class AddPools extends JFrame implements ActionListener {
         tfPoolNumber.setBounds(200, 80, 150, 30);
         add(tfPoolNumber);
         
-        JLabel lblType = new JLabel("Pool Type");
+        lblType = new JLabel("Pool Type");
         lblType.setFont(new Font("Tahoma", Font.PLAIN, 16));
         lblType.setBounds(60, 130, 120, 20);
         add(lblType);
@@ -38,7 +39,7 @@ public class AddPools extends JFrame implements ActionListener {
         tfType.setBounds(200, 130, 150, 30);
         add(tfType);
         
-        JLabel lblAvailable = new JLabel("Available");
+        lblAvailable = new JLabel("Available");
         lblAvailable.setFont(new Font("Tahoma", Font.PLAIN, 16));
         lblAvailable.setBounds(60, 180, 120, 20);
         add(lblAvailable);
@@ -49,7 +50,7 @@ public class AddPools extends JFrame implements ActionListener {
         availablecombo.setBackground(Color.WHITE);
         add(availablecombo);
         
-        JLabel lblPrice = new JLabel("Price");
+        lblPrice = new JLabel("Price");
         lblPrice.setFont(new Font("Tahoma", Font.PLAIN, 16));
         lblPrice.setBounds(60, 230, 120, 20);
         add(lblPrice);

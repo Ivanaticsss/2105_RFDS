@@ -8,20 +8,21 @@ import java.awt.event.*;
 
 public class AddServices extends JFrame implements ActionListener{
     
-    JButton add, cancel;
-    JTextField tfservice, tfbudget;
+    private JButton add, cancel;
+    private JTextField tfservice, tfbudget;
+    private JLabel heading, lblservice, lblbudget;
     
     
     AddServices(){
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
         
-        JLabel heading = new JLabel("Add Services");
+        heading = new JLabel("Add Services");
         heading.setFont(new Font("Tahoma", Font.BOLD, 18));
         heading.setBounds(150, 20, 200, 20);
         add(heading);
         
-        JLabel lblservice = new JLabel("Service");
+        lblservice = new JLabel("Service");
         lblservice.setFont(new Font("Tahoma", Font.PLAIN, 16));
         lblservice.setBounds(60, 80, 120, 20);
         add(lblservice);
@@ -31,7 +32,7 @@ public class AddServices extends JFrame implements ActionListener{
         add(tfservice);
         
    
-        JLabel lblbudget = new JLabel("Budget");
+        lblbudget = new JLabel("Budget");
         lblbudget.setFont(new Font("Tahoma", Font.PLAIN, 16));
         lblbudget.setBounds(60, 130, 120, 20);
         add(lblbudget);

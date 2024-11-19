@@ -9,12 +9,13 @@ import javax.swing.border.LineBorder;
 
 public class AvailServices extends JFrame {
         
-    JComboBox<String> comboCottageType, comboCottageNumber;
-    JTextField tfCottagePrice, tfPoolPrice, tfSpaPrice, tfRestoPrice, tfTourPrice, tfServicesCost;
+    private JComboBox<String> comboCottageType, comboCottageNumber;
+    private JTextField tfCottagePrice, tfPoolPrice, tfSpaPrice, tfRestoPrice, tfTourPrice, tfServicesCost;
     
-    JCheckBox chkCottage, chkPool, chkSpa, chkResto, chkTour, chkKiddie, chkAdult, chkInfinity;
-    JButton add, back, chooseCottage;
-    Choice ccottage;
+    private JCheckBox chkCottage, chkPool, chkSpa, chkResto, chkTour, chkKiddie, chkAdult, chkInfinity;
+    private JButton add, back, chooseCottage, btnConfirm, btnCancel, btnReset;
+    private JLabel lblServices, lblServicesCost;
+    private Choice ccottage;
      private CheckIn checkIn;
      private int guestID; 
     
@@ -25,7 +26,7 @@ public class AvailServices extends JFrame {
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);  // Using null layout for custom positioning
         
-        JLabel lblServices = new JLabel("Avail Services: ");
+        lblServices = new JLabel("Avail Services: ");
         lblServices.setBounds(50, 20, 150, 30);
         lblServices.setFont(new Font("Helvetica", Font.BOLD, 18));
         add(lblServices);
@@ -187,7 +188,7 @@ public class AvailServices extends JFrame {
         add(tfTourPrice);
 
         // Label for Total Services Cost
-        JLabel lblServicesCost = new JLabel("Total Cost: ");
+        lblServicesCost = new JLabel("Total Cost: ");
         lblServicesCost.setBounds(20, 260, 150, 30);
         lblServicesCost.setFont(new Font("Helvetica", Font.PLAIN, 17));
         add(lblServicesCost);
@@ -203,17 +204,17 @@ public class AvailServices extends JFrame {
         add(tfServicesCost);
 
         
-        JButton btnConfirm = new JButton("Confirm");
+        btnConfirm = new JButton("Confirm");
         btnConfirm.setBounds(150, 300, 100, 30);
         btnConfirm.addActionListener(e -> confirmAction());  // Define the action here
         add(btnConfirm);
 
-        JButton btnCancel = new JButton("Cancel");
+        btnCancel = new JButton("Cancel");
         btnCancel.setBounds(260, 300, 100, 30);
         btnCancel.addActionListener(e -> cancelAction());  // Define the action here
         add(btnCancel);
 
-        JButton btnReset = new JButton("Reset");
+        btnReset = new JButton("Reset");
         btnReset.setBounds(370, 300, 100, 30);
         btnReset.addActionListener(e -> resetForm());  // Define the action here
         add(btnReset);

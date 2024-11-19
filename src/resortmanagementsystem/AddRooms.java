@@ -8,22 +8,22 @@ import java.awt.event.*;
 
 public class AddRooms extends JFrame implements ActionListener, ItemListener {
     
-    JButton add, cancel;
-    JTextField tfroom, tfprice;
-    JComboBox roomtypecombo, bedtypecombo, availablecombo;
-    JCheckBox wifi, poolAccess, oceanView, airConditioned;
-    JLabel roomImage; 
+    private JButton add, cancel;
+    private JTextField tfroom, tfprice;
+    private JComboBox roomtypecombo, bedtypecombo, availablecombo;
+    private JCheckBox wifi, poolAccess, oceanView, airConditioned;
+    private JLabel roomImage, heading, lblroomtype, lblroomno, lblavailavle, lblprice, lbltype, lblFacilities; 
     
     AddRooms(){
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
         
-        JLabel heading = new JLabel("Add Rooms");
+        heading = new JLabel("Add Rooms");
         heading.setFont(new Font("Tahoma", Font.BOLD, 18));
         heading.setBounds(150, 20, 200, 20);
         add(heading);
         
-        JLabel lblroomtype = new JLabel("Room Type:");
+        lblroomtype = new JLabel("Room Type:");
         lblroomtype.setFont(new Font("Tahoma", Font.PLAIN, 16));
         lblroomtype.setBounds(60, 80, 120, 20);
         add(lblroomtype);
@@ -35,7 +35,7 @@ public class AddRooms extends JFrame implements ActionListener, ItemListener {
         roomtypecombo.addItemListener(this);
         add(roomtypecombo);
         
-        JLabel lblroomno = new JLabel("Room Number");
+        lblroomno = new JLabel("Room Number");
         lblroomno.setFont(new Font("Tahoma", Font.PLAIN, 16));
         lblroomno.setBounds(60, 130, 120, 20);
         add(lblroomno);
@@ -44,7 +44,7 @@ public class AddRooms extends JFrame implements ActionListener, ItemListener {
         tfroom.setBounds(200, 130, 150, 30);
         add(tfroom);
         
-        JLabel lblavailavle = new JLabel("Available");
+        lblavailavle = new JLabel("Available");
         lblavailavle.setFont(new Font("Tahoma", Font.PLAIN, 16));
         lblavailavle.setBounds(60, 180, 120, 20);
         add(lblavailavle);
@@ -55,7 +55,7 @@ public class AddRooms extends JFrame implements ActionListener, ItemListener {
         availablecombo.setBackground(Color.WHITE);
         add(availablecombo);
         
-        JLabel lblprice = new JLabel("Price");
+        lblprice = new JLabel("Price");
         lblprice.setFont(new Font("Tahoma", Font.PLAIN, 16));
         lblprice.setBounds(60, 230, 120, 20);
         add(lblprice);
@@ -64,7 +64,7 @@ public class AddRooms extends JFrame implements ActionListener, ItemListener {
         tfprice.setBounds(200, 230, 150, 30);
         add(tfprice);
         
-        JLabel lbltype = new JLabel("Bed Type");
+        lbltype = new JLabel("Bed Type");
         lbltype.setFont(new Font("Tahoma", Font.PLAIN, 16));
         lbltype.setBounds(60, 280, 120, 20);
         add(lbltype);
@@ -76,7 +76,7 @@ public class AddRooms extends JFrame implements ActionListener, ItemListener {
         add(bedtypecombo);
         
         // Facilities Checkboxes
-        JLabel lblFacilities = new JLabel("Facilities:");
+        lblFacilities = new JLabel("Facilities:");
         lblFacilities.setFont(new Font("Tahoma", Font.PLAIN, 16));
         lblFacilities.setBounds(60, 330, 120, 20);
         add(lblFacilities);

@@ -28,7 +28,7 @@ public class CheckIn extends JFrame implements ActionListener {
         private JCheckBox checkboxPoolSize;
         private JRadioButton rmale, rfemale, rStandard, rVIP, rVVIP;
         private Choice croom;
-        private JLabel checkintime, lblGuestID, lblDepositRange;
+        private JLabel checkintime, lblGuestID, lblDepositRange, lblname, lbladress, lblnumber, lblroomtype, lblroom, lblBedType, lblFacilities, lblPrice, lblLength, lblDays, lblTotalCost, lblPesoTotalCost, lbldeposit, lblPesoDeposit, lblchange, lblPesoChange, lblid, lblsex, lblCountry, lbltime, lblpaymentMethod;
         private JButton add, back, chooseCottage, availServices, reset, generateBill, searchRooms, 
                 searchCottages, services, guestInfo,searchServices;
         private JTextArea textArea;
@@ -83,7 +83,7 @@ public class CheckIn extends JFrame implements ActionListener {
         fetchNextGuestID();
         
         //Name Input
-        JLabel lblname = new JLabel("Full Name     :");
+        lblname = new JLabel("Full Name     :");
         lblname.setBounds(45, 160, 300, 30);
         lblname.setFont(new Font("Helvetica", Font.PLAIN, 17));
         add(lblname);
@@ -115,7 +115,7 @@ public class CheckIn extends JFrame implements ActionListener {
         add(tfname);
         
         //Address input
-        JLabel lbladress = new JLabel("Full Adress   :");
+        lbladress = new JLabel("Full Adress   :");
         lbladress.setBounds(45, 190, 300, 30);
         lbladress.setFont(new Font("Helvetica", Font.PLAIN, 17));
         add(lbladress);
@@ -147,7 +147,7 @@ public class CheckIn extends JFrame implements ActionListener {
         add(tfaddress);
         
         //Phone Number input
-        JLabel lblnumber = new JLabel("Mobile Number:");
+        lblnumber = new JLabel("Mobile Number:");
         lblnumber.setBounds(45, 220, 300, 30);
         lblnumber.setFont(new Font("Helvetica", Font.PLAIN, 17));
         add(lblnumber);
@@ -180,7 +180,7 @@ public class CheckIn extends JFrame implements ActionListener {
         
         //Show Room details
         
-        JLabel lblroomtype = new JLabel("Room Type:");
+        lblroomtype = new JLabel("Room Type:");
         lblroomtype.setBounds(45, 280, 100, 30);
         lblroomtype.setFont(new Font("Helvetica", Font.PLAIN, 17));
         add(lblroomtype);
@@ -213,12 +213,12 @@ public class CheckIn extends JFrame implements ActionListener {
         add(rVIP);
         add(rVVIP);
         
-        JLabel lblroom = new JLabel("Room No.");
+        lblroom = new JLabel("Room No.");
         lblroom.setBounds(45, 315, 100, 30);
         lblroom.setFont(new Font("Helvetica", Font.PLAIN, 17));
         add(lblroom);
         
-        JLabel lblBedType = new JLabel("Bed Type");
+        lblBedType = new JLabel("Bed Type");
         lblBedType.setBounds(45, 345, 100, 30);
         lblBedType.setFont(new Font("Helvetica", Font.PLAIN, 17));
         add(lblBedType);
@@ -232,7 +232,7 @@ public class CheckIn extends JFrame implements ActionListener {
         tfBedType.setBorder(new LineBorder(Color.decode("#D3A376"), 1)); 
         add(tfBedType);
         
-        JLabel lblFacilities = new JLabel("Facilities");
+        lblFacilities = new JLabel("Facilities");
         lblFacilities.setBounds(45, 375, 100, 30);
         lblFacilities.setFont(new Font("Helvetica", Font.PLAIN, 17));
         add(lblFacilities);
@@ -246,7 +246,7 @@ public class CheckIn extends JFrame implements ActionListener {
         tfFacilities.setBorder(new LineBorder(Color.decode("#D3A376"), 1)); 
         add(tfFacilities);
         
-        JLabel lblPrice = new JLabel("Price per day:");
+        lblPrice = new JLabel("Price per day:");
         lblPrice.setBounds(45, 405, 200, 30);
         lblPrice.setFont(new Font("Helvetica", Font.PLAIN, 17));
         add(lblPrice);
@@ -297,7 +297,7 @@ public class CheckIn extends JFrame implements ActionListener {
         
 
        
-        JLabel lblLength = new JLabel("Length of Stay:");
+        lblLength = new JLabel("Length of Stay:");
         lblLength.setBounds(45, 435, 200, 30);
         lblLength.setFont(new Font("Helvetica", Font.PLAIN, 17));
         add(lblLength);
@@ -318,18 +318,18 @@ public class CheckIn extends JFrame implements ActionListener {
             });
         
         
-        JLabel lblDays = new JLabel("day/s");
+        lblDays = new JLabel("day/s");
         lblDays.setBounds(250, 440, 200, 30);
         lblDays.setFont(new Font("Helvetica", Font.PLAIN, 17));
         add(lblDays);
         
         
-        JLabel lblTotalCost = new JLabel("Total Cost:");
+        lblTotalCost = new JLabel("Total Cost:");
         lblTotalCost.setBounds(45, 490, 200, 40);
         lblTotalCost.setFont(new Font("Helvetica", Font.PLAIN, 18));
         add(lblTotalCost);
         
-        JLabel lblPesoTotalCost = new JLabel("₱"); 
+        lblPesoTotalCost = new JLabel("₱"); 
         lblPesoTotalCost.setBounds(200, 485, 20, 40);
         lblPesoTotalCost.setFont(new Font("Raleway", Font.PLAIN, 20));
         add(lblPesoTotalCost);
@@ -344,13 +344,13 @@ public class CheckIn extends JFrame implements ActionListener {
         add(tfTotalCost);
         
         
-        JLabel lbldeposit = new JLabel("Deposit:");
+        lbldeposit = new JLabel("Deposit:");
         lbldeposit.setBounds(45, 540, 200, 40);
         lbldeposit.setFont(new Font("Raleway", Font.PLAIN, 18));
         add(lbldeposit);
         
         
-        JLabel lblPesoDeposit = new JLabel("₱"); 
+        lblPesoDeposit = new JLabel("₱"); 
         lblPesoDeposit.setBounds(200, 535, 20, 40);
         lblPesoDeposit.setFont(new Font("Raleway", Font.PLAIN, 20));
         add(lblPesoDeposit);
@@ -381,13 +381,13 @@ public class CheckIn extends JFrame implements ActionListener {
         lblDepositRange.setForeground(Color.DARK_GRAY);
         add(lblDepositRange);
         
-        JLabel lblchange = new JLabel("Change:");
+        lblchange = new JLabel("Change:");
         lblchange.setBounds(45, 585, 200, 40);
         lblchange.setFont(new Font("Raleway", Font.PLAIN, 18));
         add(lblchange);
         
         
-        JLabel lblPesoChange = new JLabel("₱"); // Separate JLabel for Deposit peso sign
+        lblPesoChange = new JLabel("₱"); // Separate JLabel for Deposit peso sign
         lblPesoChange.setBounds(200, 585, 20, 40);
         lblPesoChange.setFont(new Font("Raleway", Font.PLAIN, 20));
         add(lblPesoChange);
@@ -403,7 +403,7 @@ public class CheckIn extends JFrame implements ActionListener {
         //===Second Column===//
         //ID input
         
-        JLabel lblid = new JLabel("ID");
+        lblid = new JLabel("ID");
         lblid.setBounds(450, 165, 150, 25);
         lblid.setFont(new Font("HELVETICA", Font.PLAIN, 17));
         add(lblid);
@@ -418,7 +418,7 @@ public class CheckIn extends JFrame implements ActionListener {
         add(comboid);
         
         //SEX input
-        JLabel lblsex = new JLabel("Sex");
+        lblsex = new JLabel("Sex");
         lblsex.setBounds(450, 190, 300, 30);
         lblsex.setFont(new Font("Helvetica", Font.PLAIN, 18));
         add(lblsex);
@@ -438,7 +438,7 @@ public class CheckIn extends JFrame implements ActionListener {
         add(rmale);
         add(rfemale);
         
-        JLabel lblCountry = new JLabel("Country: ");
+        lblCountry = new JLabel("Country: ");
         lblCountry.setBounds(450, 225, 300, 30);
         lblCountry.setFont(new Font("Helvetica", Font.PLAIN, 17));
         add(lblCountry);
@@ -454,7 +454,7 @@ public class CheckIn extends JFrame implements ActionListener {
         
         
         //CHECK IN TIME 
-        JLabel lbltime = new JLabel("Check-in Time: ");
+        lbltime = new JLabel("Check-in Time: ");
         lbltime.setBounds(500, 265, 150, 60);
         lbltime.setFont(new Font("Helvetica", Font.PLAIN, 18));
         add(lbltime);
@@ -490,7 +490,7 @@ public class CheckIn extends JFrame implements ActionListener {
         scrollPane.setBounds(520,360, 200, 100);
         add(scrollPane);
         
-        JLabel lblpaymentMethod = new JLabel("Payment Method");
+        lblpaymentMethod = new JLabel("Payment Method");
         lblpaymentMethod.setBounds(400, 545, 150, 25);
         lblpaymentMethod.setFont(new Font("HELVETICA", Font.PLAIN, 17));
         add(lblpaymentMethod);

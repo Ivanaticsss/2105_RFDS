@@ -7,21 +7,22 @@ import java.awt.event.*;
 
 public class AddCottages extends JFrame implements ActionListener {
     
-    JButton add, cancel;
-    JTextField tfCottageNumber, tfPrice;
-    JComboBox typecombo, availablecombo;
+    private JButton add, cancel;
+    private JTextField tfCottageNumber, tfPrice;
+    private JComboBox typecombo, availablecombo;
+    private JLabel heading, lblCottageNo, lblAvailable, lblPrice, lblType;
     
     AddCottages() {
         
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
         
-        JLabel heading = new JLabel("Add Cottages");
+        heading = new JLabel("Add Cottages");
         heading.setFont(new Font("Tahoma", Font.BOLD, 18));
         heading.setBounds(150, 20, 200, 20);
         add(heading);
         
-        JLabel lblCottageNo = new JLabel("Cottage Number");
+        lblCottageNo = new JLabel("Cottage Number");
         lblCottageNo.setFont(new Font("Tahoma", Font.PLAIN, 16));
         lblCottageNo.setBounds(60, 80, 120, 20);
         add(lblCottageNo);
@@ -30,7 +31,7 @@ public class AddCottages extends JFrame implements ActionListener {
         tfCottageNumber.setBounds(200, 80, 150, 30);
         add(tfCottageNumber);
         
-        JLabel lblAvailable = new JLabel("Available");
+        lblAvailable = new JLabel("Available");
         lblAvailable.setFont(new Font("Tahoma", Font.PLAIN, 16));
         lblAvailable.setBounds(60, 130, 120, 20);
         add(lblAvailable);
@@ -41,7 +42,7 @@ public class AddCottages extends JFrame implements ActionListener {
         availablecombo.setBackground(Color.WHITE);
         add(availablecombo);
         
-        JLabel lblPrice = new JLabel("Price");
+        lblPrice = new JLabel("Price");
         lblPrice.setFont(new Font("Tahoma", Font.PLAIN, 16));
         lblPrice.setBounds(60, 180, 120, 20);
         add(lblPrice);
@@ -50,7 +51,7 @@ public class AddCottages extends JFrame implements ActionListener {
         tfPrice.setBounds(200, 180, 150, 30);
         add(tfPrice);
         
-        JLabel lblType = new JLabel("Cottage Type");
+        lblType = new JLabel("Cottage Type");
         lblType.setFont(new Font("Tahoma", Font.PLAIN, 16));
         lblType.setBounds(60, 230, 120, 20);
         add(lblType);
