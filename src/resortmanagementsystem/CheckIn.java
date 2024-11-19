@@ -161,7 +161,7 @@ public class CheckIn extends JFrame implements ActionListener {
         tfnumber.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (tfnumber.getText().equals("Number")) {
+                if (tfnumber.getText().equals("Mobile Number")) {
                     tfnumber.setText("");
                     tfnumber.setForeground(Color.BLACK);
                 }
@@ -170,7 +170,7 @@ public class CheckIn extends JFrame implements ActionListener {
             @Override
             public void focusLost(FocusEvent e) {
                 if (tfnumber.getText().isEmpty()) {
-                    tfnumber.setText("Number");
+                    tfnumber.setText("Mobile Number");
                     tfnumber.setForeground(Color.GRAY);
                 }
             }
