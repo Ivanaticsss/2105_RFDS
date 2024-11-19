@@ -67,16 +67,16 @@ public class CheckIn extends JFrame implements ActionListener {
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
         
-        ImageIcon i1 = new ImageIcon(getClass().getResource("/icons/logobg.png"));
-        Image i2 = i1.getImage().getScaledInstance(400, 150, Image.SCALE_SMOOTH); // Use smoother scaling
+        ImageIcon i1 = new ImageIcon(getClass().getResource("/icons/anlaa.jpg"));
+        Image i2 = i1.getImage().getScaledInstance(1199, 130, Image.SCALE_SMOOTH); // Use smoother scaling
         ImageIcon i3 = new ImageIcon(i2);
         JLabel image = new JLabel(i3);
-        image.setBounds(400,10,400,150);
+        image.setBounds(0,0,1190,130);
         add(image);
         
         
         lblGuestID = new JLabel("Generating...");
-        lblGuestID.setBounds(200, 120, 150, 25);
+        lblGuestID.setBounds(200, 140, 150, 25);
         lblGuestID.setFont(new Font("Helvetica", Font.BOLD, 18));
         add(lblGuestID);
         
@@ -186,17 +186,17 @@ public class CheckIn extends JFrame implements ActionListener {
         add(lblroomtype);
         
         rStandard = new JRadioButton("Standard");
-        rStandard.setBackground(Color.decode("#FFE0B2")); 
+        rStandard.setBackground(Color.decode("#D2B486")); 
         rStandard.setForeground(Color.decode("#3E2522")); 
         rStandard.setBounds(200, 285, 80, 25);
         
         rVIP = new JRadioButton("VIP");
-        rVIP.setBackground(Color.decode("#FFE0B2")); 
+        rVIP.setBackground(Color.decode("#D2B486")); 
         rVIP.setForeground(Color.decode("#3E2522")); 
         rVIP.setBounds(290, 285, 50, 25);
         
         rVVIP = new JRadioButton("VVIP");
-        rVVIP.setBackground(Color.decode("#FFE0B2")); 
+        rVVIP.setBackground(Color.decode("#D2B486")); 
         rVVIP.setForeground(Color.decode("#3E2522")); 
         rVVIP.setBounds(350, 285, 60, 25);
         
@@ -471,8 +471,8 @@ public class CheckIn extends JFrame implements ActionListener {
 
         
         availServices = new JButton ("Avail Services");
-        availServices.setBackground(Color.decode("#D3A376"));
-        availServices.setForeground(Color.WHITE);
+        availServices.setBackground(Color.decode("#D2B486"));
+        availServices.setForeground(Color.BLACK);
         availServices.setFont(new Font("Helvetica", Font.BOLD, 18));
         availServices.setBounds (520, 320, 200, 40);
         availServices.addActionListener(this);
