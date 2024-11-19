@@ -83,7 +83,7 @@ public class CheckIn extends JFrame implements ActionListener {
         fetchNextGuestID();
         
         //Name Input
-        lblname = new JLabel("Full Name     :");
+        lblname = new JLabel("Full Name:");
         lblname.setBounds(45, 160, 300, 30);
         lblname.setFont(new Font("Helvetica", Font.PLAIN, 17));
         add(lblname);
@@ -115,7 +115,7 @@ public class CheckIn extends JFrame implements ActionListener {
         add(tfname);
         
         //Address input
-        lbladress = new JLabel("Full Adress   :");
+        lbladress = new JLabel("Full Adress:");
         lbladress.setBounds(45, 190, 300, 30);
         lbladress.setFont(new Font("Helvetica", Font.PLAIN, 17));
         add(lbladress);
@@ -152,7 +152,7 @@ public class CheckIn extends JFrame implements ActionListener {
         lblnumber.setFont(new Font("Helvetica", Font.PLAIN, 17));
         add(lblnumber);
         
-        tfnumber = new JTextField("Number");
+        tfnumber = new JTextField("Mobile Number");
         tfnumber.setBounds(200, 225, 200, 25);
         tfnumber.setForeground(Color.GRAY);
         tfnumber.setFont(new Font("Helvetica", Font.PLAIN, 15));
@@ -213,12 +213,12 @@ public class CheckIn extends JFrame implements ActionListener {
         add(rVIP);
         add(rVVIP);
         
-        lblroom = new JLabel("Room No.");
+        lblroom = new JLabel("Room No.:");
         lblroom.setBounds(45, 315, 100, 30);
         lblroom.setFont(new Font("Helvetica", Font.PLAIN, 17));
         add(lblroom);
         
-        lblBedType = new JLabel("Bed Type");
+        lblBedType = new JLabel("Bed Type:");
         lblBedType.setBounds(45, 345, 100, 30);
         lblBedType.setFont(new Font("Helvetica", Font.PLAIN, 17));
         add(lblBedType);
@@ -232,7 +232,7 @@ public class CheckIn extends JFrame implements ActionListener {
         tfBedType.setBorder(new LineBorder(Color.decode("#D3A376"), 1)); 
         add(tfBedType);
         
-        lblFacilities = new JLabel("Facilities");
+        lblFacilities = new JLabel("Facilities:");
         lblFacilities.setBounds(45, 375, 100, 30);
         lblFacilities.setFont(new Font("Helvetica", Font.PLAIN, 17));
         add(lblFacilities);
@@ -403,7 +403,7 @@ public class CheckIn extends JFrame implements ActionListener {
         //===Second Column===//
         //ID input
         
-        lblid = new JLabel("ID");
+        lblid = new JLabel("ID:");
         lblid.setBounds(450, 165, 150, 25);
         lblid.setFont(new Font("HELVETICA", Font.PLAIN, 17));
         add(lblid);
@@ -418,7 +418,7 @@ public class CheckIn extends JFrame implements ActionListener {
         add(comboid);
         
         //SEX input
-        lblsex = new JLabel("Sex");
+        lblsex = new JLabel("Sex:");
         lblsex.setBounds(450, 190, 300, 30);
         lblsex.setFont(new Font("Helvetica", Font.PLAIN, 18));
         add(lblsex);
@@ -438,7 +438,7 @@ public class CheckIn extends JFrame implements ActionListener {
         add(rmale);
         add(rfemale);
         
-        lblCountry = new JLabel("Country: ");
+        lblCountry = new JLabel("Country:");
         lblCountry.setBounds(450, 225, 300, 30);
         lblCountry.setFont(new Font("Helvetica", Font.PLAIN, 17));
         add(lblCountry);
@@ -454,7 +454,7 @@ public class CheckIn extends JFrame implements ActionListener {
         
         
         //CHECK IN TIME 
-        lbltime = new JLabel("Check-in Time: ");
+        lbltime = new JLabel("Check-in Time:");
         lbltime.setBounds(500, 265, 150, 60);
         lbltime.setFont(new Font("Helvetica", Font.PLAIN, 18));
         add(lbltime);
@@ -490,7 +490,7 @@ public class CheckIn extends JFrame implements ActionListener {
         scrollPane.setBounds(520,360, 200, 100);
         add(scrollPane);
         
-        lblpaymentMethod = new JLabel("Payment Method");
+        lblpaymentMethod = new JLabel("Payment Method:");
         lblpaymentMethod.setBounds(400, 545, 150, 25);
         lblpaymentMethod.setFont(new Font("HELVETICA", Font.PLAIN, 17));
         add(lblpaymentMethod);
@@ -548,7 +548,7 @@ public class CheckIn extends JFrame implements ActionListener {
         add (searchServices);
         
         guestInfo = new JButton ("Guest Info");
-        guestInfo.setBackground(Color.BLACK);
+        guestInfo.setBackground(Color.decode ("#2a1c13"));
         guestInfo.setForeground(Color.WHITE);
         guestInfo.setBounds (950, 350, 230, 40);
         guestInfo.addActionListener(this);

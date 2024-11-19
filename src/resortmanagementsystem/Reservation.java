@@ -24,7 +24,7 @@ public class Reservation extends JFrame {
         background.setBounds(0, 0, 800, 700);
         add(background);
 
-        lblName = new JLabel("Name:");
+        lblName = new JLabel("Full Name:");
         lblName.setBounds(45, 120, 300, 30);
         lblName.setFont(new Font("Helvetica", Font.PLAIN, 17));
         background.add(lblName);
