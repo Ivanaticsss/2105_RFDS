@@ -8,15 +8,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 import java.time.LocalDate;
+import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 public class Reservation extends JFrame {
-    private JLabel lblName, lblAddress, lblNumber, lblCountry, lblSex, lblCheckIn, lblLengthOfStay, lblDateGuide, lblId, lblCheckOut;
+    private JLabel lblName, lblAddress, lblNumber, lblCountry, lblSex, lblCheckIn, lblLengthOfStay, lblDateGuide, lblId, lblCheckOut, lblpaymentMethod;
     private JTextField tfName, tfAddress, tfNumber, tfCountry, tfLengthOfStay;
     private JPanel background;
     private JRadioButton rMale, rFemale;
-    private JComboBox<String> checkInMonth, checkInDay, checkInYear, comboId;
+    private JComboBox<String> checkInMonth, checkInDay, checkInYear, comboId, comboPayment;
 
     public Reservation() {
         setTitle("Book Reservation");
@@ -237,11 +238,37 @@ public class Reservation extends JFrame {
         lblCheckOut.setFont(new Font("HELVETICA", Font.PLAIN, 10));
         background.add(lblCheckOut);
 
+        lblId = new JLabel("ID:");
+        lblId.setBounds(450, 120, 150, 25);
+        lblId.setFont(new Font("HELVETICA", Font.PLAIN, 17));
+        background.add(lblId);
         
+        String options[] = {"Driver's License", "SSS ID", "Pag-ibig ID", "Voter's ID", "National ID", "Company ID", "Student's ID", "Passport/Visa"};
+        comboId = new JComboBox<>(options);
+        comboId.setBounds(655, 120, 130, 25);
+        comboId.setBackground(Color.WHITE);
+        comboId.setFont(new Font("HELVETICA", Font.PLAIN, 15));
+        //Border border = BorderFactory.createLineBorder(Color.decode("#D3A376"), 2);  // Change 'Color.BLUE' to your desired color
+        //comboId.setBorder(border);
+        background.add(comboId);
+        
+        lblpaymentMethod = new JLabel("Payment Method:");
+        lblpaymentMethod.setBounds(450, 170, 150, 25);
+        lblpaymentMethod.setFont(new Font("HELVETICA", Font.PLAIN, 17));
+        background.add(lblpaymentMethod);
+        
+        String paymentOptions[] = {"Cash", "Credit Card (VISA, Mastercard, etc.)", "Debit Card", "E-Wallet"};
+        comboPayment = new JComboBox<>(paymentOptions);
+        comboPayment.setBounds(655, 170, 130, 25);
+        comboPayment.setBackground(Color.WHITE);
+        comboPayment.setFont(new Font("HELVETICA", Font.PLAIN, 15));
+        //Border paymentBorder = BorderFactory.createLineBorder(Color.decode("#D3A376"), 2);  // Change 'Color.BLUE' to your desired color
+        //comboPayment.setBorder(paymentBorder);
+        background.add(comboPayment);
         
         //NANDINEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
-        setBounds(300, 100, 800, 550); //ITO FIT SA SCREEN KOOOOOOOOOOOOOOOOOOOOOOOOOO
-        //setBounds(300, 100, 1200, 800);
+        setBounds(230, 70, 900, 600); //ITO FIT SA SCREEN KOOOOOOOOOOOOOOOOOOOOOOOOOO
+        //setBounds(300, 100, 1200, 800); ITO YUNG SA SCREEN NI DANAH
         setVisible(true);
     }
 
