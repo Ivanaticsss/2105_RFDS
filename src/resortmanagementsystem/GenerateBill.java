@@ -62,10 +62,6 @@ public class GenerateBill {
             billText.append(" Services Total: ₱").append(String.format("%.2f", servicesTotal)).append("\n");
         }
 
-        if (roomPrice > 0) {
-            billText.append(" Length of Stay: ₱").append(String.format("%.2f", roomPrice * lengthOfStay)).append("\n\n");
-        }
-
         // Total cost calculation
         billText.append(" Total Cost: ₱").append(String.format("%.2f", totalCost)).append("\n")
                 .append(" Total Payment: ₱").append(String.format("%.2f", totalPayment)).append("\n")

@@ -24,20 +24,15 @@ public class Reception extends JFrame implements ActionListener{
 
         JMenuItem checkIn = new JMenuItem("Check-In Form");
         JMenuItem reservation = new JMenuItem("Reservation Form");
-        JMenuItem dayPass = new JMenuItem("Day Pass Form");
 
         checkIn.addActionListener(this);
         reservation.addActionListener(this);
-        dayPass.addActionListener(this);
 
         guestMenu.add(checkIn);
         guestMenu.add(reservation);
-        guestMenu.add(dayPass);
 
         // Set preferred size to match the button width
         guestMenu.setPreferredSize(new Dimension(newGuest.getWidth(), 100));
-
-        
         
         //pop up menu for Rooms button
         rooms = new JButton("Rooms");
@@ -61,7 +56,7 @@ public class Reception extends JFrame implements ActionListener{
         roomsMenu.setPreferredSize(new Dimension(rooms.getWidth(), roomsMenu.getPreferredSize().height));  
        
         
-        // Cottages button with Popup Menu
+        // Cottages button 
         cottages = new JButton("Cottages");
         cottages.setBounds(10, 150, 230, 40);
         cottages.setBackground(Color.decode("#2a1c13"));
@@ -69,18 +64,7 @@ public class Reception extends JFrame implements ActionListener{
         cottages.addActionListener(this);
         add(cottages);
         
-        cottagesMenu = new JPopupMenu();
-        cottagesMenu.setBackground(new Color(204, 153, 102)); 
-        JMenuItem addCottage = new JMenuItem("View Cottages");
-        JMenuItem searchCottages = new JMenuItem("Search Cottages");
-        addCottage.addActionListener(this);
-        searchCottages.addActionListener(this);
-        cottagesMenu.add(addCottage);
-        cottagesMenu.add(searchCottages);
-        
-        cottagesMenu.setPreferredSize(new Dimension(rooms.getWidth(), roomsMenu.getPreferredSize().height));  
-       
-        // Pools button with Popup Menu
+        // Pools button 
         pools = new JButton("Pools");
         pools.setBounds(10, 200, 230, 40);
         pools.setBackground(Color.decode("#2a1c13"));
@@ -88,17 +72,6 @@ public class Reception extends JFrame implements ActionListener{
         pools.addActionListener(this);
         add(pools);
         
-        poolsMenu = new JPopupMenu();
-        poolsMenu.setBackground(new Color(204, 153, 102));
-        JMenuItem addPool = new JMenuItem("View Pools");
-        JMenuItem searchPools = new JMenuItem("Search Pools");
-        addPool.addActionListener(this);
-        searchPools.addActionListener(this);
-        poolsMenu.add(addPool);
-        poolsMenu.add(searchPools);
-        
-        poolsMenu.setPreferredSize(new Dimension(rooms.getWidth(), roomsMenu.getPreferredSize().height));  
-       
         service = new JButton("Services");
         service.setBounds(10, 250, 230, 40);
         service.setBackground(Color.decode("#2a1c13"));
@@ -149,17 +122,10 @@ public class Reception extends JFrame implements ActionListener{
             guestMenu.show(newGuest, 0, newGuest.getHeight());
         }else if (ae.getSource() == rooms) {
             roomsMenu.show(rooms, 0, rooms.getHeight());
-        }else if (ae.getSource() == cottages) {
-            cottagesMenu.show(cottages, 0, cottages.getHeight());
-        } else if (ae.getSource() == pools) {
-            poolsMenu.show(pools, 0, pools.getHeight());
         } else if (ae.getActionCommand().equals("Check-In Form")) {
             setVisible(false);
             new CheckIn();
         }else if (ae.getActionCommand().equals("Reservation")) {
-            setVisible(false);
-            new CheckIn();
-        }else if (ae.getActionCommand().equals("Day Pass")) {
             setVisible(false);
             new CheckIn();
         }
@@ -169,18 +135,12 @@ public class Reception extends JFrame implements ActionListener{
         } else if (ae.getActionCommand().equals("Update Room Status")) {
             setVisible(false);
             new UpdateRoom();
-        } else if (ae.getActionCommand().equals("View Cottages")) {
-            setVisible(false);
-            new Cottage();
-        } else if (ae.getActionCommand().equals("Search Cottages")) {
+        } else if (ae.getActionCommand().equals("Cottages")) {
             setVisible(false);
             new SearchCottages();
-        } else if (ae.getActionCommand().equals("View Pools")) {
+        } else if (ae.getActionCommand().equals("Pools")) {
             setVisible(false);
             new Pool();
-        } else if (ae.getActionCommand().equals("Search Pools")) {
-            setVisible(false);
-            new SearchPool();
         } else if (ae.getSource() == guestInfo) {
             setVisible(false);
             new GuestInfo();

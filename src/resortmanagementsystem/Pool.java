@@ -1,83 +1,120 @@
-
 package resortmanagementsystem;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
-import net.proteanit.sql.*;  //rs2xml.jar
+import javax.swing.table.DefaultTableModel;
+import net.proteanit.sql.*;  // rs2xml.jar
 
 /**
  *
  * @author Danah Paris
  */
-public class Pool extends JFrame implements ActionListener{
+public class Pool extends JFrame implements ActionListener {
     
-    JTable table;
-    JButton back;
+    JTable poolTable;
+    JButton backButton;
+    JTextField poolNameField;
+    JButton submitButton;
     
-    Pool(){
+    Pool() {
         
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
         
-        ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icons/eight.jpg"));
-        Image i2 =  i1.getImage().getScaledInstance(600, 600, Image.SCALE_DEFAULT);
-        ImageIcon i3 = new ImageIcon(i2);
-        JLabel image = new JLabel(i3);
-        image.setBounds(500, 0, 600, 600);
-        add(image);
         
+       
+        ImageIcon icon = new ImageIcon(getClass().getResource("/icons/poolheader.jpg"));
+        JLabel headerLabel = new JLabel(icon);
+        headerLabel.setBounds(-20, -10, 1050, 80);
+        add(headerLabel);
+
+        JLabel serviceLabel = new JLabel("Pool Type: ");
+        serviceLabel.setBounds(50, 100, 100, 20);
+        add(serviceLabel);
+
+        poolNameField = new JTextField();
+        poolNameField.setBounds(150, 100, 150, 25);
+        poolNameField.setBackground(Color.white);
+        add(poolNameField);
         
-        JLabel j1 = new JLabel("Pool Number");
-        j1.setBounds(10, 10, 100, 20);
-        add(j1);
-        
-        JLabel j2 = new JLabel("Pool Size");
-        j2.setBounds(120, 10, 100, 20);
-        add(j2);
-        
-        JLabel j3 = new JLabel("Availability");
-        j3.setBounds(250, 10, 100, 20);
-        add(j3);
-        
-        JLabel j4 = new JLabel("Price");
-        j4.setBounds(375, 10, 100, 20);
-        add(j4);
-        
-        table = new JTable();
-        table.setBounds(0, 40, 500, 400);
-        add(table);
-        
-        try{
-            Conn c = new Conn();
-            ResultSet rs = c.s.executeQuery("select * from pool");
-            table.setModel(DbUtils.resultSetToTableModel(rs));
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        
-        back = new JButton("Back");
-        back.setBackground(Color.BLACK);
-        back.setForeground(Color.white);
-        back.addActionListener(this);
-        back.setBounds(200, 500, 120, 30);
-        add(back);
-        
-        
-        
-        setBounds(300, 200, 1050, 600);
+        poolTable = new JTable();
+        JScrollPane scrollPane = new JScrollPane(poolTable);
+        scrollPane.setBounds(0, 150, 1000, 250);
+        add(scrollPane);
+
+        loadTableData("SELECT * FROM pool");
+
+        submitButton = new JButton("Submit");
+        submitButton.setBackground(Color.BLACK);
+        submitButton.setForeground(Color.white);
+        submitButton.addActionListener(this);
+        submitButton.setBounds(300, 100, 120, 25); 
+        add(submitButton);
+
+        backButton = new JButton("Back");
+        backButton.setBackground(Color.BLACK);
+        backButton.setForeground(Color.white);
+        backButton.addActionListener(this);
+        backButton.setBounds(500, 510, 120, 30);
+        add(backButton);
+
+        setBounds(300, 200, 1000, 600);
         setVisible(true);
+    }
+
+    public void actionPerformed(ActionEvent ae) {
+        if (ae.getSource() == submitButton) {
+            try {
+                String poolName = poolNameField.getText(); 
+                String query;
+                
+               if (poolName.isEmpty()) {
+                query = "SELECT pool_type, price FROM pool";  
+            } else {
+                query = "SELECT pool_type, price FROM pool WHERE pool_type LIKE '%" + poolName + "%'";
+            }
+
+                loadTableData(query);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error loading data: " + e.getMessage());
+                e.printStackTrace();
+            }
+        } else if (ae.getSource() == backButton) {
+            setVisible(false);
+            new Reception();
         }
-    
-    public void actionPerformed(ActionEvent ae){
-        setVisible(false);
-        new Reception();
     }
-    
-    public static void main(String[] args){
-            new Pool();
+
+    private void loadTableData(String query) {
+    try {
+        Conn conn = new Conn(); 
+        ResultSet rs = conn.s.executeQuery(query);
+
+        String[] columnNames = {"Pool Name", "Pool Price"};
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+
+        
+        while (rs.next()) {
+            String poolName = rs.getString("pool_type");  // Adjust to your database column name
+            String poolPrice = rs.getString("price"); // Adjust to your database column name
+
+           
+            model.addRow(new Object[]{poolName, poolPrice});
+        }
+
+        // Update table model
+        poolTable.setModel(model);
+
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(this, "Error executing query: " + e.getMessage());
+        e.printStackTrace();
     }
-    
-    
+
+    }
+
+    public static void main(String[] args) {
+        new Pool();
+    }
 }

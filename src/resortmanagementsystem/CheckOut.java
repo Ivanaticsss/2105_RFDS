@@ -3,7 +3,9 @@ package resortmanagementsystem;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.sql.*;
+import javax.swing.border.LineBorder;
 
 public class CheckOut extends JFrame implements ActionListener {
 
@@ -16,117 +18,177 @@ public class CheckOut extends JFrame implements ActionListener {
     CheckOut() {
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
+        
+        // Header Image
+        ImageIcon icon = new ImageIcon(getClass().getResource("/icons/checkoutheader.png"));
+        JLabel header = new JLabel(icon);
+        header.setBounds(0, -5, 1050, 70);
+        add(header);
 
-        JLabel text = new JLabel("Check Out");
-        text.setBounds(100, 20, 100, 30);
-        text.setForeground(Color.BLUE);
-        text.setFont(new Font("Tamoha", Font.PLAIN, 20));
-        add(text);
+        Font labelFont = new Font("Helvetica", Font.BOLD, 15);
 
         JLabel lblSearch = new JLabel("Search Guest ID:");
-        lblSearch.setBounds(30, 80, 120, 30);
+        lblSearch.setBounds(30, 100, 150, 30);
+        Font font = new Font("Helvetica", Font.BOLD, 17);
+        lblSearch.setFont(font);
         add(lblSearch);
-
+        
         searchField = new JTextField();
-        searchField.setBounds(150, 80, 150, 25);
+        searchField.setBounds(170, 100, 150, 30);
         add(searchField);
 
-        
-        
         searchButton = new JButton("");
-        searchButton.setBounds(310, 80, 100, 25);
+        searchButton.setBounds(330, 100, 100, 25);
         searchButton.setBackground(Color.WHITE);
         ImageIcon searchIcon = new ImageIcon(ClassLoader.getSystemResource("icons/search.png"));
         Image img = searchIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH); 
         searchIcon = new ImageIcon(img);
         searchButton.setIcon(searchIcon);
-        searchButton.setBounds(310, 80, searchIcon.getIconWidth(), searchIcon.getIconHeight()); // Adjust size based on icon size
+        searchButton.setBounds(330, 100, searchIcon.getIconWidth(), searchIcon.getIconHeight()); // Adjust size based on icon size
         searchButton.addActionListener(this);
         add(searchButton);
 
         JLabel lblGuestID = new JLabel("Guest ID");
-        lblGuestID.setBounds(30, 130, 100, 30);
+        lblGuestID.setBounds(30, 150, 120, 30);
+        lblGuestID.setFont(labelFont);  
         add(lblGuestID);
 
         guestIDField = new JTextField();
-        guestIDField.setBounds(150, 130, 150, 25);
+        guestIDField.setBounds(170, 150, 150, 25);
         guestIDField.setEditable(false);
         guestIDField.setBackground(Color.WHITE);
         add(guestIDField);
 
         JLabel lblRoom = new JLabel("Room Number");
-        lblRoom.setBounds(30, 180, 100, 30);
+        lblRoom.setBounds(30, 190, 150, 30);
+        lblRoom.setFont(labelFont);  
         add(lblRoom);
 
         roomNumberField = new JTextField();
-        roomNumberField.setBounds(150, 180, 150, 25);
+        roomNumberField.setBounds(170, 190, 150, 25);
         roomNumberField.setEditable(false);
         roomNumberField.setBackground(Color.WHITE);
         add(roomNumberField);
 
         JLabel lblCheckIn = new JLabel("Check-In Time");
-        lblCheckIn.setBounds(30, 230, 100, 30);
+        lblCheckIn.setBounds(30, 230, 150, 30);
+        lblCheckIn.setFont(labelFont);  
         add(lblCheckIn);
 
         checkInField = new JTextField();
-        checkInField.setBounds(150, 230, 150, 25);
+        checkInField.setBounds(170, 230, 150, 25);
         checkInField.setEditable(false);
         checkInField.setBackground(Color.WHITE);
         add(checkInField);
 
         JLabel lblCheckOut = new JLabel("Check-Out Time");
-        lblCheckOut.setBounds(30, 280, 100, 30);
+        lblCheckOut.setBounds(30, 270, 150, 30);
+        lblCheckOut.setFont(labelFont);  
         add(lblCheckOut);
 
         checkOutField = new JTextField();
-        checkOutField.setBounds(150, 280, 150, 25);
+        checkOutField.setBounds(170, 270, 150, 25);
         checkOutField.setEditable(false);
         checkOutField.setBackground(Color.WHITE);
         add(checkOutField);
 
         JLabel lblPayment = new JLabel("Payment Status");
-        lblPayment.setBounds(30, 330, 100, 30);
+        lblPayment.setBounds(30, 310, 150, 30);
+        lblPayment.setFont(labelFont);  
         add(lblPayment);
 
         paymentField = new JTextField();
-        paymentField.setBounds(150, 330, 150, 25);
+        paymentField.setBounds(170, 310, 150, 25);
         paymentField.setEditable(false);
         paymentField.setBackground(Color.WHITE);
         add(paymentField);
-
+        
+        // Check Out Button
         checkOut = new JButton("Check Out");
-        checkOut.setBackground(Color.BLACK);
+        checkOut.setBackground(Color.decode("#2a1c13"));
         checkOut.setForeground(Color.WHITE);
-        checkOut.setBounds(30, 380, 120, 30);
+        checkOut.setBounds(280,500, 120, 40);  
+        checkOut.setFont(new Font("Helvetica", Font.BOLD, 14)); 
+        checkOut.setBorder(new LineBorder(Color.decode("#2a1c13"), 2, true));  // Rounded border
+        checkOut.setFocusPainted(false);  
+        checkOut.setCursor(new Cursor(Cursor.HAND_CURSOR));  
         checkOut.addActionListener(this);
+        
+        checkOut.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                checkOut.setBackground(Color.decode("#3e2a1f"));  
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                checkOut.setBackground(Color.decode("#2a1c13"));  
+            }
+        });
+
+        
         add(checkOut);
 
         back = new JButton("Back");
-        back.setBackground(Color.BLACK);
+        back.setBackground(Color.decode("#2a1c13"));
         back.setForeground(Color.WHITE);
-        back.setBounds(170, 380, 120, 30);
+        back.setBounds(420, 500, 120, 40); 
+        back.setFont(new Font("Helvetica", Font.BOLD, 14));  
+        back.setBorder(new LineBorder(Color.decode("#2a1c13"), 2, true));  
+        back.setFocusPainted(false); 
+        back.setCursor(new Cursor(Cursor.HAND_CURSOR));  
         back.addActionListener(this);
+
+        // Hover effect for the "Back" button
+        back.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                back.setBackground(Color.decode("#3e2a1f"));  
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                back.setBackground(Color.decode("#2a1c13")); 
+            }
+        });
+
         add(back);
+
         
-        generateBill = new JButton ("Generate Bill");
-        generateBill.setBackground(Color.BLACK);
+        generateBill = new JButton("Generate Bill");
+        generateBill.setBackground(Color.decode("#9c6644"));
         generateBill.setForeground(Color.WHITE);
-        generateBill.setBounds (295, 380, 120, 30);
+        generateBill.setBounds(560, 500, 120, 40);  
+        generateBill.setFont(new Font("Helvetica", Font.BOLD, 14));  
+        generateBill.setBorder(new LineBorder(Color.decode("#9c6644"), 2, true));  
+        generateBill.setFocusPainted(false); 
+        generateBill.setCursor(new Cursor(Cursor.HAND_CURSOR)); 
         generateBill.addActionListener(this);
-        add (generateBill);
-        
+       
+        generateBill.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                generateBill.setBackground(Color.decode("#a17d58")); 
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                generateBill.setBackground(Color.decode("#9c6644")); 
+            }
+        });
+
+        add(generateBill);
+
 
         // Set up the table with guest data
         String[] columnNames = {"Guest ID", "Name", "Room Number", "Check-In Time", "Check-Out Time", "Payment Status"};
         Object[][] data = fetchGuestData();
         guestTable = new JTable(data, columnNames);
         guestTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        guestTable.setBounds(350, 50, 450, 250);
+        guestTable.setBounds(400, 100, 590, 300);
         scrollPane = new JScrollPane(guestTable);
-        scrollPane.setBounds(350, 50, 450, 250);
+        scrollPane.setBounds(400, 100, 590, 300);
         add(scrollPane);
 
-        setBounds(300, 200, 850, 500);
+        setBounds(300, 200, 1050, 600);
+        setLocationRelativeTo(null); 
         setVisible(true);
     }
 
@@ -238,7 +300,7 @@ public class CheckOut extends JFrame implements ActionListener {
                 }
 
                 // Add the services' total cost to the total cost
-                totalCost += servicesTotal;
+                //totalCost += servicesTotal;
 
                 // Call GenerateBill and pass all these values, with Date types for check-in and check-out dates
                 if (roomNumber != null && !roomNumber.isEmpty()) {

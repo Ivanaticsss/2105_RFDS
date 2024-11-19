@@ -8,7 +8,7 @@ import net.proteanit.sql.*; // rs2xml.jar
 
 public class GuestInfo extends JFrame implements ActionListener {
     
-    JTable table;
+    private JTable table;
     JButton back, searchButton;
     JTextField searchField;
     

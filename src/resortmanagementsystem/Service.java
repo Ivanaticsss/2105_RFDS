@@ -28,7 +28,7 @@ public class Service extends JFrame implements ActionListener {
         headerLabel.setBounds(-20, -10, 1050, 80);
         add(headerLabel);
 
-        JLabel serviceLabel = new JLabel("Service Name");
+        JLabel serviceLabel = new JLabel("Service Name:");
         serviceLabel.setBounds(50, 100, 100, 20);
         add(serviceLabel);
 
