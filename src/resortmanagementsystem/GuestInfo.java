@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
+import javax.swing.border.LineBorder;
 import net.proteanit.sql.*; // rs2xml.jar
 
 public class GuestInfo extends JFrame implements ActionListener {
@@ -35,10 +36,26 @@ public class GuestInfo extends JFrame implements ActionListener {
 
         // Search Button
         searchButton = new JButton("Search");
-        searchButton.setBounds(250, 110, 100, 30);
-        searchButton.setBackground(Color.BLACK);
+        searchButton.setBackground(Color.decode("#9c6644"));
         searchButton.setForeground(Color.WHITE);
+        searchButton.setBounds(250, 110, 100, 30);
+        searchButton.setFont(new Font("Helvetica", Font.BOLD, 14));  
+        searchButton.setBorder(new LineBorder(Color.decode("#9c6644"), 2, true));  
+        searchButton.setFocusPainted(false); 
+        searchButton.setCursor(new Cursor(Cursor.HAND_CURSOR)); 
         searchButton.addActionListener(this);
+       
+        searchButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                searchButton.setBackground(Color.decode("#a17d58")); 
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                searchButton.setBackground(Color.decode("#9c6644")); 
+            }
+        });
+
         add(searchButton);
 
         // Table and Scroll Pane
@@ -54,11 +71,28 @@ public class GuestInfo extends JFrame implements ActionListener {
         populateTable("");
 
         
-        back = new JButton("Back");
-        back.setBackground(Color.BLACK);
+       back = new JButton("Back");
+        back.setBackground(Color.decode("#2a1c13"));
         back.setForeground(Color.WHITE);
+        back.setBounds(400, 510, 120, 30);
+        back.setFont(new Font("Helvetica", Font.BOLD, 14));  
+        back.setBorder(new LineBorder(Color.decode("#2a1c13"), 2, true));  
+        back.setFocusPainted(false); 
+        back.setCursor(new Cursor(Cursor.HAND_CURSOR));  
         back.addActionListener(this);
-        back.setBounds(440, 500, 120, 30);
+
+        // Hover effect for the "Back" button
+        back.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                back.setBackground(Color.decode("#3e2a1f"));  
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                back.setBackground(Color.decode("#2a1c13")); 
+            }
+        });
+
         add(back);
         
         

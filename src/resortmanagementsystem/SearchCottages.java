@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
+import javax.swing.border.LineBorder;
 import net.proteanit.sql.DbUtils; // Ensure rs2xml.jar is included in your classpath
 
 public class SearchCottages extends JFrame implements ActionListener {
@@ -44,18 +45,52 @@ public class SearchCottages extends JFrame implements ActionListener {
         loadTableData("select * from cottage");
 
         submit = new JButton("Submit");
-        submit.setBackground(Color.BLACK);
-        submit.setForeground(Color.white);
+        submit.setBackground(Color.decode("#9c6644"));
+        submit.setForeground(Color.WHITE);
+        submit.setBounds(300, 100, 120, 25);  
+        submit.setFont(new Font("Helvetica", Font.BOLD, 14));  
+        submit.setBorder(new LineBorder(Color.decode("#9c6644"), 2, true));  
+        submit.setFocusPainted(false); 
+        submit.setCursor(new Cursor(Cursor.HAND_CURSOR)); 
         submit.addActionListener(this);
-        submit.setBounds(300, 510, 120, 30);
-        add(submit);
+       
+        submit.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                submit.setBackground(Color.decode("#a17d58")); 
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                submit.setBackground(Color.decode("#9c6644")); 
+            }
+        });
 
+        add(submit);
+        
         back = new JButton("Back");
-        back.setBackground(Color.BLACK);
-        back.setForeground(Color.white);
+        back.setBackground(Color.decode("#2a1c13"));
+        back.setForeground(Color.WHITE);
+        back.setBounds(400, 510, 120, 30);
+        back.setFont(new Font("Helvetica", Font.BOLD, 14));  
+        back.setBorder(new LineBorder(Color.decode("#2a1c13"), 2, true));  
+        back.setFocusPainted(false); 
+        back.setCursor(new Cursor(Cursor.HAND_CURSOR));  
         back.addActionListener(this);
-        back.setBounds(500, 510, 120, 30);
+
+        // Hover effect for the "Back" button
+        back.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                back.setBackground(Color.decode("#3e2a1f"));  
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                back.setBackground(Color.decode("#2a1c13")); 
+            }
+        });
+
         add(back);
+        
 
         setBounds(300, 200, 1000, 600);
         setVisible(true);

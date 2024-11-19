@@ -4,12 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.sql.*;
 import java.awt.event.*;
+import javax.swing.border.LineBorder;
 
 public class UpdateCheck extends JFrame implements ActionListener {
 
     Choice ccustomer;
     JTextField tfroom, tfname, tfcheckin, tfpaid, tfpending, tftotalCost, tfdeposit, tfchange;
-    JButton check, update, back, generateBill, calculate;
+    JButton check, update, back, generateBill, calculate, searchButton;
     JTable guestTable;
     JScrollPane scrollPane;
 
@@ -17,18 +18,21 @@ public class UpdateCheck extends JFrame implements ActionListener {
             getContentPane().setBackground(Color.WHITE);
             setLayout(null);
 
-            JLabel text = new JLabel("Update Status");
-            text.setFont(new Font("Tamoha", Font.PLAIN, 20));
-            text.setBounds(90, 20, 200, 30);
-            text.setForeground(Color.BLUE);
-            add(text);
+            ImageIcon icon = new ImageIcon(getClass().getResource("/icons/checkoutheader.png"));
+            JLabel header = new JLabel(icon);
+            header.setBounds(0, -5, 1050, 70);
+            add(header);
+            
+            Font labelFont = new Font("Tahoma", Font.BOLD, 13); 
+            
 
             JLabel lblid = new JLabel("Guest ID");
             lblid.setBounds(30, 80, 100, 20);
+            lblid.setFont(labelFont); 
             add(lblid);
 
             ccustomer = new Choice();
-            ccustomer.setBounds(200, 80, 150, 25);
+            ccustomer.setBounds(150, 80, 150, 25);
             add(ccustomer);
 
             // Load Guest IDs
@@ -45,114 +49,178 @@ public class UpdateCheck extends JFrame implements ActionListener {
             // Initialize text fields here
             JLabel lblroom = new JLabel("Room");
             lblroom.setBounds(30, 120, 100, 20);
+            lblroom.setFont(labelFont); 
             add(lblroom);
             tfroom = new JTextField();
-            tfroom.setBounds(200, 120, 150, 25);
+            tfroom.setBounds(150, 120, 150, 25);
             add(tfroom);
 
             JLabel lblname = new JLabel("Name");
             lblname.setBounds(30, 160, 100, 20);
+            lblname.setFont(labelFont); 
             add(lblname);
             tfname = new JTextField();
-            tfname.setBounds(200, 160, 150, 25);
+            tfname.setBounds(150, 160, 150, 25);
             add(tfname);
 
             
             JLabel lblCheckIn = new JLabel("Check-In Date");
             lblCheckIn.setBounds(30, 200, 100, 20);
+            lblCheckIn.setFont(labelFont); 
             add(lblCheckIn);
             tfcheckin = new JTextField();
-            tfcheckin.setBounds(200, 200, 150, 25);
+            tfcheckin.setBounds(150, 200, 150, 25);
             add(tfcheckin);
 
             JLabel lblPaid = new JLabel("Paid");
             lblPaid.setBounds(30, 240, 100, 20);
+            lblPaid.setFont(labelFont); 
             add(lblPaid);
             tfpaid = new JTextField();
-            tfpaid.setBounds(200, 240, 150, 25);
+            tfpaid.setBounds(150, 240, 150, 25);
             add(tfpaid);
 
             
             JLabel lblPending = new JLabel("Pending");
             lblPending.setBounds(30, 280, 100, 20);
+            lblPending.setFont(labelFont); 
             add(lblPending);
             tfpending = new JTextField();
-            tfpending.setBounds(200, 280, 150, 25);
+            tfpending.setBounds(150, 280, 150, 25);
             tfpending.setEditable(false);  // To make it read-only
             add(tfpending);
 
             
             JLabel lblTotal = new JLabel("Total Cost");
             lblTotal.setBounds(30, 320, 100, 20);
+            lblTotal.setFont(labelFont); 
             add(lblTotal);
             tftotalCost = new JTextField();
-            tftotalCost.setBounds(200, 320, 150, 25);
+            tftotalCost.setBounds(150, 320, 150, 25);
             add(tftotalCost);
             
             JLabel lblDeposit = new JLabel("New Deposit");
             lblDeposit.setBounds(30, 360, 100, 20);
+            lblDeposit.setFont(labelFont);
             add(lblDeposit);
             tfdeposit = new JTextField();
-            tfdeposit.setBounds(200, 360, 150, 25);
+            tfdeposit.setBounds(150, 360, 150, 25);
             add(tfdeposit);
             
             calculate = new JButton("Calculate");
-            calculate.setBackground(Color.BLACK);
-            calculate.setForeground(Color.WHITE);
-            calculate.setBounds(360, 360, 100, 30);
+            
+            calculate.setBounds(300, 360, 100, 25);
             calculate.addActionListener(this);
             add(calculate);
 
             JLabel lblChange = new JLabel("Change");
             lblChange.setBounds(30, 400, 100, 20);
+            lblChange.setFont(labelFont);
             add(lblChange);
             tfchange = new JTextField();
-            tfchange.setBounds(200, 400, 150, 25);
+            tfchange.setBounds(150, 400, 150, 25);
             add(tfchange);
 
-            // Check Button
-            check = new JButton("Check");
-            check.setBackground(Color.BLACK);
-            check.setForeground(Color.WHITE);
-            check.setBounds(30, 440, 100, 30);
-            check.addActionListener(this);
-            add(check);
+           
+            searchButton = new JButton("");
+            searchButton.setBounds(310, 80, 100, 25); 
+            searchButton.setBackground(Color.WHITE);
+            ImageIcon searchIcon = new ImageIcon(ClassLoader.getSystemResource("icons/search.png"));
+            Image img = searchIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH); 
+            searchIcon = new ImageIcon(img);
+            searchButton.setIcon(searchIcon);
+            searchButton.setBounds(310, 80, searchIcon.getIconWidth(), searchIcon.getIconHeight()); // Adjust size based on icon size
+            searchButton.addActionListener(this);
+            add(searchButton);
 
-            // Update Button
-            update = new JButton("Update");
-            update.setBackground(Color.BLACK);
-            update.setForeground(Color.WHITE);
-            update.setBounds(150, 440, 100, 30);
-            update.addActionListener(this);
-            add(update);
+            
+                // Check Out Button
+             update = new JButton("Update");
+             update.setBackground(Color.decode("#2a1c13"));
+             update.setForeground(Color.WHITE);
+             update.setBounds(280,500, 120, 40);  
+             update.setFont(new Font("Helvetica", Font.BOLD, 14)); 
+             update.setBorder(new LineBorder(Color.decode("#2a1c13"), 2, true));  // Rounded border
+             update.setFocusPainted(false);  
+             update.setCursor(new Cursor(Cursor.HAND_CURSOR));  
+             update.addActionListener(this);
 
-            // Generate Bill Button
-            generateBill = new JButton("Generate Bill");
-            generateBill.setBackground(Color.BLACK);
-            generateBill.setForeground(Color.WHITE);
-            generateBill.setBounds(270, 440, 120, 30);
-            generateBill.addActionListener(this);
-            add(generateBill);
+             update.addMouseListener(new MouseAdapter() {
+                 @Override
+                 public void mouseEntered(MouseEvent e) {
+                     update.setBackground(Color.decode("#3e2a1f"));  
+                 }
+                 @Override
+                 public void mouseExited(MouseEvent e) {
+                     update.setBackground(Color.decode("#2a1c13"));  
+                 }
+             });
 
-            // Back Button
-            back = new JButton("Back");
-            back.setBackground(Color.BLACK);
-            back.setForeground(Color.WHITE);
-            back.setBounds(400, 440, 100, 30);
-            back.addActionListener(this);
-            add(back);
+
+             add(update);
+
+             back = new JButton("Back");
+             back.setBackground(Color.decode("#2a1c13"));
+             back.setForeground(Color.WHITE);
+             back.setBounds(420, 500, 120, 40); 
+             back.setFont(new Font("Helvetica", Font.BOLD, 14));  
+             back.setBorder(new LineBorder(Color.decode("#2a1c13"), 2, true));  
+             back.setFocusPainted(false); 
+             back.setCursor(new Cursor(Cursor.HAND_CURSOR));  
+             back.addActionListener(this);
+
+             // Hover effect for the "Back" button
+             back.addMouseListener(new MouseAdapter() {
+                 @Override
+                 public void mouseEntered(MouseEvent e) {
+                     back.setBackground(Color.decode("#3e2a1f"));  
+                 }
+                 @Override
+                 public void mouseExited(MouseEvent e) {
+                     back.setBackground(Color.decode("#2a1c13")); 
+                 }
+             });
+
+             add(back);
+
+
+             generateBill = new JButton("Generate Bill");
+             generateBill.setBackground(Color.decode("#9c6644"));
+             generateBill.setForeground(Color.WHITE);
+             generateBill.setBounds(560, 500, 120, 40);  
+             generateBill.setFont(new Font("Helvetica", Font.BOLD, 14));  
+             generateBill.setBorder(new LineBorder(Color.decode("#9c6644"), 2, true));  
+             generateBill.setFocusPainted(false); 
+             generateBill.setCursor(new Cursor(Cursor.HAND_CURSOR)); 
+             generateBill.addActionListener(this);
+
+             generateBill.addMouseListener(new MouseAdapter() {
+                 @Override
+                 public void mouseEntered(MouseEvent e) {
+                     generateBill.setBackground(Color.decode("#a17d58")); 
+                 }
+                 @Override
+                 public void mouseExited(MouseEvent e) {
+                     generateBill.setBackground(Color.decode("#9c6644")); 
+                 }
+             });
+
+             add(generateBill);
+
+
 
             // Set up the table with guest data
             String[] columnNames = {"Guest ID", "Name", "Room Number", "Check-In Time", "Check-Out Time", "Total Cost", "Deposit", "Payment Status"};
             Object[][] data = fetchGuestData();
             guestTable = new JTable(data, columnNames);
             guestTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            guestTable.setBounds(380, 50, 580, 250);
+            guestTable.setBounds(420, 100, 590, 300);
             scrollPane = new JScrollPane(guestTable);
-            scrollPane.setBounds(380, 50, 580, 250);
+            scrollPane.setBounds(420, 100, 590, 300);
             add(scrollPane);
 
-            setBounds(300, 200, 980, 520);
+            setBounds(300, 200, 1050, 600);
+            setLocationRelativeTo(null); 
             setVisible(true);
         }
 
@@ -190,7 +258,7 @@ public class UpdateCheck extends JFrame implements ActionListener {
 
 
             public void actionPerformed(ActionEvent ae) {
-            if (ae.getSource() == check) {
+            if (ae.getSource() == searchButton) {
         String id = ccustomer.getSelectedItem();
         String query = "SELECT * FROM guest WHERE guestID = '" + id + "'";
         try {

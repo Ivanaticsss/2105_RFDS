@@ -57,6 +57,7 @@ public class CheckOut extends JFrame implements ActionListener {
         guestIDField.setBounds(170, 150, 150, 25);
         guestIDField.setEditable(false);
         guestIDField.setBackground(Color.WHITE);
+        guestIDField.setBorder(new LineBorder(Color.GRAY)); 
         add(guestIDField);
 
         JLabel lblRoom = new JLabel("Room Number");
@@ -68,6 +69,7 @@ public class CheckOut extends JFrame implements ActionListener {
         roomNumberField.setBounds(170, 190, 150, 25);
         roomNumberField.setEditable(false);
         roomNumberField.setBackground(Color.WHITE);
+        roomNumberField.setBorder(new LineBorder(Color.GRAY)); 
         add(roomNumberField);
 
         JLabel lblCheckIn = new JLabel("Check-In Time");
@@ -79,6 +81,7 @@ public class CheckOut extends JFrame implements ActionListener {
         checkInField.setBounds(170, 230, 150, 25);
         checkInField.setEditable(false);
         checkInField.setBackground(Color.WHITE);
+        checkInField.setBorder(new LineBorder(Color.GRAY)); 
         add(checkInField);
 
         JLabel lblCheckOut = new JLabel("Check-Out Time");
@@ -90,6 +93,7 @@ public class CheckOut extends JFrame implements ActionListener {
         checkOutField.setBounds(170, 270, 150, 25);
         checkOutField.setEditable(false);
         checkOutField.setBackground(Color.WHITE);
+        checkOutField.setBorder(new LineBorder(Color.GRAY)); 
         add(checkOutField);
 
         JLabel lblPayment = new JLabel("Payment Status");
@@ -101,6 +105,7 @@ public class CheckOut extends JFrame implements ActionListener {
         paymentField.setBounds(170, 310, 150, 25);
         paymentField.setEditable(false);
         paymentField.setBackground(Color.WHITE);
+        paymentField.setBorder(new LineBorder(Color.GRAY)); 
         add(paymentField);
         
         // Check Out Button

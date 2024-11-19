@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.sql.*;
 import java.awt.event.*;
+import javax.swing.border.LineBorder;
 import net.proteanit.sql.DbUtils;
 
 public class UpdateRoom extends JFrame implements ActionListener {
@@ -70,26 +71,84 @@ public class UpdateRoom extends JFrame implements ActionListener {
         tfPrice.setBounds(200, 230, 150, 25);
         add(tfPrice);
 
-        check = new JButton("Search");
-        check.setBackground(Color.BLACK);
-        check.setForeground(Color.WHITE);
-        check.setBounds(30, 300, 100, 30);
-        check.addActionListener(this);
-        add(check);
+        
+        
+        
+             check = new JButton("Search");
+             check.setBackground(Color.decode("#2a1c13"));
+             check.setForeground(Color.WHITE);
+             check.setBounds(30, 300, 100, 30);
+             check.setFont(new Font("Helvetica", Font.BOLD, 14)); 
+             check.setBorder(new LineBorder(Color.decode("#2a1c13"), 2, true));  // Rounded border
+             check.setFocusPainted(false);  
+             check.setCursor(new Cursor(Cursor.HAND_CURSOR));  
+             check.addActionListener(this);
 
-        update = new JButton("Update");
-        update.setBackground(Color.BLACK);
-        update.setForeground(Color.WHITE);
-        update.setBounds(150, 300, 100, 30);
-        update.addActionListener(this);
-        add(update);
+             check.addMouseListener(new MouseAdapter() {
+                 @Override
+                 public void mouseEntered(MouseEvent e) {
+                     check.setBackground(Color.decode("#3e2a1f"));  
+                 }
+                 @Override
+                 public void mouseExited(MouseEvent e) {
+                     check.setBackground(Color.decode("#2a1c13"));  
+                 }
+             });
 
-        back = new JButton("Back");
-        back.setBackground(Color.BLACK);
-        back.setForeground(Color.WHITE);
-        back.setBounds(270, 300, 100, 30);
-        back.addActionListener(this);
-        add(back);
+
+             add(check);
+
+
+        
+             update = new JButton("Update");
+             update.setBackground(Color.decode("#2a1c13"));
+             update.setForeground(Color.WHITE);
+             update.setBounds(150, 300, 100, 30);
+             update.setFont(new Font("Helvetica", Font.BOLD, 14)); 
+             update.setBorder(new LineBorder(Color.decode("#2a1c13"), 2, true));  // Rounded border
+             update.setFocusPainted(false);  
+             update.setCursor(new Cursor(Cursor.HAND_CURSOR));  
+             update.addActionListener(this);
+
+             update.addMouseListener(new MouseAdapter() {
+                 @Override
+                 public void mouseEntered(MouseEvent e) {
+                     update.setBackground(Color.decode("#3e2a1f"));  
+                 }
+                 @Override
+                 public void mouseExited(MouseEvent e) {
+                     update.setBackground(Color.decode("#2a1c13"));  
+                 }
+             });
+
+
+             add(update);
+
+             back = new JButton("Back");
+             back.setBackground(Color.decode("#2a1c13"));
+             back.setForeground(Color.WHITE);
+             back.setBounds(270, 300, 100, 30);
+             back.setFont(new Font("Helvetica", Font.BOLD, 14));  
+             back.setBorder(new LineBorder(Color.decode("#2a1c13"), 2, true));  
+             back.setFocusPainted(false); 
+             back.setCursor(new Cursor(Cursor.HAND_CURSOR));  
+             back.addActionListener(this);
+
+             // Hover effect for the "Back" button
+             back.addMouseListener(new MouseAdapter() {
+                 @Override
+                 public void mouseEntered(MouseEvent e) {
+                     back.setBackground(Color.decode("#3e2a1f"));  
+                 }
+                 @Override
+                 public void mouseExited(MouseEvent e) {
+                     back.setBackground(Color.decode("#2a1c13")); 
+                 }
+             });
+
+             add(back);
+
+
 
         setBounds(300, 200, 980, 450);
         setVisible(true);

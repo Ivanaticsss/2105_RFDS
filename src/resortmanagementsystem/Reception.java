@@ -32,7 +32,7 @@ public class Reception extends JFrame implements ActionListener{
         guestMenu.add(reservation);
 
         // Set preferred size to match the button width
-        guestMenu.setPreferredSize(new Dimension(newGuest.getWidth(), 100));
+        guestMenu.setPreferredSize(new Dimension(newGuest.getWidth(), 50));
         
         //pop up menu for Rooms button
         rooms = new JButton("Rooms");

@@ -67,7 +67,7 @@ public class CheckIn extends JFrame implements ActionListener {
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
         
-        ImageIcon i1 = new ImageIcon(getClass().getResource("/icons/anlaa.jpg"));
+        ImageIcon i1 = new ImageIcon( getClass().getResource("/icons/anlaa.jpg"));
         Image i2 = i1.getImage().getScaledInstance(1199, 130, Image.SCALE_SMOOTH); // Use smoother scaling
         ImageIcon i3 = new ImageIcon(i2);
         JLabel image = new JLabel(i3);
