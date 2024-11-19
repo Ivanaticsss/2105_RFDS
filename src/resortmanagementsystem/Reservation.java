@@ -6,9 +6,15 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
 //import javax.swing.JOptionPane;
 import javax.swing.*;
 import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -19,7 +25,7 @@ public class Reservation extends JFrame{
     private JPanel background;
     private JRadioButton rMale, rFemale;
     private JComboBox<String> checkInMonth, checkInDay, checkInYear, comboId, comboPayment;
-    private JButton jBAdd, jBBack, jBReset;
+    private JButton jBAdd, jBBack, jBReset, availServices;
 
     public Reservation() {
         setTitle("Book Reservation");
@@ -269,6 +275,14 @@ public class Reservation extends JFrame{
         //comboPayment.setBorder(paymentBorder);
         background.add(comboPayment);
         
+        availServices = new JButton("Avail Services");
+        availServices.setBackground(Color.decode("#D2B486"));
+        availServices.setForeground(Color.BLACK);
+        availServices.setFont(new Font("Helvetica", Font.BOLD, 18));
+        availServices.setBounds(520, 320, 200, 40);
+        availServices.addActionListener((ActionListener) this);
+        background.add(availServices);
+        
         jBAdd = new JButton ("Add");
         jBAdd.setBackground(Color.BLACK);
         jBAdd.setForeground(Color.WHITE);
@@ -351,7 +365,86 @@ public class Reservation extends JFrame{
             lblCheckOut.setFont(new Font("HELVETICA", Font.ITALIC, 10));
         }
     }
+    
+    public void actionPerformed(ActionEvent ae) {
+    if (ae.getSource() == availServices) {
+        String name = tfName.getText().trim();
+        String address = tfAddress.getText().trim();
+        String number = tfNumber.getText().trim();
+        String id = (String) comboId.getSelectedItem();  
+        String sex = rMale.isSelected() ? "Male" : "Female"; 
+        String country = tfCountry.getText().trim();
+        String paymentMethod = (String) comboPayment.getSelectedItem();  
 
+        String lengthOfStayStr = tfLengthOfStay.getText().trim();  // Get the length of stay from the input
+
+        // Validate required fields
+        if (name.isEmpty() || address.isEmpty() || number.isEmpty() || country.isEmpty() || lengthOfStayStr.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please fill in all the required fields.", "Input Error", JOptionPane.ERROR_MESSAGE);
+            return;  // Exit the method if any required fields are empty
+        }
+
+        try {
+            // Validate the length of stay input
+            int lengthOfStay = Integer.parseInt(lengthOfStayStr);  
+            if (lengthOfStay <= 0) {
+                JOptionPane.showMessageDialog(this, "Length of stay must be a positive number.", "Input Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Get the check-in date from the selected values
+            String checkInDate = checkInYear.getSelectedItem() + "-" +
+                                 checkInMonth.getSelectedItem() + "-" +
+                                 checkInDay.getSelectedItem();
+            
+            // Parse the check-in date to Date format
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date checkInParsedDate = inputFormat.parse(checkInDate);
+            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String formattedCheckInDate = outputFormat.format(checkInParsedDate);
+
+            // Calculate check-out date based on length of stay
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(checkInParsedDate);  
+            cal.add(Calendar.DAY_OF_YEAR, lengthOfStay);  
+            String checkOutDate = outputFormat.format(cal.getTime());
+
+            // SQL query to insert a new guest reservation
+            String query = "INSERT INTO guest (name, address, number, document, sex, country, check_in_date, check_out_date, paymentMethod, length_of_stay) " +
+                           "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+            // Create a database connection and execute the insert query
+            Conn conn = new Conn();
+            PreparedStatement stmt = conn.c.prepareStatement(query);
+            stmt.setString(1, name);
+            stmt.setString(2, address);
+            stmt.setString(3, number);
+            stmt.setString(4, id);
+            stmt.setString(5, sex);
+            stmt.setString(6, country);
+            stmt.setString(7, formattedCheckInDate);  // Check-in date
+            stmt.setString(8, checkOutDate);  // Check-out date
+            stmt.setString(9, paymentMethod);  // Payment method
+            stmt.setInt(10, lengthOfStay);  // Length of stay
+            stmt.executeUpdate();  // Execute the query
+            
+            JOptionPane.showMessageDialog(this, "Reservation added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+            // Optionally, you can clear the fields or update UI elements here
+
+        } catch (NumberFormatException e) {
+            // Handle invalid length of stay input
+            JOptionPane.showMessageDialog(this, "Please enter a valid number for the length of stay.", "Input Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            // Handle any other exceptions (e.g., database issues)
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "An error occurred while processing your reservation.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+}
+
+    
+    
     public static void main(String[] args) {
         new Reservation();
     }
