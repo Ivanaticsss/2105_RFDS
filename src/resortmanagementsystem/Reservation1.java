@@ -29,7 +29,7 @@ public class Reservation1 extends JFrame implements ActionListener {
         private Choice croom;
         private JLabel checkintime, lblGuestID, lblDepositRange, lblname, lbladress, lblnumber, lblroomtype, lblroom, lblBedType, lblFacilities, lblPrice, lblLength, lblDays, lblTotalCost, lblPesoTotalCost, lbldeposit, lblPesoDeposit, lblchange, lblPesoChange, lblid, lblsex, lblCountry, lbltime, lblpaymentMethod;
         private JButton add, back, availServices, reset, searchRooms, 
-                searchCottages, guestInfo,searchServices;
+                searchCottages, guestInfo,searchServices, checkAvailabilityButton;
         private JTextArea textArea;
         private ButtonGroup roomType;
         double roomPrice; 
@@ -500,6 +500,20 @@ public class Reservation1 extends JFrame implements ActionListener {
             }
         });
 
+       
+        checkAvailabilityButton = new JButton("Check Availability");
+        checkAvailabilityButton.setBounds(820, 300, 100, 30);
+        checkAvailabilityButton.setBackground(Color.BLACK);
+        checkAvailabilityButton.setForeground(Color.WHITE);
+        add (checkAvailabilityButton);
+        checkAvailabilityButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                checkRoomAvailability();
+            }
+        });
+        
+        
+
         
         availServices = new JButton ("Avail Services");
         availServices.setBackground(Color.decode("#D2B486"));
@@ -595,6 +609,59 @@ public class Reservation1 extends JFrame implements ActionListener {
         
         
     }
+       private void checkRoomAvailability() {
+        try {
+            
+            String checkInDateStr = tfcheckintime.getText();
+            String lengthOfStayStr = tflength.getText();
+
+            
+            SimpleDateFormat inputFormat = new SimpleDateFormat("MMMM dd yyyy");
+            Date checkInDate = inputFormat.parse(checkInDateStr);
+            int lengthOfStay = Integer.parseInt(lengthOfStayStr);
+
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(checkInDate);
+            cal.add(Calendar.DAY_OF_YEAR, lengthOfStay);
+            Date checkOutDate = cal.getTime();
+
+            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String formattedCheckInDate = outputFormat.format(checkInDate);
+            String formattedCheckOutDate = outputFormat.format(checkOutDate);
+
+           
+            String query = "SELECT roomnumber FROM room WHERE roomnumber NOT IN (" +
+                           "SELECT room FROM guest WHERE (check_in_date BETWEEN ? AND ?) OR (check_out_date BETWEEN ? AND ?))" +
+                           " AND roomnumber NOT IN (SELECT room FROM guest WHERE check_in_date > ?)" ; // Checking for future availability
+
+            Conn conn = new Conn();
+            PreparedStatement stmt = conn.c.prepareStatement(query);
+            stmt.setString(1, formattedCheckInDate);
+            stmt.setString(2, formattedCheckOutDate);
+            stmt.setString(3, formattedCheckInDate);
+            stmt.setString(4, formattedCheckOutDate);
+            stmt.setString(5, formattedCheckInDate);  
+            ResultSet rs = stmt.executeQuery();
+
+            croom.removeAll();  // Clear the existing room items
+            while (rs.next()) {
+                String roomNumber = rs.getString("roomnumber");
+                croom.add(roomNumber);  
+            }
+
+            if (croom.getItemCount() == 0) {
+                JOptionPane.showMessageDialog(this, "No rooms available for the selected dates.");
+            } else {
+                JOptionPane.showMessageDialog(this, "Rooms available for the selected dates.");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error checking room availability.");
+        }
+    }
+
+
         // Update the check-in date TextField based on the selected values
     private void updateCheckInDate() {
         String selectedMonth = (String) comboMonth.getSelectedItem();
@@ -608,7 +675,7 @@ public class Reservation1 extends JFrame implements ActionListener {
         
         public void updateTotalCost() {
     try {
-        // Fetch the room price
+        
         String roomNumber = croom.getSelectedItem();
         Conn conn = new Conn();
         String query = "SELECT price FROM room WHERE roomnumber = ?";
@@ -618,7 +685,7 @@ public class Reservation1 extends JFrame implements ActionListener {
 
         double roomPrice = 0;
         if (rs.next()) {
-            roomPrice = rs.getDouble("price"); // Fetch the room price
+            roomPrice = rs.getDouble("price"); 
         }
         // Get the service price
         double servicePrice = 0;
@@ -708,33 +775,60 @@ public class Reservation1 extends JFrame implements ActionListener {
         }
     }
 
-             private void updateRoomNumbers(String roomType) {
-            croom.removeAll();  // Clear existing room numbers
+          private void updateRoomNumbers(String roomType) {
+    croom.removeAll();  // Clear existing room numbers
 
-            try {
-                Conn conn = new Conn();
-                String query = "SELECT roomnumber FROM room WHERE roomtype = ? AND availability = 'Available'";
-                PreparedStatement stmt = conn.c.prepareStatement(query);
-                stmt.setString(1, roomType);
-                ResultSet rs = stmt.executeQuery();
+    try {
+        // Get check-in and check-out date from input fields
+        String checkInDateStr = tfcheckintime.getText();  
+        String lengthOfStayStr = tflength.getText();      
 
-                while (rs.next()) {
-                    croom.add(rs.getString("roomnumber"));
-                }
+        
+        SimpleDateFormat inputFormat = new SimpleDateFormat("MMMM dd yyyy");
+        Date checkInDate = inputFormat.parse(checkInDateStr);
+        int lengthOfStay = Integer.parseInt(lengthOfStayStr);
 
-                // If there are rooms, set the first one as selected to update the room details
-                if (croom.getItemCount() > 0) {
-                    updateRoomDetails(croom.getItem(0));
-                } else {
-                    
-                    tfBedType.setText("No Rooms Available");
-                    tfFacilities.setText("No Rooms Available");
-                    tfPrice.setText("No Rooms Available");
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(checkInDate);
+        cal.add(Calendar.DAY_OF_YEAR, lengthOfStay);
+        Date checkOutDate = cal.getTime();
+
+        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedCheckInDate = outputFormat.format(checkInDate);
+        String formattedCheckOutDate = outputFormat.format(checkOutDate);
+
+        // Query to select rooms that are available for the selected date range
+        String query = "SELECT roomnumber FROM room " +
+                       "WHERE roomtype = ? AND roomnumber NOT IN (" +
+                       "SELECT room FROM guest WHERE (check_in_date BETWEEN ? AND ?) OR (check_out_date BETWEEN ? AND ?))";
+
+        Conn conn = new Conn();
+        PreparedStatement stmt = conn.c.prepareStatement(query);
+        stmt.setString(1, roomType);
+        stmt.setString(2, formattedCheckInDate);
+        stmt.setString(3, formattedCheckOutDate);
+        stmt.setString(4, formattedCheckInDate);
+        stmt.setString(5, formattedCheckOutDate);
+
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            croom.add(rs.getString("roomnumber"));
         }
+
+        // If there are rooms, set the first one as selected to update the room details
+        if (croom.getItemCount() > 0) {
+            updateRoomDetails(croom.getItem(0));
+        } else {
+            tfBedType.setText("No Rooms Available");
+            tfFacilities.setText("No Rooms Available");
+            tfPrice.setText("No Rooms Available");
+        }
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    }
+}
+
         public int getGuestID() {
                 return guestID;
             }
@@ -798,6 +892,7 @@ public class Reservation1 extends JFrame implements ActionListener {
             cal.setTime(checkInParsedDate);  
             cal.add(Calendar.DAY_OF_YEAR, stayLength);  
             String checkOutDate = outputFormat.format(cal.getTime());
+            
             
             // Query to insert the new guest into the guest table
             String query = "INSERT INTO guest (name, address, number, document, sex, country, room, check_in_date, check_out_date, totalCost, deposit, paymentMethod, length_of_stay) " +
