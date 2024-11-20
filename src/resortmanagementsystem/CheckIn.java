@@ -27,7 +27,7 @@ public class CheckIn extends JFrame implements ActionListener {
         
         private JRadioButton rmale, rfemale, rStandard, rVIP, rVVIP;
         private Choice croom;
-        private JLabel checkintime, lblGuestID, lblDepositRange, lblname, lbladress, lblnumber, lblroomtype, lblroom, lblBedType, lblFacilities, lblPrice, lblLength, lblDays, lblTotalCost, lblPesoTotalCost, lbldeposit, lblPesoDeposit, lblchange, lblPesoChange, lblid, lblsex, lblCountry, lbltime, lblpaymentMethod;
+        private JLabel checkintime, lblGuestID, lblCheckIn, lblDepositRange, lblname, lbladress, lblnumber, lblroomtype, lblroom, lblBedType, lblFacilities, lblPrice, lblLength, lblDays, lblTotalCost, lblPesoTotalCost, lbldeposit, lblPesoDeposit, lblchange, lblPesoChange, lblid, lblsex, lblCountry, lbltime, lblpaymentMethod;
         private JButton add, back, availServices, reset, searchRooms, 
                 searchCottages, guestInfo,searchServices;
         private JTextArea textArea;
@@ -80,6 +80,12 @@ public class CheckIn extends JFrame implements ActionListener {
         add(lblGuestID);
         
         fetchNextGuestID();
+        
+        lblCheckIn = new JLabel("Check-In Form");
+        lblCheckIn.setBounds(900, 600, 300, 30);
+        lblCheckIn.setFont(new Font("Helvetica", Font.ITALIC, 22));
+        
+        add(lblCheckIn);
         
         //Name Input
         lblname = new JLabel("Full Name:");
@@ -528,28 +534,28 @@ public class CheckIn extends JFrame implements ActionListener {
         searchRooms = new JButton ("Rooms");
         searchRooms.setBackground(Color.decode("#2a1c13"));
         searchRooms.setForeground(Color.WHITE);
-        searchRooms.setBounds (950, 200, 230, 40);
+        searchRooms.setBounds (900, 250, 230, 40);
         searchRooms.addActionListener(this);
         add (searchRooms);
         
         searchCottages = new JButton ("Cottages");
         searchCottages.setBackground(Color.decode("#2a1c13"));
         searchCottages.setForeground(Color.WHITE);
-        searchCottages.setBounds (950, 250, 230, 40);
+        searchCottages.setBounds (900, 300, 230, 40);
         searchCottages.addActionListener(this);
         add (searchCottages);
                 
         searchServices = new JButton ("Services");
         searchServices.setBackground(Color.decode("#2a1c13"));
         searchServices.setForeground(Color.WHITE);
-        searchServices.setBounds (950, 300, 230, 40);
+        searchServices.setBounds (900, 350, 230, 40);
         searchServices.addActionListener(this);
         add (searchServices);
         
         guestInfo = new JButton ("Guest Info");
         guestInfo.setBackground(Color.decode ("#2a1c13"));
         guestInfo.setForeground(Color.WHITE);
-        guestInfo.setBounds (950, 350, 230, 40);
+        guestInfo.setBounds (900, 400, 230, 40);
         guestInfo.addActionListener(this);
         add (guestInfo);
         
