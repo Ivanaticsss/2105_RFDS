@@ -118,46 +118,58 @@ public class Reception extends JFrame implements ActionListener{
     }
     
     public void actionPerformed(ActionEvent ae) {
-         if (ae.getSource() == newGuest) {
-            guestMenu.show(newGuest, 0, newGuest.getHeight());
-        }else if (ae.getSource() == rooms) {
-            roomsMenu.show(rooms, 0, rooms.getHeight());
-        } else if (ae.getActionCommand().equals("Check-In Form")) {
-            setVisible(false);
-            new CheckIn();
-        }else if (ae.getActionCommand().equals("Reservation Form")) {
-            setVisible(false);
-            new Reservation1();
-        }
-        else if (ae.getActionCommand().equals("Search Rooms")) {
-            setVisible(false);
-            new SearchRoom();
-        } else if (ae.getActionCommand().equals("Update Room Status")) {
-            setVisible(false);
-            new UpdateRoom();
-        } else if (ae.getActionCommand().equals("Cottages")) {
-            setVisible(false);
-            new SearchCottages();
-        } else if (ae.getActionCommand().equals("Pools")) {
-            setVisible(false);
-            new Pool();
-        } else if (ae.getSource() == guestInfo) {
-            setVisible(false);
-            new GuestInfo();
-        } else if(ae.getSource() == update){
-            setVisible(false);
-            new UpdateCheck();
-        }else if (ae.getSource() == checkout) {
-            setVisible(false);
-            new CheckOut();
-        } else if (ae.getSource() == logout) {
+    if (ae.getSource() == newGuest) {
+        guestMenu.show(newGuest, 0, newGuest.getHeight());
+    } else if (ae.getSource() == rooms) {
+        roomsMenu.show(rooms, 0, rooms.getHeight());
+    } else if (ae.getActionCommand().equals("Check-In Form")) {
+        setVisible(false);
+        new CheckIn();
+    } else if (ae.getActionCommand().equals("Reservation Form")) {
+        setVisible(false);
+        new Reservation1();
+    } else if (ae.getActionCommand().equals("Search Rooms")) {
+        setVisible(false);
+        new SearchRoom();
+    } else if (ae.getActionCommand().equals("Update Room Status")) {
+        setVisible(false);
+        new UpdateRoom();
+    } else if (ae.getActionCommand().equals("Cottages")) {
+        setVisible(false);
+        new SearchCottages();
+    } else if (ae.getActionCommand().equals("Pools")) {
+        setVisible(false);
+        new Pool();
+    } else if (ae.getSource() == guestInfo) {
+        setVisible(false);
+        new GuestInfo();
+    } else if (ae.getSource() == update) {
+        setVisible(false);
+        new UpdateCheck();
+    } else if (ae.getSource() == checkout) {
+        setVisible(false);
+        new CheckOut();
+    } else if (ae.getSource() == logout) {
+        // Prompt the user to confirm logout
+        int confirm = JOptionPane.showConfirmDialog(null, 
+                                                    "Are you sure you want to log out?", 
+                                                    "Confirm Logout", 
+                                                    JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            // If confirmed, exit the application
             setVisible(false);
             System.exit(0);
-        }else if (ae.getSource() == service) {
-            setVisible(false);
-            new Service();
-        } 
+        } else {
+            // If not confirmed, show a message and stay on the current screen
+            JOptionPane.showMessageDialog(null, "Logout canceled");
+        }
+    } else if (ae.getSource() == service) {
+        setVisible(false);
+        new Service();
     }
+}
+
     
     public static void main(String[] args){
         new Reception();

@@ -876,8 +876,7 @@ public class Reservation1 extends JFrame implements ActionListener {
         // Get the length of stay 
         String lengthOfStay =  tflength.getText(); 
 
-       try {
-           
+        try {
             String checkInDateStr = tfcheckintime.getText();
             
             // Parse it into the desired format
@@ -892,7 +891,6 @@ public class Reservation1 extends JFrame implements ActionListener {
             cal.setTime(checkInParsedDate);  
             cal.add(Calendar.DAY_OF_YEAR, stayLength);  
             String checkOutDate = outputFormat.format(cal.getTime());
-            
             
             // Query to insert the new guest into the guest table
             String query = "INSERT INTO guest (name, address, number, document, sex, country, room, check_in_date, check_out_date, totalCost, deposit, paymentMethod, length_of_stay) " +
@@ -925,8 +923,7 @@ public class Reservation1 extends JFrame implements ActionListener {
             PreparedStatement stmtStatusUpdate = conn.c.prepareStatement(statusUpdateQuery);
             stmtStatusUpdate.executeUpdate();
 
-
-             new ReserveServices(this, guestID);
+            new ReserveServices(this, guestID);
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -936,63 +933,71 @@ public class Reservation1 extends JFrame implements ActionListener {
         new SearchCottages();
     } else if (ae.getSource() == searchRooms) {
         new SearchRoom();
-    }else if (ae.getSource() == guestInfo) {
+    } else if (ae.getSource() == guestInfo) {
         new GuestInfo();
-    }else if (ae.getSource() == searchServices) {
+    } else if (ae.getSource() == searchServices) {
         new Service();
-    }else if (ae.getSource() == back) {
+    } else if (ae.getSource() == back) {
         setVisible(false);
         new Reception();
     } else if (ae.getSource() == reset) {
          resetForm();
-    }
-            else if (ae.getSource() == add) {
-        try {
-            Conn conn = new Conn();
-             String services = textArea.getText(); 
-            double totalCost = Double.parseDouble(tfTotalCost.getText().trim());
-            double deposit = Double.parseDouble(tfdeposit.getText().trim());
+    } else if (ae.getSource() == add) {
+        // Show a confirmation dialog before finalizing the reservation
+        int confirm = JOptionPane.showConfirmDialog(this, 
+                                                    "Do you want to finalize this reservation?", 
+                                                    "Confirm Reservation", 
+                                                    JOptionPane.YES_NO_OPTION);
 
-            if (deposit < totalCost * 0.1) {
-                throw new IllegalArgumentException("Deposit must be within the valid range.");
+        if (confirm == JOptionPane.YES_OPTION) {
+            try {
+                Conn conn = new Conn();
+                String services = textArea.getText(); 
+                double totalCost = Double.parseDouble(tfTotalCost.getText().trim());
+                double deposit = Double.parseDouble(tfdeposit.getText().trim());
+
+                if (deposit < totalCost * 0.1) {
+                    throw new IllegalArgumentException("Deposit must be within the valid range.");
+                }
+
+                String paymentStatus = (deposit >= totalCost) ? "Paid" : "Pending";
+
+                // Update the guest table in the database
+                String query = "UPDATE guest SET totalCost = ?, deposit = ?, payment_status = ?, availedServices = ? WHERE guestID = ?";
+                PreparedStatement pstmt = conn.c.prepareStatement(query);
+                pstmt.setDouble(1, totalCost);
+                pstmt.setDouble(2, deposit);
+                pstmt.setString(3, paymentStatus);
+                pstmt.setString(4, services);
+                pstmt.setInt(5, guestID); 
+
+                int rowsUpdated = pstmt.executeUpdate();
+                if (rowsUpdated > 0) {
+                    JOptionPane.showMessageDialog(this, "Reservation Finalized Successfully!");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Guest not found. Reservation not finalized.");
+                }
+
+                setVisible(false);
+                new Reception();
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Please enter valid numeric values for total cost and deposit.");
+                return; // Stop 
+            } catch (IllegalArgumentException e) {
+                JOptionPane.showMessageDialog(this, e.getMessage());
+                return; // Stop 
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error finalizing Reservation.");
+                return; // Stop 
             }
-
-             
-        String paymentStatus = (deposit >= totalCost) ? "Paid" : "Pending";
-
-        
-        String query = "UPDATE guest SET totalCost = ?, deposit = ?, payment_status = ?, availedServices = ? WHERE guestID = ?";
-        PreparedStatement pstmt = conn.c.prepareStatement(query);
-        pstmt.setDouble(1, totalCost);
-        pstmt.setDouble(2, deposit);
-        pstmt.setString(3, paymentStatus);
-        pstmt.setString(4, services);
-        pstmt.setInt(5, guestID); 
-
-        
-        int rowsUpdated = pstmt.executeUpdate();
-            if (rowsUpdated > 0) {
-                JOptionPane.showMessageDialog(this, "Reservation Finalized Successfully!");
-            } else {
-                JOptionPane.showMessageDialog(this, "Guest not found. Reservation not finalized.");
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Please enter valid numeric values for total cost and deposit.");
-            return; // Stop 
-        } catch (IllegalArgumentException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-            return; // Stop 
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error finalizing Reservation.");
-            return; // Stop 
+        } else {
+            // If user selects "No", show message and do nothing
+            JOptionPane.showMessageDialog(this, "Reservation not finalized.");
         }
-
-       
-        setVisible(false);
-        new Reception();
     }
-          }
+}
+
 
     public static void main(String[] args) {
         new Reservation1();
