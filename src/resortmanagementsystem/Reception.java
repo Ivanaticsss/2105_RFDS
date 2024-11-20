@@ -125,9 +125,9 @@ public class Reception extends JFrame implements ActionListener{
         } else if (ae.getActionCommand().equals("Check-In Form")) {
             setVisible(false);
             new CheckIn();
-        }else if (ae.getActionCommand().equals("Reservation")) {
+        }else if (ae.getActionCommand().equals("Reservation Form")) {
             setVisible(false);
-            new CheckIn();
+            new Reservation1();
         }
         else if (ae.getActionCommand().equals("Search Rooms")) {
             setVisible(false);

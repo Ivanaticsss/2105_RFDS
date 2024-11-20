@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
@@ -22,13 +23,39 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 public class Reservation extends JFrame{
-    private JLabel lblName, lblAddress, lblNumber, lblCountry, lblSex, lblCheckIn, lblLengthOfStay, lblDateGuide, lblId, lblCheckOut, lblpaymentMethod;
-    private JTextField tfName, tfAddress, tfNumber, tfCountry, tfLengthOfStay;
+    private JLabel lblName, lblGuestID, lblAddress, lblNumber, lblCountry, lblSex, lblCheckIn, lblLengthOfStay, lblDateGuide, lblId, lblCheckOut, lblpaymentMethod;
+    private JTextField tfName, tfAddress, tfNumber, tfCountry, tfLengthOfStay, tfTotalCost, tfdeposit;
     private JPanel background;
     private JRadioButton rMale, rFemale;
     private JComboBox<String> checkInMonth, checkInDay, checkInYear, comboId, comboPayment;
-    private JButton jBAdd, jBBack, jBReset, availServices, searchCottage, searchServices, searchCottages, guestInfo;
+    private JButton  searchCottages, searchServices, guestInfo, availServices, jBBack, jBReset, jBAdd;
+    private int guestID;
+    String room;
+    JTextArea textArea;
+    
+          private void fetchNextGuestID() {
+    try {
+        Conn conn = new Conn();
+        String query = "SELECT MAX(guestID) FROM guest";
+        ResultSet rs = conn.s.executeQuery(query);
 
+        if (rs.next()) {
+            int nextGuestID = rs.getInt(1) + 1;  
+            lblGuestID.setText("Guest ID: " + nextGuestID);
+        } else {
+            lblGuestID.setText("Guest ID: 1");  
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        lblGuestID.setText("Guest ID not available");
+    }
+    
+    
+    String guestIDText = lblGuestID.getText();
+    
+    guestID = Integer.parseInt(guestIDText.replaceAll("[^0-9]", ""));
+    System.out.println("Next Guest ID: " + guestID);
+}
     public Reservation() {
         setTitle("Book Reservation");
         setSize(500, 400);
@@ -41,6 +68,14 @@ public class Reservation extends JFrame{
         JLabel image = new JLabel(i3);
         image.setBounds(0,0,1190,130);
         add(image);
+        
+        
+        lblGuestID = new JLabel("Generating...");
+        lblGuestID.setBounds(200, 140, 150, 25);
+        lblGuestID.setFont(new Font("Helvetica", Font.BOLD, 18));
+        add(lblGuestID);
+        
+        fetchNextGuestID();
 
         background = new JPanel(null);
         background.setBounds(0, 0, 800, 700);
@@ -289,7 +324,7 @@ public class Reservation extends JFrame{
         availServices.setForeground(Color.BLACK);
         availServices.setFont(new Font("Helvetica", Font.BOLD, 18));
         availServices.setBounds(520, 220, 200, 40);
-        availServices.addActionListener(this);
+        //availServices.addActionListener(this);
         add(availServices);
         String services = null;
         
@@ -318,27 +353,27 @@ public class Reservation extends JFrame{
         searchCottages.setBackground(Color.decode("#2a1c13"));
         searchCottages.setForeground(Color.WHITE);
         searchCottages.setBounds (950, 250, 230, 40);
-        searchCottages.addActionListener(this);
+       // searchCottages.addActionListener(this);
         add (searchCottages);
                 
         searchServices = new JButton ("Services");
         searchServices.setBackground(Color.decode("#2a1c13"));
         searchServices.setForeground(Color.WHITE);
         searchServices.setBounds (950, 300, 230, 40);
-        searchServices.addActionListener(this);
+        //searchServices.addActionListener(this);
         add (searchServices);
         
         guestInfo = new JButton ("Guest Info");
         guestInfo.setBackground(Color.decode ("#2a1c13"));
         guestInfo.setForeground(Color.WHITE);
         guestInfo.setBounds (950, 350, 230, 40);
-        guestInfo.addActionListener(this);
+       // guestInfo.addActionListener(this);
         add (guestInfo);
 
 
         
         //NANDINEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
-        setBounds(230, 70, 900, 600); //ITO FIT SA SCREEN KOOOOOOOOOOOOOOOOOOOOOOOOOO
+        setBounds(230, 70, 1200, 800); //ITO FIT SA SCREEN KOOOOOOOOOOOOOOOOOOOOOOOOOO
         //setBounds(300, 100, 1200, 800); ITO YUNG SA SCREEN NI DANAH
         setVisible(true);
     }
@@ -399,83 +434,6 @@ public class Reservation extends JFrame{
         }
     }
     
-    /*public void actionPerformed(ActionEvent ae) {
-    if (ae.getSource() == availServices) {
-        String name = tfName.getText().trim();
-        String address = tfAddress.getText().trim();
-        String number = tfNumber.getText().trim();
-        String id = (String) comboId.getSelectedItem();  
-        String sex = rMale.isSelected() ? "Male" : "Female"; 
-        String country = tfCountry.getText().trim();
-        String paymentMethod = (String) comboPayment.getSelectedItem();  
-
-        String lengthOfStayStr = tfLengthOfStay.getText().trim();  // Get the length of stay from the input
-
-        // Validate required fields
-        if (name.isEmpty() || address.isEmpty() || number.isEmpty() || country.isEmpty() || lengthOfStayStr.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please fill in all the required fields.", "Input Error", JOptionPane.ERROR_MESSAGE);
-            return;  // Exit the method if any required fields are empty
-        }
-
-        try {
-            // Validate the length of stay input
-            int lengthOfStay = Integer.parseInt(lengthOfStayStr);  
-            if (lengthOfStay <= 0) {
-                JOptionPane.showMessageDialog(this, "Length of stay must be a positive number.", "Input Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            // Get the check-in date from the selected values
-            String checkInDate = checkInYear.getSelectedItem() + "-" +
-                                 checkInMonth.getSelectedItem() + "-" +
-                                 checkInDay.getSelectedItem();
-            
-            // Parse the check-in date to Date format
-            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Date checkInParsedDate = inputFormat.parse(checkInDate);
-            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String formattedCheckInDate = outputFormat.format(checkInParsedDate);
-
-            // Calculate check-out date based on length of stay
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(checkInParsedDate);  
-            cal.add(Calendar.DAY_OF_YEAR, lengthOfStay);  
-            String checkOutDate = outputFormat.format(cal.getTime());
-
-            // SQL query to insert a new guest reservation
-            String query = "INSERT INTO guest (name, address, number, document, sex, country, check_in_date, check_out_date, paymentMethod, length_of_stay) " +
-                           "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-            // Create a database connection and execute the insert query
-            Conn conn = new Conn();
-            PreparedStatement stmt = conn.c.prepareStatement(query);
-            stmt.setString(1, name);
-            stmt.setString(2, address);
-            stmt.setString(3, number);
-            stmt.setString(4, id);
-            stmt.setString(5, sex);
-            stmt.setString(6, country);
-            stmt.setString(7, formattedCheckInDate);  // Check-in date
-            stmt.setString(8, checkOutDate);  // Check-out date
-            stmt.setString(9, paymentMethod);  // Payment method
-            stmt.setInt(10, lengthOfStay);  // Length of stay
-            stmt.executeUpdate();  // Execute the query
-            
-            JOptionPane.showMessageDialog(this, "Reservation added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-
-            // Optionally, you can clear the fields or update UI elements here
-
-        } catch (NumberFormatException e) {
-            // Handle invalid length of stay input
-            JOptionPane.showMessageDialog(this, "Please enter a valid number for the length of stay.", "Input Error", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception e) {
-            // Handle any other exceptions (e.g., database issues)
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "An error occurred while processing your reservation.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-}
-*/
     
     public void actionPerformed(ActionEvent ae) {
     if (ae.getSource() == availServices) {
@@ -492,8 +450,10 @@ public class Reservation extends JFrame{
 
         try {
             // Format the current date and time
-            SimpleDateFormat inputFormat = new SimpleDateFormat("EEE MMM dd yyyy HH:mm");
-            String checkInDate = checkintime.getText();
+           SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            String checkInDate = (String) checkInDay.getSelectedItem();
+
             
             Date checkInParsedDate = inputFormat.parse(checkInDate);
             SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -528,15 +488,17 @@ public class Reservation extends JFrame{
             PreparedStatement stmt2 = conn.c.prepareStatement(query2);
             stmt2.setString(1, room);
             stmt2.executeUpdate();
-             new AvailServices(this, guestID);
+             //new AvailServices(this, guestID);
             
         } catch (Exception e) {
             e.printStackTrace();
         }
         
-    } else if (ae.getSource() == searchCottage) {
-        new SearchCottages();
-    }else if (ae.getSource() == guestInfo) {
+    }else if (ae.getSource() == searchCottages) {
+         new SearchCottages();
+    } else if (ae.getSource() == searchServices) {
+         new Service();
+    } else if (ae.getSource() == guestInfo) {
         new GuestInfo();
     }else if (ae.getSource() == searchServices) {
         new Service();
@@ -600,6 +562,19 @@ public class Reservation extends JFrame{
     }
 
     private void resetForm() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    tfName.setText("");
+    tfAddress.setText("");
+    tfNumber.setText("");
+    tfCountry.setText("");
+    tfLengthOfStay.setText("");
+    tfTotalCost.setText("");
+    tfdeposit.setText("");
+    checkInDay.setSelectedIndex(0);
+    checkInMonth.setSelectedIndex(0);
+    checkInYear.setSelectedIndex(0);
+    textArea.setText("");
+    comboId.setSelectedIndex(0);
+    comboPayment.setSelectedIndex(0);
+}
+
 }

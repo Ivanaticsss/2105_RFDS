@@ -19,11 +19,11 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
 
-public class CheckIn extends JFrame implements ActionListener {
+public class Reservation1 extends JFrame implements ActionListener {
         
-        private JComboBox<String> comboid, comboPayment;
+        private JComboBox<String> comboid, comboPayment, comboMonth, comboDate, comboYear ;
         private JTextField  tfname, tfdeposit, tfaddress, tfnumber,tfFacilities, tfBedType, tfPrice, tflength,
-                tfcountry, tfTotalCost, tfchange;
+                tfcountry, tfTotalCost, tfchange, tfcheckintime;
         
         private JRadioButton rmale, rfemale, rStandard, rVIP, rVVIP;
         private Choice croom;
@@ -60,7 +60,7 @@ public class CheckIn extends JFrame implements ActionListener {
     System.out.println("Next Guest ID: " + guestID);
 }
         
-        CheckIn() {
+        Reservation1() {
        
         
         getContentPane().setBackground(Color.WHITE);
@@ -453,40 +453,72 @@ public class CheckIn extends JFrame implements ActionListener {
         
         
         //CHECK IN TIME 
-        lbltime = new JLabel("Check-in Time:");
-        lbltime.setBounds(500, 265, 150, 60);
-        lbltime.setFont(new Font("Helvetica", Font.PLAIN, 18));
-        add(lbltime);
-        
-        Date date = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd yyyy HH:mm");
-        String formattedDate = formatter.format(date);
+               
+        String[] months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+        String[] dates = new String[31];
+        for (int i = 0; i < 31; i++) {
+            dates[i] = String.valueOf(i + 1);
+        }
+        String[] years = {"2024", "2025", "2026", "2027", "2028"};
 
-        checkintime = new JLabel(formattedDate);
-        checkintime.setBounds(650, 280, 300, 30);
-        checkintime.setFont(new Font("Helvetica", Font.BOLD, 17));
-        add(checkintime);
+       
+        comboMonth = new JComboBox<>(months);
+        comboDate = new JComboBox<>(dates);
+        comboYear = new JComboBox<>(years);
         
+        comboMonth.setBounds(520, 260, 100, 30);
+        comboDate.setBounds(630, 260, 60, 30);
+        comboYear.setBounds(700, 260, 80, 30);
+
+        add(comboMonth);
+        add(comboDate);
+        add(comboYear);
+
+        // display selected date
+        tfcheckintime = new JTextField();
+        tfcheckintime.setBounds(520, 300, 300, 30);
+        tfcheckintime.setEditable(false);
+        tfcheckintime.setFont(new Font("Helvetica", Font.BOLD, 17));
+        add(tfcheckintime);
+
+        comboMonth.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                updateCheckInDate();
+            }
+        });
+        comboDate.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                updateCheckInDate();
+            }
+        });
+        comboYear.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                updateCheckInDate();
+            }
+        });
 
         
         availServices = new JButton ("Avail Services");
         availServices.setBackground(Color.decode("#D2B486"));
         availServices.setForeground(Color.BLACK);
         availServices.setFont(new Font("Helvetica", Font.BOLD, 18));
-        availServices.setBounds (520, 320, 200, 40);
+        availServices.setBounds (520, 350, 200, 40);
         availServices.addActionListener(this);
         add (availServices);
             String services = null;
         
         textArea = new JTextArea();
-        textArea.setBounds(520, 360, 200, 100);
+        textArea.setBounds(520, 390, 200, 100);
         textArea.setFont(new Font("Helvetica", Font.PLAIN, 15));
         textArea.setForeground(Color.BLACK);
         textArea.setBorder(new LineBorder(Color.decode("#D3A376"), 1));
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
         JScrollPane scrollPane = new JScrollPane(textArea);
-        scrollPane.setBounds(520,360, 200, 100);
+        scrollPane.setBounds(520,390, 200, 100);
         add(scrollPane);
         
         lblpaymentMethod = new JLabel("Payment Method:");
@@ -560,6 +592,18 @@ public class CheckIn extends JFrame implements ActionListener {
         setBounds(300, 100, 1200, 800);
         setVisible(true);
         setLocationRelativeTo(null); 
+        
+        
+    }
+        // Update the check-in date TextField based on the selected values
+    private void updateCheckInDate() {
+        String selectedMonth = (String) comboMonth.getSelectedItem();
+        String selectedDate = (String) comboDate.getSelectedItem();
+        String selectedYear = (String) comboYear.getSelectedItem();
+
+        // Format as "Month Date Year"
+        String selectedDateString = selectedMonth + " " + selectedDate + " " + selectedYear;
+        tfcheckintime.setText(selectedDateString);
     }
         
         public void updateTotalCost() {
@@ -738,16 +782,17 @@ public class CheckIn extends JFrame implements ActionListener {
         // Get the length of stay (you can get it from user input or calculate it based on dates)
         String lengthOfStay =  tflength.getText(); 
 
-        try {
-            // Format the current date and time
-            SimpleDateFormat inputFormat = new SimpleDateFormat("EEE MMM dd yyyy HH:mm");
-            String checkInDate = checkintime.getText();
+       try {
+            // Get the manually selected check-in date from checkintime (TextField)
+            String checkInDateStr = tfcheckintime.getText();
             
-            Date checkInParsedDate = inputFormat.parse(checkInDate);
+            // Parse it into the desired format
+            SimpleDateFormat inputFormat = new SimpleDateFormat("MMMM dd yyyy");
+            Date checkInParsedDate = inputFormat.parse(checkInDateStr);
             SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String formattedCheckInDate = outputFormat.format(checkInParsedDate);
-           
-            // Calculate check-out date based on length of stay
+            
+            //calculate check out
             int stayLength = Integer.parseInt(lengthOfStay);  
             Calendar cal = Calendar.getInstance();
             cal.setTime(checkInParsedDate);  
@@ -780,12 +825,13 @@ public class CheckIn extends JFrame implements ActionListener {
             PreparedStatement stmt2 = conn.c.prepareStatement(query2);
             stmt2.setString(1, room);
             stmt2.executeUpdate();
-             new AvailServices(this, guestID);
-            String statusUpdateQuery = "UPDATE guest SET status = 'Checked-In' WHERE check_in_date <= CURDATE()";
+            
+            String statusUpdateQuery = "UPDATE guest SET status = 'Reserved' WHERE check_in_date > CURDATE()";
             PreparedStatement stmtStatusUpdate = conn.c.prepareStatement(statusUpdateQuery);
             stmtStatusUpdate.executeUpdate();
 
-             
+
+             new ReserveServices(this, guestID);
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -831,9 +877,9 @@ public class CheckIn extends JFrame implements ActionListener {
         
         int rowsUpdated = pstmt.executeUpdate();
             if (rowsUpdated > 0) {
-                JOptionPane.showMessageDialog(this, "Check-In Finalized Successfully!");
+                JOptionPane.showMessageDialog(this, "Reservation Finalized Successfully!");
             } else {
-                JOptionPane.showMessageDialog(this, "Guest not found. Check-In not finalized.");
+                JOptionPane.showMessageDialog(this, "Guest not found. Reservation not finalized.");
             }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Please enter valid numeric values for total cost and deposit.");
@@ -843,7 +889,7 @@ public class CheckIn extends JFrame implements ActionListener {
             return; // Stop 
         } catch (SQLException ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error finalizing Check-In.");
+            JOptionPane.showMessageDialog(this, "Error finalizing Reservation.");
             return; // Stop 
         }
 
@@ -854,6 +900,6 @@ public class CheckIn extends JFrame implements ActionListener {
           }
 
     public static void main(String[] args) {
-        new CheckIn();
+        new Reservation1();
     }
 }
