@@ -873,11 +873,11 @@ public class Reservation1 extends JFrame implements ActionListener {
         String paymentMethod = (String)comboPayment.getSelectedItem();  
         String totalCost = tfTotalCost.getText();  
         
-        // Get the length of stay (you can get it from user input or calculate it based on dates)
+        // Get the length of stay 
         String lengthOfStay =  tflength.getText(); 
 
        try {
-            // Get the manually selected check-in date from checkintime (TextField)
+           
             String checkInDateStr = tfcheckintime.getText();
             
             // Parse it into the desired format
@@ -960,7 +960,7 @@ public class Reservation1 extends JFrame implements ActionListener {
              
         String paymentStatus = (deposit >= totalCost) ? "Paid" : "Pending";
 
-        // Update the guest table in the database
+        
         String query = "UPDATE guest SET totalCost = ?, deposit = ?, payment_status = ?, availedServices = ? WHERE guestID = ?";
         PreparedStatement pstmt = conn.c.prepareStatement(query);
         pstmt.setDouble(1, totalCost);
