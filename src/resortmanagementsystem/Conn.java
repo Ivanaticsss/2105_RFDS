@@ -10,7 +10,7 @@ public class Conn implements AutoCloseable {
     Conn() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver"); 
-            c = DriverManager.getConnection("jdbc:mysql:///resortmanagementsystem", "root", "coding_database123");
+            c = DriverManager.getConnection("jdbc:mysql:///newschema", "root", "mysql");
             s = c.createStatement();
         } catch (Exception e) {
             e.printStackTrace();

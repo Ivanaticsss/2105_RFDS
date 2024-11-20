@@ -83,40 +83,49 @@ public class AddPools extends JFrame implements ActionListener {
     }
     
     public void actionPerformed(ActionEvent ae) {
-        if (ae.getSource() == add) {
-            String poolNumber = tfPoolNumber.getText();
-            String poolType = tfType.getText();
-            String availability = (String) availablecombo.getSelectedItem();
-            String price = tfPrice.getText();
-            
-            // Validate input fields
-            if (poolNumber.isEmpty() || poolType.isEmpty() || price.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Please fill in all required fields.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            
+    if (ae.getSource() == add) {
+        String poolNumber = tfPoolNumber.getText();
+        String poolType = tfType.getText();
+        String availability = (String) availablecombo.getSelectedItem();
+        String price = tfPrice.getText();
+
+        // Validate input fields
+        if (poolNumber.isEmpty() || poolType.isEmpty() || price.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please fill in all required fields.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Prompt the user for confirmation before adding the pool
+        int confirm = JOptionPane.showConfirmDialog(null, 
+            "Are you sure you want to add this pool?", 
+            "Confirm Addition", 
+            JOptionPane.YES_NO_OPTION);
+
+        // If the user selects "Yes", proceed with adding the pool
+        if (confirm == JOptionPane.YES_OPTION) {
             try {
                 Conn conn = new Conn();
                 String str = "insert into pool values('" + poolNumber + "', '" + poolType + "', '" + availability + "', '" + price + "')";
-                
+
                 conn.s.executeUpdate(str);
                 JOptionPane.showMessageDialog(null, "New Pool Added Successfully");
-                
-                 // Clear fields for the next entry
+
+                // Clear fields for the next entry
                 tfPoolNumber.setText("");
                 tfType.setText("");
                 tfPrice.setText("");
                 availablecombo.setSelectedIndex(0);
-               
-                
-                
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else {
-            setVisible(false);
         }
+        // If the user selects "No", do nothing (pool won't be added)
+    } else {
+        setVisible(false);
     }
+}
+
     
     public static void main(String[] args) {
         new AddPools();

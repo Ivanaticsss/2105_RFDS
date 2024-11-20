@@ -265,56 +265,64 @@ public class AddGuest extends JFrame implements ActionListener {
        public void actionPerformed(ActionEvent ae) {
     if (ae.getSource() == add) {
         String name = tfname.getText();
-        //String number = tfnumber.getText();
         String id = (String) comboid.getSelectedItem();
         String gender = rmale.isSelected() ? "Male" : "Female";
         String room = croom.getSelectedItem();
         String deposit = tfdeposit.getText();
 
-        try {
-            // Format the current date and time
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String time = formatter.format(new Date()); // Correctly formatted datetime string
+        // Prompt the user for confirmation before adding the guest
+        int confirm = JOptionPane.showConfirmDialog(null, 
+            "Are you sure you want to add this guest?", 
+            "Confirm Addition", 
+            JOptionPane.YES_NO_OPTION);
 
-            String query = "INSERT INTO guest (name, document, gender, room, checkintime, deposit) VALUES (?, ?, ?, ?, ?, ?)";
-            String query2 = "UPDATE room SET availability = 'Occupied' WHERE roomnumber = ?";
+        // If the user selects "Yes", proceed with adding the guest
+        if (confirm == JOptionPane.YES_OPTION) {
+            try {
+                // Format the current date and time
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String time = formatter.format(new Date()); // Correctly formatted datetime string
 
-            Conn conn = new Conn();
-            
-            // Prepare the first statement for inserting customer data
-            //PreparedStatement stmt = conn.c.prepareStatement(query);
-            PreparedStatement stmt = conn.c.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+                String query = "INSERT INTO guest (name, document, gender, room, checkintime, deposit) VALUES (?, ?, ?, ?, ?, ?)";
+                String query2 = "UPDATE room SET availability = 'Occupied' WHERE roomnumber = ?";
 
-            stmt.setString(1, name);
-            //stmt.setString(2, number);
-            stmt.setString(2, id);
-            stmt.setString(3, gender);
-            stmt.setString(4, room);
-            stmt.setString(5, time); // Use formatted time here
-            stmt.setBigDecimal(6, new BigDecimal(deposit));
-            stmt.executeUpdate();
-            
-            ResultSet generatedKeys = stmt.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                int guestID = generatedKeys.getInt(1);
-                lblGuestID.setText("Guest ID: " + guestID);  // Display the generated GuestID
-            } else {
-                lblGuestID.setText("Guest ID not available");
+                Conn conn = new Conn();
+                
+                // Prepare the first statement for inserting customer data
+                PreparedStatement stmt = conn.c.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
+                stmt.setString(1, name);
+                stmt.setString(2, id);
+                stmt.setString(3, gender);
+                stmt.setString(4, room);
+                stmt.setString(5, time); // Use formatted time here
+                stmt.setBigDecimal(6, new BigDecimal(deposit));
+                stmt.executeUpdate();
+                
+                // Get the generated Guest ID (if any)
+                ResultSet generatedKeys = stmt.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    int guestID = generatedKeys.getInt(1);
+                    lblGuestID.setText("Guest ID: " + guestID);  // Display the generated GuestID
+                } else {
+                    lblGuestID.setText("Guest ID not available");
+                }
+                
+                // Prepare the second statement for updating room availability
+                PreparedStatement stmt2 = conn.c.prepareStatement(query2);
+                stmt2.setString(1, room);
+                stmt2.executeUpdate();
+
+                JOptionPane.showMessageDialog(null, "New Customer Added Successfully!");
+
+                setVisible(false);
+                new Reception();
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            
-            // Prepare the second statement for updating room availability
-            PreparedStatement stmt2 = conn.c.prepareStatement(query2);
-            stmt2.setString(1, room);
-            stmt2.executeUpdate();
-
-            JOptionPane.showMessageDialog(null, "New Customer Added Successfully!");
-
-            setVisible(false);
-            new Reception();
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        // If the user selects "No", do nothing (guest won't be added)
     } else if (ae.getSource() == chooseCottage) {
         new SearchCottages();
     } else if (ae.getSource() == back) {

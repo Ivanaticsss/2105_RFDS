@@ -87,44 +87,55 @@ public class AddCottages extends JFrame implements ActionListener {
     
     public void actionPerformed(ActionEvent ae) {
     if (ae.getSource() == add) {
-        String cottageNumber = tfCottageNumber.getText();
-        String availability = (String) availablecombo.getSelectedItem();
-        String priceText = tfPrice.getText();
-        String type = (String) typecombo.getSelectedItem();
+        // Prompt the user for confirmation before adding the cottage
+        int confirm = JOptionPane.showConfirmDialog(null, 
+            "Are you sure you want to add this cottage?", 
+            "Confirm Addition", 
+            JOptionPane.YES_NO_OPTION);
 
-        // Validate input fields
-        if (cottageNumber.isEmpty() || priceText.isEmpty() || availability == null || type == null) {
-            JOptionPane.showMessageDialog(null, "Please fill in all required fields.", "Error", JOptionPane.ERROR_MESSAGE);
-            return; // Exit the method if any field is empty
+        // If the user selects "Yes", proceed with adding the cottage
+        if (confirm == JOptionPane.YES_OPTION) {
+            String cottageNumber = tfCottageNumber.getText();
+            String availability = (String) availablecombo.getSelectedItem();
+            String priceText = tfPrice.getText();
+            String type = (String) typecombo.getSelectedItem();
+
+            // Validate input fields
+            if (cottageNumber.isEmpty() || priceText.isEmpty() || availability == null || type == null) {
+                JOptionPane.showMessageDialog(null, "Please fill in all required fields.", "Error", JOptionPane.ERROR_MESSAGE);
+                return; // Exit the method if any field is empty
+            }
+
+            try {
+                // Parse the price as a double
+                double price = Double.parseDouble(priceText);
+
+                // Establish connection and execute query
+                Conn conn = new Conn();
+                String str = "INSERT INTO cottage (cottageNumber, availability, price, cottage_type) VALUES ('"
+                             + cottageNumber + "', '" + availability + "', " + price + ", '" + type + "')";
+
+                conn.s.executeUpdate(str);
+                JOptionPane.showMessageDialog(null, "New Cottage Added Successfully");
+
+                // Clear fields for the next entry
+                tfCottageNumber.setText("");
+                tfPrice.setText("");
+                availablecombo.setSelectedIndex(0);
+                typecombo.setSelectedIndex(0);
+
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Please enter a valid numeric value for price.", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-
-        try {
-            // Parse the price as a double
-            double price = Double.parseDouble(priceText);
-
-            // Establish connection and execute query
-            Conn conn = new Conn();
-            String str = "INSERT INTO cottage (cottageNumber, availability, price, cottage_type) VALUES ('"
-                         + cottageNumber + "', '" + availability + "', " + price + ", '" + type + "')";
-            
-            conn.s.executeUpdate(str);
-            JOptionPane.showMessageDialog(null, "New Cottage Added Successfully");
-
-            // Clear fields for the next entry
-            tfCottageNumber.setText("");
-            tfPrice.setText("");
-            availablecombo.setSelectedIndex(0);
-            typecombo.setSelectedIndex(0);
-
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Please enter a valid numeric value for price.", "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        // If the user selects "No", do nothing (cottage won't be added)
     } else {
         setVisible(false);
     }
 }
+
 
     
     public static void main(String[] args) {

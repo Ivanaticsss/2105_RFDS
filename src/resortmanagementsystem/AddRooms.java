@@ -131,39 +131,48 @@ public class AddRooms extends JFrame implements ActionListener, ItemListener {
         setVisible(true);
     }
     
-    public void actionPerformed(ActionEvent ae){
-        if (ae.getSource() == add){
-            String roomnumber = tfroom.getText();
-            String availability = (String) availablecombo.getSelectedItem();
-            String price = tfprice.getText();
-            String roomtype = (String) roomtypecombo.getSelectedItem();
-            String type = (String) bedtypecombo.getSelectedItem();
-            
-            // Capture selected facilities
-            String facilities = "";
-            if (wifi.isSelected()) facilities += "WiFi, ";
-            if (poolAccess.isSelected()) facilities += "Pool Access, ";
-            if (oceanView.isSelected()) facilities += "Ocean View, ";
-            if (airConditioned.isSelected()) facilities += "Air Conditioned, ";
-            
-            if (facilities.length() > 0) facilities = facilities.substring(0, facilities.length() - 2);
-            
-            
-            if (roomnumber.isEmpty() || price.isEmpty() || availability == null || type == null || roomtype == null) {
-                JOptionPane.showMessageDialog(null, "Please fill in all required fields.", "Error", JOptionPane.ERROR_MESSAGE);
-                return; 
-            }
-            
-            try{
+    public void actionPerformed(ActionEvent ae) {
+    if (ae.getSource() == add) {
+        String roomnumber = tfroom.getText();
+        String availability = (String) availablecombo.getSelectedItem();
+        String price = tfprice.getText();
+        String roomtype = (String) roomtypecombo.getSelectedItem();
+        String type = (String) bedtypecombo.getSelectedItem();
+        
+        // Capture selected facilities
+        String facilities = "";
+        if (wifi.isSelected()) facilities += "WiFi, ";
+        if (poolAccess.isSelected()) facilities += "Pool Access, ";
+        if (oceanView.isSelected()) facilities += "Ocean View, ";
+        if (airConditioned.isSelected()) facilities += "Air Conditioned, ";
+        
+        if (facilities.length() > 0) facilities = facilities.substring(0, facilities.length() - 2);
+        
+        // Validate fields
+        if (roomnumber.isEmpty() || price.isEmpty() || availability == null || type == null || roomtype == null) {
+            JOptionPane.showMessageDialog(null, "Please fill in all required fields.", "Error", JOptionPane.ERROR_MESSAGE);
+            return; 
+        }
+        
+        // Show confirmation dialog
+        int confirm = JOptionPane.showConfirmDialog(null, 
+            "Are you sure you want to add this room?", 
+            "Confirm Room Addition", 
+            JOptionPane.YES_NO_OPTION);
+
+        // If the user clicks "Yes", proceed with adding the room
+        if (confirm == JOptionPane.YES_OPTION) {
+            try {
                 Conn conn = new Conn();
-                
+
                 String str = "insert into room (roomnumber, roomType, availability, price, bed_type, facilities) values('"
-            + roomnumber + "', '" + roomtype + "','" + availability + "', '" + price + "', '" + type + "', '" + facilities + "')";
+                        + roomnumber + "', '" + roomtype + "','" + availability + "', '" + price + "', '" + type + "', '" + facilities + "')";
 
                 conn.s.executeUpdate(str);
-                
+
                 JOptionPane.showMessageDialog(null, "New Room Added successfully");
-                
+
+                // Clear fields after successful insertion
                 roomtypecombo.setSelectedIndex(0);
                 tfroom.setText("");
                 tfprice.setText("");
@@ -173,14 +182,16 @@ public class AddRooms extends JFrame implements ActionListener, ItemListener {
                 poolAccess.setSelected(false);
                 oceanView.setSelected(false);
                 airConditioned.setSelected(false);
-        
-            } catch(Exception e){
+
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else {
-            dispose();
         }
+    } else {
+        dispose(); // Close the window if cancel button is clicked
     }
+}
+
     
      
     public void itemStateChanged(ItemEvent e) {
