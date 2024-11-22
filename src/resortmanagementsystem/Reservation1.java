@@ -61,8 +61,9 @@ public class Reservation1 extends JFrame implements ActionListener {
 }
         
         Reservation1() {
-       
         
+        setTitle("Book Reservation");
+       
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
         
@@ -185,18 +186,18 @@ public class Reservation1 extends JFrame implements ActionListener {
         add(lblroomtype);
         
         rStandard = new JRadioButton("Standard");
-        rStandard.setBackground(Color.decode("#D2B486")); 
-        rStandard.setForeground(Color.decode("#3E2522")); 
+        rStandard.setBackground(Color.decode("#D3A376")); 
+        rStandard.setForeground(Color.BLACK);  
         rStandard.setBounds(200, 285, 80, 25);
         
         rVIP = new JRadioButton("VIP");
-        rVIP.setBackground(Color.decode("#D2B486")); 
-        rVIP.setForeground(Color.decode("#3E2522")); 
+        rVIP.setBackground(Color.decode("#D3A376"));
+        rVIP.setForeground(Color.BLACK); 
         rVIP.setBounds(290, 285, 50, 25);
         
         rVVIP = new JRadioButton("VVIP");
-        rVVIP.setBackground(Color.decode("#D2B486")); 
-        rVVIP.setForeground(Color.decode("#3E2522")); 
+        rVVIP.setBackground(Color.decode("#D3A376")); 
+        rVVIP.setForeground(Color.BLACK);  
         rVVIP.setBounds(350, 285, 60, 25);
         
         rStandard.addItemListener(e -> updateRoomNumbers("Standard"));
@@ -403,32 +404,32 @@ public class Reservation1 extends JFrame implements ActionListener {
         //ID input
         
         lblid = new JLabel("ID:");
-        lblid.setBounds(450, 165, 150, 25);
+        lblid.setBounds(500, 165, 150, 25);
         lblid.setFont(new Font("HELVETICA", Font.PLAIN, 17));
         add(lblid);
         
         String options[] = {"Driver's License", "SSS ID", "Pag-ibig ID", "Voter's ID", "National ID", "Company ID", "Student's ID", "Passport/Visa"};
         comboid = new JComboBox<>(options);
-        comboid.setBounds(520, 165, 150, 25);
+        comboid.setBounds(590, 165, 150, 25);
         comboid.setBackground(Color.WHITE);
-        comboid.setFont(new Font("HELVETICA", Font.PLAIN, 15));
+        comboid.setFont(new Font("HELVETICA", Font.BOLD, 15));
         Border border = BorderFactory.createLineBorder(Color.decode("#D3A376"), 2);  // Change 'Color.BLUE' to your desired color
         comboid.setBorder(border);
         add(comboid);
         
         //SEX input
         lblsex = new JLabel("Sex:");
-        lblsex.setBounds(450, 190, 300, 30);
+        lblsex.setBounds(500, 190, 300, 30);
         lblsex.setFont(new Font("Helvetica", Font.PLAIN, 18));
         add(lblsex);
         
         rmale = new JRadioButton("Male");
         rmale.setBackground(Color.WHITE);
-        rmale.setBounds(520, 195, 70, 25);
+        rmale.setBounds(590, 195, 70, 25);
         
         rfemale = new JRadioButton("Female");
         rfemale.setBackground(Color.WHITE);
-        rfemale.setBounds(590, 195, 80, 25);
+        rfemale.setBounds(660, 195, 80, 25);
 
         ButtonGroup sexGroup = new ButtonGroup();
         sexGroup.add(rmale);
@@ -438,17 +439,38 @@ public class Reservation1 extends JFrame implements ActionListener {
         add(rfemale);
         
         lblCountry = new JLabel("Country:");
-        lblCountry.setBounds(450, 225, 300, 30);
+        lblCountry.setBounds(500, 220, 300, 30);
         lblCountry.setFont(new Font("Helvetica", Font.PLAIN, 17));
         add(lblCountry);
 
-        tfcountry = new JTextField();
-        tfcountry.setBounds(520, 225, 150, 25);
+        tfcountry = new JTextField("Enter Country");
+        tfcountry.setBounds(590, 225, 150, 25);
         tfcountry.setEditable(true); 
-        tfcountry.setFont(new Font("Helvetica", Font.PLAIN, 17)); 
-        tfcountry.setBackground(Color.WHITE); 
-        tfcountry.setForeground(Color.BLACK); 
+        tfcountry.setFont(new Font("Helvetica", Font.PLAIN, 15)); 
+        //tfcountry.setBackground(Color.WHITE); 
+        tfcountry.setForeground(Color.GRAY); 
         tfcountry.setBorder(new LineBorder(Color.decode("#D3A376"), 1));
+        //add(tfcountry);
+        
+        
+        tfcountry.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (tfcountry.getText().equals("Enter Country")) {
+                    tfcountry.setText("");
+                    tfcountry.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (tfcountry.getText().isEmpty()) {
+                    tfcountry.setText("Enter Country");
+                    tfcountry.setForeground(Color.GRAY);
+                }
+            }
+        });
+        
         add(tfcountry);
         
         
@@ -466,9 +488,9 @@ public class Reservation1 extends JFrame implements ActionListener {
         comboDate = new JComboBox<>(dates);
         comboYear = new JComboBox<>(years);
         
-        comboMonth.setBounds(520, 260, 100, 30);
-        comboDate.setBounds(630, 260, 60, 30);
-        comboYear.setBounds(700, 260, 80, 30);
+        comboMonth.setBounds(500, 280, 100, 30);
+        comboDate.setBounds(610, 280, 60, 30);
+        comboYear.setBounds(680, 280, 80, 30);
 
         add(comboMonth);
         add(comboDate);
@@ -476,9 +498,10 @@ public class Reservation1 extends JFrame implements ActionListener {
 
         // display selected date
         tfcheckintime = new JTextField();
-        tfcheckintime.setBounds(520, 300, 300, 30);
+        tfcheckintime.setBounds(500, 320, 150, 30);
         tfcheckintime.setEditable(false);
-        tfcheckintime.setFont(new Font("Helvetica", Font.BOLD, 17));
+        tfcheckintime.setForeground(Color.BLACK);
+        tfcheckintime.setFont(new Font("Helvetica", Font.BOLD | Font.ITALIC, 15));
         add(tfcheckintime);
 
         comboMonth.addItemListener(new ItemListener() {
@@ -501,9 +524,9 @@ public class Reservation1 extends JFrame implements ActionListener {
         });
 
        
-        checkAvailabilityButton = new JButton("Check Availability");
-        checkAvailabilityButton.setBounds(820, 300, 100, 30);
-        checkAvailabilityButton.setBackground(Color.BLACK);
+        checkAvailabilityButton = new JButton("Check Date");
+        checkAvailabilityButton.setBounds(640, 320, 120, 30);
+        checkAvailabilityButton.setBackground(Color.decode("#65350F"));
         checkAvailabilityButton.setForeground(Color.WHITE);
         add (checkAvailabilityButton);
         checkAvailabilityButton.addActionListener(new ActionListener() {
@@ -516,35 +539,35 @@ public class Reservation1 extends JFrame implements ActionListener {
 
         
         availServices = new JButton ("Avail Services");
-        availServices.setBackground(Color.decode("#D2B486"));
-        availServices.setForeground(Color.BLACK);
+        availServices.setBackground(Color.decode("#65350F"));
+        availServices.setForeground(Color.WHITE);
         availServices.setFont(new Font("Helvetica", Font.BOLD, 18));
-        availServices.setBounds (520, 350, 200, 40);
+        availServices.setBounds (500, 370, 260, 40);
         availServices.addActionListener(this);
         add (availServices);
             String services = null;
         
         textArea = new JTextArea();
-        textArea.setBounds(520, 390, 200, 100);
+        textArea.setBounds(5200, 410, 260, 100);
         textArea.setFont(new Font("Helvetica", Font.PLAIN, 15));
         textArea.setForeground(Color.BLACK);
         textArea.setBorder(new LineBorder(Color.decode("#D3A376"), 1));
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
         JScrollPane scrollPane = new JScrollPane(textArea);
-        scrollPane.setBounds(520,390, 200, 100);
+        scrollPane.setBounds(500,410, 260, 100);
         add(scrollPane);
         
-        lblpaymentMethod = new JLabel("Payment Method:");
-        lblpaymentMethod.setBounds(400, 545, 150, 25);
+        lblpaymentMethod = new JLabel("Choose a Payment Method:");
+        lblpaymentMethod.setBounds(500, 545, 260, 25);
         lblpaymentMethod.setFont(new Font("HELVETICA", Font.PLAIN, 17));
         add(lblpaymentMethod);
         
         String paymentOptions[] = {"Cash", "Credit Card (VISA, Mastercard, etc.)", "Debit Card", "E-Wallet"};
         comboPayment = new JComboBox<>(paymentOptions);
-        comboPayment.setBounds(530, 545, 200, 25);
+        comboPayment.setBounds(500, 570, 260, 25);
         comboPayment.setBackground(Color.WHITE);
-        comboPayment.setFont(new Font("HELVETICA", Font.PLAIN, 15));
+        comboPayment.setFont(new Font("HELVETICA", Font.BOLD, 15));
         Border paymentBorder = BorderFactory.createLineBorder(Color.decode("#D3A376"), 2);  // Change 'Color.BLUE' to your desired color
         comboPayment.setBorder(paymentBorder);
         add(comboPayment);
@@ -574,28 +597,28 @@ public class Reservation1 extends JFrame implements ActionListener {
         searchRooms = new JButton ("Rooms");
         searchRooms.setBackground(Color.decode("#2a1c13"));
         searchRooms.setForeground(Color.WHITE);
-        searchRooms.setBounds (950, 200, 230, 40);
+        searchRooms.setBounds (900, 200, 230, 40);
         searchRooms.addActionListener(this);
         add (searchRooms);
         
         searchCottages = new JButton ("Cottages");
         searchCottages.setBackground(Color.decode("#2a1c13"));
         searchCottages.setForeground(Color.WHITE);
-        searchCottages.setBounds (950, 250, 230, 40);
+        searchCottages.setBounds (900, 250, 230, 40);
         searchCottages.addActionListener(this);
         add (searchCottages);
                 
         searchServices = new JButton ("Services");
         searchServices.setBackground(Color.decode("#2a1c13"));
         searchServices.setForeground(Color.WHITE);
-        searchServices.setBounds (950, 300, 230, 40);
+        searchServices.setBounds (900, 300, 230, 40);
         searchServices.addActionListener(this);
         add (searchServices);
         
         guestInfo = new JButton ("Guest Info");
         guestInfo.setBackground(Color.decode ("#2a1c13"));
         guestInfo.setForeground(Color.WHITE);
-        guestInfo.setBounds (950, 350, 230, 40);
+        guestInfo.setBounds (900, 350, 230, 40);
         guestInfo.addActionListener(this);
         add (guestInfo);
         
@@ -876,7 +899,8 @@ public class Reservation1 extends JFrame implements ActionListener {
         // Get the length of stay 
         String lengthOfStay =  tflength.getText(); 
 
-        try {
+       try {
+           
             String checkInDateStr = tfcheckintime.getText();
             
             // Parse it into the desired format
@@ -891,6 +915,7 @@ public class Reservation1 extends JFrame implements ActionListener {
             cal.setTime(checkInParsedDate);  
             cal.add(Calendar.DAY_OF_YEAR, stayLength);  
             String checkOutDate = outputFormat.format(cal.getTime());
+            
             
             // Query to insert the new guest into the guest table
             String query = "INSERT INTO guest (name, address, number, document, sex, country, room, check_in_date, check_out_date, totalCost, deposit, paymentMethod, length_of_stay) " +
@@ -923,7 +948,8 @@ public class Reservation1 extends JFrame implements ActionListener {
             PreparedStatement stmtStatusUpdate = conn.c.prepareStatement(statusUpdateQuery);
             stmtStatusUpdate.executeUpdate();
 
-            new ReserveServices(this, guestID);
+
+             new ReserveServices(this, guestID);
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -933,71 +959,63 @@ public class Reservation1 extends JFrame implements ActionListener {
         new SearchCottages();
     } else if (ae.getSource() == searchRooms) {
         new SearchRoom();
-    } else if (ae.getSource() == guestInfo) {
+    }else if (ae.getSource() == guestInfo) {
         new GuestInfo();
-    } else if (ae.getSource() == searchServices) {
+    }else if (ae.getSource() == searchServices) {
         new Service();
-    } else if (ae.getSource() == back) {
+    }else if (ae.getSource() == back) {
         setVisible(false);
         new Reception();
     } else if (ae.getSource() == reset) {
          resetForm();
-    } else if (ae.getSource() == add) {
-        // Show a confirmation dialog before finalizing the reservation
-        int confirm = JOptionPane.showConfirmDialog(this, 
-                                                    "Do you want to finalize this reservation?", 
-                                                    "Confirm Reservation", 
-                                                    JOptionPane.YES_NO_OPTION);
-
-        if (confirm == JOptionPane.YES_OPTION) {
-            try {
-                Conn conn = new Conn();
-                String services = textArea.getText(); 
-                double totalCost = Double.parseDouble(tfTotalCost.getText().trim());
-                double deposit = Double.parseDouble(tfdeposit.getText().trim());
-
-                if (deposit < totalCost * 0.1) {
-                    throw new IllegalArgumentException("Deposit must be within the valid range.");
-                }
-
-                String paymentStatus = (deposit >= totalCost) ? "Paid" : "Pending";
-
-                // Update the guest table in the database
-                String query = "UPDATE guest SET totalCost = ?, deposit = ?, payment_status = ?, availedServices = ? WHERE guestID = ?";
-                PreparedStatement pstmt = conn.c.prepareStatement(query);
-                pstmt.setDouble(1, totalCost);
-                pstmt.setDouble(2, deposit);
-                pstmt.setString(3, paymentStatus);
-                pstmt.setString(4, services);
-                pstmt.setInt(5, guestID); 
-
-                int rowsUpdated = pstmt.executeUpdate();
-                if (rowsUpdated > 0) {
-                    JOptionPane.showMessageDialog(this, "Reservation Finalized Successfully!");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Guest not found. Reservation not finalized.");
-                }
-
-                setVisible(false);
-                new Reception();
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "Please enter valid numeric values for total cost and deposit.");
-                return; // Stop 
-            } catch (IllegalArgumentException e) {
-                JOptionPane.showMessageDialog(this, e.getMessage());
-                return; // Stop 
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error finalizing Reservation.");
-                return; // Stop 
-            }
-        } else {
-            // If user selects "No", show message and do nothing
-            JOptionPane.showMessageDialog(this, "Reservation not finalized.");
-        }
     }
-}
+            else if (ae.getSource() == add) {
+        try {
+            Conn conn = new Conn();
+             String services = textArea.getText(); 
+            double totalCost = Double.parseDouble(tfTotalCost.getText().trim());
+            double deposit = Double.parseDouble(tfdeposit.getText().trim());
 
+            if (deposit < totalCost * 0.1) {
+                throw new IllegalArgumentException("Deposit must be within the valid range.");
+            }
+
+             
+        String paymentStatus = (deposit >= totalCost) ? "Paid" : "Pending";
+
+        
+        String query = "UPDATE guest SET totalCost = ?, deposit = ?, payment_status = ?, availedServices = ? WHERE guestID = ?";
+        PreparedStatement pstmt = conn.c.prepareStatement(query);
+        pstmt.setDouble(1, totalCost);
+        pstmt.setDouble(2, deposit);
+        pstmt.setString(3, paymentStatus);
+        pstmt.setString(4, services);
+        pstmt.setInt(5, guestID); 
+
+        
+        int rowsUpdated = pstmt.executeUpdate();
+            if (rowsUpdated > 0) {
+                JOptionPane.showMessageDialog(this, "Reservation Finalized Successfully!");
+            } else {
+                JOptionPane.showMessageDialog(this, "Guest not found. Reservation not finalized.");
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Please enter valid numeric values for total cost and deposit.");
+            return; // Stop 
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+            return; // Stop 
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error finalizing Reservation.");
+            return; // Stop 
+        }
+
+       
+        setVisible(false);
+        new Reception();
+    }
+          }
 
     public static void main(String[] args) {
         new Reservation1();
