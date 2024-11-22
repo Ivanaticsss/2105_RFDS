@@ -786,13 +786,11 @@ public class CheckIn extends JFrame implements ActionListener {
             PreparedStatement stmt2 = conn.c.prepareStatement(query2);
             stmt2.setString(1, room);
             stmt2.executeUpdate();
-             new AvailServices(this, guestID);
+            new AvailServices(this, guestID);
             String statusUpdateQuery = "UPDATE guest SET status = 'Checked-In' WHERE check_in_date <= CURDATE()";
             PreparedStatement stmtStatusUpdate = conn.c.prepareStatement(statusUpdateQuery);
             stmtStatusUpdate.executeUpdate();
 
-             
-            
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -801,63 +799,72 @@ public class CheckIn extends JFrame implements ActionListener {
         new SearchCottages();
     } else if (ae.getSource() == searchRooms) {
         new SearchRoom();
-    }else if (ae.getSource() == guestInfo) {
+    } else if (ae.getSource() == guestInfo) {
         new GuestInfo();
-    }else if (ae.getSource() == searchServices) {
+    } else if (ae.getSource() == searchServices) {
         new Service();
-    }else if (ae.getSource() == back) {
+    } else if (ae.getSource() == back) {
         setVisible(false);
         new Reception();
     } else if (ae.getSource() == reset) {
-         resetForm();
-    }
-            else if (ae.getSource() == add) {
-        try {
-            Conn conn = new Conn();
-             String services = textArea.getText(); 
-            double totalCost = Double.parseDouble(tfTotalCost.getText().trim());
-            double deposit = Double.parseDouble(tfdeposit.getText().trim());
+        resetForm();
+    } else if (ae.getSource() == add) {
+        // Show confirmation dialog to ask if user wants to add this customer
+        int confirm = JOptionPane.showConfirmDialog(this, 
+                                                    "Do you want to add this customer?", 
+                                                    "Confirm Add Customer", 
+                                                    JOptionPane.YES_NO_OPTION);
 
-            if (deposit < totalCost * 0.1) {
-                throw new IllegalArgumentException("Deposit must be within the valid range.");
+        if (confirm == JOptionPane.YES_OPTION) {
+            try {
+                Conn conn = new Conn();
+                String services = textArea.getText(); 
+                double totalCost = Double.parseDouble(tfTotalCost.getText().trim());
+                double deposit = Double.parseDouble(tfdeposit.getText().trim());
+
+                // Check if the deposit is at least 10% of the total cost
+                if (deposit < totalCost * 0.1) {
+                    throw new IllegalArgumentException("Deposit must be within the valid range.");
+                }
+
+                String paymentStatus = (deposit >= totalCost) ? "Paid" : "Pending";
+
+                // Update the guest table in the database
+                String query = "UPDATE guest SET totalCost = ?, deposit = ?, payment_status = ?, availedServices = ? WHERE guestID = ?";
+                PreparedStatement pstmt = conn.c.prepareStatement(query);
+                pstmt.setDouble(1, totalCost);
+                pstmt.setDouble(2, deposit);
+                pstmt.setString(3, paymentStatus);
+                pstmt.setString(4, services);
+                pstmt.setInt(5, guestID); 
+
+                int rowsUpdated = pstmt.executeUpdate();
+                if (rowsUpdated > 0) {
+                    JOptionPane.showMessageDialog(this, "Check-In Finalized Successfully!");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Guest not found. Check-In not finalized.");
+                }
+
+                setVisible(false);
+                new Reception();
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Please enter valid numeric values for total cost and deposit.");
+                return; // Stop 
+            } catch (IllegalArgumentException e) {
+                JOptionPane.showMessageDialog(this, e.getMessage());
+                return; // Stop 
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error finalizing Check-In.");
+                return; // Stop 
             }
-
-             
-        String paymentStatus = (deposit >= totalCost) ? "Paid" : "Pending";
-
-        // Update the guest table in the database
-        String query = "UPDATE guest SET totalCost = ?, deposit = ?, payment_status = ?, availedServices = ? WHERE guestID = ?";
-        PreparedStatement pstmt = conn.c.prepareStatement(query);
-        pstmt.setDouble(1, totalCost);
-        pstmt.setDouble(2, deposit);
-        pstmt.setString(3, paymentStatus);
-        pstmt.setString(4, services);
-        pstmt.setInt(5, guestID); 
-
-        
-        int rowsUpdated = pstmt.executeUpdate();
-            if (rowsUpdated > 0) {
-                JOptionPane.showMessageDialog(this, "Check-In Finalized Successfully!");
-            } else {
-                JOptionPane.showMessageDialog(this, "Guest not found. Check-In not finalized.");
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Please enter valid numeric values for total cost and deposit.");
-            return; // Stop 
-        } catch (IllegalArgumentException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-            return; // Stop 
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error finalizing Check-In.");
-            return; // Stop 
+        } else {
+            // If the user selects 'No', cancel the action and show a message
+            JOptionPane.showMessageDialog(this, "Customer not added.");
         }
-
-       
-        setVisible(false);
-        new Reception();
     }
-          }
+}
+
 
     public static void main(String[] args) {
         new CheckIn();
