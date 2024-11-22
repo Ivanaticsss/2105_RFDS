@@ -81,12 +81,6 @@ public class CheckIn extends JFrame implements ActionListener {
         
         fetchNextGuestID();
         
-        lblCheckIn = new JLabel("Check-In Form");
-        lblCheckIn.setBounds(900, 600, 300, 30);
-        lblCheckIn.setFont(new Font("Helvetica", Font.ITALIC, 22));
-        
-        add(lblCheckIn);
-        
         //Name Input
         lblname = new JLabel("Full Name:");
         lblname.setBounds(45, 160, 300, 30);
@@ -490,7 +484,7 @@ public class CheckIn extends JFrame implements ActionListener {
         String formattedDate = formatter.format(date);
 
         checkintime = new JLabel(formattedDate);
-        checkintime.setBounds(570, 280, 300, 30);
+        checkintime.setBounds(610, 280, 300, 30);
         checkintime.setFont(new Font("Helvetica", Font.BOLD | Font.ITALIC, 13));
         add(checkintime);
         
@@ -523,9 +517,9 @@ public class CheckIn extends JFrame implements ActionListener {
         
         String paymentOptions[] = {"Cash", "Credit Card (VISA, Mastercard, etc.)", "Debit Card", "E-Wallet"};
         comboPayment = new JComboBox<>(paymentOptions);
-        comboPayment.setBounds(500, 560, 260, 25);
+        comboPayment.setBounds(500, 570, 260, 25);
         comboPayment.setBackground(Color.WHITE);
-        comboPayment.setFont(new Font("HELVETICA", Font.BOLD | Font.ITALIC, 15));
+        comboPayment.setFont(new Font("HELVETICA", Font.BOLD, 15));
         Border paymentBorder = BorderFactory.createLineBorder(Color.decode("#D3A376"), 2);  // Change 'Color.BLUE' to your desired color
         comboPayment.setBorder(paymentBorder);
         add(comboPayment);
