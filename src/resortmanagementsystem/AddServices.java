@@ -59,7 +59,7 @@ public class AddServices extends JFrame implements ActionListener{
         cancel.addActionListener(this);
         add(cancel);
         
-        ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icons/roombg.jpg"));
+        ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icons/servicesbg.jpg"));
         JLabel image = new JLabel(i1);
         image.setBounds(400, 30, 500, 300);
         add(image);
