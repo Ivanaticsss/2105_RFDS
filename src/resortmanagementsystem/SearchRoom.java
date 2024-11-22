@@ -19,6 +19,7 @@ public class SearchRoom extends JFrame implements ActionListener {
     JCheckBox available;
 
     SearchRoom() {
+        setTitle("Search Room");
 
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);

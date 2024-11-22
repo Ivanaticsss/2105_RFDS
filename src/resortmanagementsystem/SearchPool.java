@@ -22,6 +22,8 @@ public class SearchPool extends JFrame implements ActionListener{
     
     SearchPool(){
         
+        setTitle("Search Pool");
+        
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
       

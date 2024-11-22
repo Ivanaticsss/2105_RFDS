@@ -10,6 +10,8 @@ public class Reception extends JFrame implements ActionListener{
     JPopupMenu roomsMenu, poolsMenu, cottagesMenu, guestMenu;
     
     Reception(){
+        setTitle("Reception");
+        
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
         newGuest = new JButton("New Guest Form");

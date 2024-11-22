@@ -20,6 +20,7 @@ public class Service extends JFrame implements ActionListener {
     JButton submitButton;
     
     Service() {
+        setTitle("Search Services");
         
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);

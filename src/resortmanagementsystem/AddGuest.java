@@ -45,6 +45,8 @@ public class AddGuest extends JFrame implements ActionListener {
 }
         
         AddGuest() {
+        setTitle("wala na pala to");
+        
         ImageIcon backgroundIcon = new ImageIcon(ClassLoader.getSystemResource("icons/formbg.jpg"));
         JLabel background = new JLabel(backgroundIcon);
         background.setBounds(0, 0, 800, 550);

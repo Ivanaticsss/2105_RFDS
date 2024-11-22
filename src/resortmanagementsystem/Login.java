@@ -12,6 +12,7 @@ public class Login extends JFrame implements ActionListener{
     JButton login, cancel;
             
     Login(){
+       setTitle("Log In");
        
         getContentPane().setBackground(Color.WHITE);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);// exit so that it will still not run in the background

@@ -15,6 +15,7 @@ public class UpdateCheck extends JFrame implements ActionListener {
     JScrollPane scrollPane;
 
     UpdateCheck() {
+        setTitle("Payment Update");
             getContentPane().setBackground(Color.WHITE);
             setLayout(null);
 

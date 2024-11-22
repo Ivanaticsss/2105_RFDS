@@ -15,6 +15,7 @@ public class UpdateRoom extends JFrame implements ActionListener {
     JTable table;
 
     UpdateRoom() {
+        setTitle("Room Status");
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
 

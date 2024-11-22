@@ -14,6 +14,9 @@ public class AddServices extends JFrame implements ActionListener{
     
     
     AddServices(){
+        
+        setTitle("Add Services");
+        
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
         

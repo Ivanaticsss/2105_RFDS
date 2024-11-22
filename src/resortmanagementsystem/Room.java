@@ -17,6 +17,7 @@ public class Room extends JFrame implements ActionListener{
     JButton back;
     
     Room(){
+        setTitle("Room List");
         
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);

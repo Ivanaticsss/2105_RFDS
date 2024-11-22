@@ -22,6 +22,7 @@ public class AvailServices extends JFrame {
     
     
     AvailServices(CheckIn checkIn, int guestID) {
+        
         this.checkIn = checkIn;
         this.guestID = guestID;
         getContentPane().setBackground(Color.WHITE);

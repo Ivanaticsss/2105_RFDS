@@ -21,6 +21,8 @@ public class ReserveServices extends JFrame {
     
     
     ReserveServices(Reservation1 reservation1, int guestID) {
+        setTitle("Book Services");
+        
         this.reservation1 = reservation1;
         this.guestID = guestID;
         getContentPane().setBackground(Color.WHITE);

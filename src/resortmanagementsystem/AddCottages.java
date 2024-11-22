@@ -13,6 +13,7 @@ public class AddCottages extends JFrame implements ActionListener {
     private JLabel heading, lblCottageNo, lblAvailable, lblPrice, lblType;
     
     AddCottages() {
+        setTitle("Add Cottage");
         
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);

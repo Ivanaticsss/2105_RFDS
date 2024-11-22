@@ -15,6 +15,8 @@ public class AddRooms extends JFrame implements ActionListener, ItemListener {
     private JLabel roomImage, heading, lblroomtype, lblroomno, lblavailavle, lblprice, lbltype, lblFacilities; 
     
     AddRooms(){
+        setTitle("Add Rooms");
+        
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
         

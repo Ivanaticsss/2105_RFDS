@@ -9,6 +9,7 @@ import java.awt.event.*;
 public class ResortManagementSystem extends JFrame implements ActionListener{
     
     ResortManagementSystem(){
+        setTitle("Serenity Cove Resort Front Desk");
         //setSize(1366, 565);
         //setLocation(100,100);
         setBounds(100,100,1366,565);

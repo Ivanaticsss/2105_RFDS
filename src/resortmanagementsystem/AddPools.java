@@ -13,6 +13,9 @@ public class AddPools extends JFrame implements ActionListener {
     private JLabel heading, lblPoolNo, lblType, lblAvailable, lblPrice;
     
     AddPools() {
+        
+        setTitle("Add Pools");
+        
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
         

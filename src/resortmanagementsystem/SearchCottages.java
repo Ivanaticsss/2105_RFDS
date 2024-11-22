@@ -15,6 +15,8 @@ public class SearchCottages extends JFrame implements ActionListener {
     JCheckBox available;
 
     public SearchCottages() {
+        setTitle("Search Cottage");
+        
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
         

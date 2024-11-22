@@ -18,6 +18,8 @@ public class Cottage extends JFrame implements ActionListener{
     
     Cottage(){
         
+        setTitle("Cottages");
+        
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
         

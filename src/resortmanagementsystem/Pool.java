@@ -21,6 +21,8 @@ public class Pool extends JFrame implements ActionListener {
     
     Pool() {
         
+        setTitle("Pool List");
+        
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
         

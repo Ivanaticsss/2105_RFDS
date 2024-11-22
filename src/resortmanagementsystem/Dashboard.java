@@ -7,6 +7,8 @@ import java.awt.event.*;
 public class Dashboard extends JFrame implements ActionListener{
     
     Dashboard(){
+        setTitle("Serenity Cove Resort Front Desk");
+        
         setBounds(0, 0, 1550, 1000);
         
         setLayout(null);

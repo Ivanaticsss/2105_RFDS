@@ -16,6 +16,8 @@ public class CheckOut extends JFrame implements ActionListener {
     JScrollPane scrollPane;
 
     CheckOut() {
+        setTitle("Check-Out");
+        
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
         
