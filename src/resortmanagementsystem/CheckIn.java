@@ -409,32 +409,32 @@ public class CheckIn extends JFrame implements ActionListener {
         //ID input
         
         lblid = new JLabel("ID:");
-        lblid.setBounds(450, 165, 150, 25);
+        lblid.setBounds(500, 165, 150, 25);
         lblid.setFont(new Font("HELVETICA", Font.PLAIN, 17));
         add(lblid);
         
         String options[] = {"Driver's License", "SSS ID", "Pag-ibig ID", "Voter's ID", "National ID", "Company ID", "Student's ID", "Passport/Visa"};
         comboid = new JComboBox<>(options);
-        comboid.setBounds(520, 165, 150, 25);
+        comboid.setBounds(590, 165, 150, 25);
         comboid.setBackground(Color.WHITE);
-        comboid.setFont(new Font("HELVETICA", Font.PLAIN, 15));
+        comboid.setFont(new Font("HELVETICA", Font.BOLD, 15));
         Border border = BorderFactory.createLineBorder(Color.decode("#D3A376"), 2);  // Change 'Color.BLUE' to your desired color
         comboid.setBorder(border);
         add(comboid);
         
         //SEX input
         lblsex = new JLabel("Sex:");
-        lblsex.setBounds(450, 190, 300, 30);
+        lblsex.setBounds(500, 190, 300, 30);
         lblsex.setFont(new Font("Helvetica", Font.PLAIN, 18));
         add(lblsex);
         
         rmale = new JRadioButton("Male");
         rmale.setBackground(Color.WHITE);
-        rmale.setBounds(520, 195, 70, 25);
+        rmale.setBounds(590, 195, 70, 25);
         
         rfemale = new JRadioButton("Female");
         rfemale.setBackground(Color.WHITE);
-        rfemale.setBounds(590, 195, 80, 25);
+        rfemale.setBounds(660, 195, 80, 25);
 
         ButtonGroup sexGroup = new ButtonGroup();
         sexGroup.add(rmale);
@@ -444,24 +444,45 @@ public class CheckIn extends JFrame implements ActionListener {
         add(rfemale);
         
         lblCountry = new JLabel("Country:");
-        lblCountry.setBounds(450, 225, 300, 30);
+        lblCountry.setBounds(500, 220, 300, 30);
         lblCountry.setFont(new Font("Helvetica", Font.PLAIN, 17));
         add(lblCountry);
 
-        tfcountry = new JTextField();
-        tfcountry.setBounds(520, 225, 150, 25);
+        tfcountry = new JTextField("Enter Country");
+        tfcountry.setBounds(590, 225, 150, 25);
         tfcountry.setEditable(true); 
-        tfcountry.setFont(new Font("Helvetica", Font.PLAIN, 17)); 
-        tfcountry.setBackground(Color.WHITE); 
-        tfcountry.setForeground(Color.BLACK); 
+        tfcountry.setFont(new Font("Helvetica", Font.PLAIN, 15)); 
+        //tfcountry.setBackground(Color.WHITE); 
+        tfcountry.setForeground(Color.GRAY); 
         tfcountry.setBorder(new LineBorder(Color.decode("#D3A376"), 1));
+        //add(tfcountry);
+        
+        
+        tfcountry.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (tfcountry.getText().equals("Enter Country")) {
+                    tfcountry.setText("");
+                    tfcountry.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (tfcountry.getText().isEmpty()) {
+                    tfcountry.setText("Enter Country");
+                    tfcountry.setForeground(Color.GRAY);
+                }
+            }
+        });
+        
         add(tfcountry);
         
         
         //CHECK IN TIME 
         lbltime = new JLabel("Check-in Time:");
         lbltime.setBounds(500, 265, 150, 60);
-        lbltime.setFont(new Font("Helvetica", Font.PLAIN, 18));
+        lbltime.setFont(new Font("Helvetica", Font.ITALIC, 13));
         add(lbltime);
         
         Date date = new Date();
@@ -470,41 +491,41 @@ public class CheckIn extends JFrame implements ActionListener {
 
         checkintime = new JLabel(formattedDate);
         checkintime.setBounds(650, 280, 300, 30);
-        checkintime.setFont(new Font("Helvetica", Font.BOLD, 17));
+        checkintime.setFont(new Font("Helvetica", Font.BOLD | Font.ITALIC, 13));
         add(checkintime);
         
 
         
         availServices = new JButton ("Avail Services");
-        availServices.setBackground(Color.decode("#D2B486"));
-        availServices.setForeground(Color.BLACK);
+        availServices.setBackground(Color.decode("#65350F"));
+        availServices.setForeground(Color.WHITE);
         availServices.setFont(new Font("Helvetica", Font.BOLD, 18));
-        availServices.setBounds (520, 320, 200, 40);
+        availServices.setBounds (500, 320, 260, 40);
         availServices.addActionListener(this);
         add (availServices);
             String services = null;
         
         textArea = new JTextArea();
-        textArea.setBounds(520, 360, 200, 100);
+        textArea.setBounds(500, 360, 260, 100);
         textArea.setFont(new Font("Helvetica", Font.PLAIN, 15));
         textArea.setForeground(Color.BLACK);
         textArea.setBorder(new LineBorder(Color.decode("#D3A376"), 1));
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
         JScrollPane scrollPane = new JScrollPane(textArea);
-        scrollPane.setBounds(520,360, 200, 100);
+        scrollPane.setBounds(500,360, 260, 100);
         add(scrollPane);
         
-        lblpaymentMethod = new JLabel("Payment Method:");
-        lblpaymentMethod.setBounds(400, 545, 150, 25);
+        lblpaymentMethod = new JLabel("Choose a Payment Method:");
+        lblpaymentMethod.setBounds(500, 545, 260, 25);
         lblpaymentMethod.setFont(new Font("HELVETICA", Font.PLAIN, 17));
         add(lblpaymentMethod);
         
         String paymentOptions[] = {"Cash", "Credit Card (VISA, Mastercard, etc.)", "Debit Card", "E-Wallet"};
         comboPayment = new JComboBox<>(paymentOptions);
-        comboPayment.setBounds(530, 545, 200, 25);
+        comboPayment.setBounds(500, 545, 560, 25);
         comboPayment.setBackground(Color.WHITE);
-        comboPayment.setFont(new Font("HELVETICA", Font.PLAIN, 15));
+        comboPayment.setFont(new Font("HELVETICA", Font.BOLD | Font.ITALIC, 15));
         Border paymentBorder = BorderFactory.createLineBorder(Color.decode("#D3A376"), 2);  // Change 'Color.BLUE' to your desired color
         comboPayment.setBorder(paymentBorder);
         add(comboPayment);
