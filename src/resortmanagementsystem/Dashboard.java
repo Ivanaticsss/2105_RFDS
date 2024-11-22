@@ -74,7 +74,7 @@ public class Dashboard extends JFrame implements ActionListener{
         
 
         setVisible(true);
-    }
+    } 
     
     public void actionPerformed(ActionEvent ae){
         if(ae.getActionCommand().equals("ADD ROOMS")){

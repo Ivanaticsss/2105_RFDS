@@ -618,7 +618,7 @@ public class CheckIn extends JFrame implements ActionListener {
         double totalCost = (roomPrice + servicePrice) * lengthOfStay;
         tfTotalCost.setText(String.format("%.2f", totalCost));
 
-        double minDeposit = totalCost * 0.1; // 10% minimum deposit
+        double minDeposit = totalCost * 0.5; // 50% minimum deposit
         double maxDeposit = totalCost;  //maximum deposit
        
         lblDepositRange.setText(String.format("Range: ₱%.2f - ₱%.2f", minDeposit, maxDeposit));
