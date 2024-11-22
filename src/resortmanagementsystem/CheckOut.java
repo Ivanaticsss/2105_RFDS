@@ -9,6 +9,7 @@ import javax.swing.border.LineBorder;
 
 public class CheckOut extends JFrame implements ActionListener {
 
+    Choice ccustomer;
     JTextField searchField, guestIDField, roomNumberField, checkInField, checkOutField, paymentField
             ;
     JButton checkOut, back, searchButton, generateBill;
@@ -30,14 +31,26 @@ public class CheckOut extends JFrame implements ActionListener {
         Font labelFont = new Font("Helvetica", Font.BOLD, 15);
 
         JLabel lblSearch = new JLabel("Search Guest ID:");
-        lblSearch.setBounds(30, 100, 150, 30);
+        lblSearch.setBounds(30, 105, 140, 30);
         Font font = new Font("Helvetica", Font.BOLD, 17);
         lblSearch.setFont(font);
         add(lblSearch);
-        
-        searchField = new JTextField();
-        searchField.setBounds(170, 100, 150, 30);
-        add(searchField);
+       
+        ccustomer = new Choice();
+        ccustomer.setBounds(170, 110, 150, 40);
+            add(ccustomer);
+
+            // Load Guest IDs
+            try {
+                Conn c = new Conn();
+                ResultSet rs = c.s.executeQuery("SELECT guestID FROM guest");
+                while (rs.next()) {
+                    ccustomer.add(rs.getString("guestID"));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
 
         searchButton = new JButton("");
         searchButton.setBounds(330, 100, 100, 25);
@@ -219,11 +232,12 @@ public class CheckOut extends JFrame implements ActionListener {
 
     public void actionPerformed(ActionEvent ae) {
      if (ae.getSource() == searchButton) {
-         String searchID = searchField.getText().trim();
+         String searchID =ccustomer.getSelectedItem();
          if (!searchID.isEmpty()) {
              searchGuestByID(searchID);
          }
      }
+       
 
       if (ae.getSource() == checkOut) {
     String guestID = guestIDField.getText();

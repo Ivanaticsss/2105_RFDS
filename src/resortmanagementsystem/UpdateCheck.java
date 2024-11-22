@@ -19,7 +19,7 @@ public class UpdateCheck extends JFrame implements ActionListener {
             getContentPane().setBackground(Color.WHITE);
             setLayout(null);
 
-            ImageIcon icon = new ImageIcon(getClass().getResource("/icons/checkoutheader.png"));
+            ImageIcon icon = new ImageIcon(getClass().getResource("/icons/updatestatusheader.png"));
             JLabel header = new JLabel(icon);
             header.setBounds(0, -5, 1050, 70);
             add(header);
