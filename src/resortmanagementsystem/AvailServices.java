@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Date;
 import javax.swing.border.LineBorder;
 
 public class AvailServices extends JFrame {
@@ -44,7 +45,7 @@ public class AvailServices extends JFrame {
         if (isSelected) {
             // Automatically update the cottage numbers and price when selected
             String selectedType = (String) comboCottageType.getSelectedItem();
-            updateCottageNumbers(selectedType); // Load cottage numbers based on selected type
+            updateCottageNumbers(selectedType, Integer.toString(guestID));
             calculateTotalCost(); // Recalculate total cost
         }
     });
@@ -83,7 +84,9 @@ public class AvailServices extends JFrame {
             if (e.getStateChange() == ItemEvent.SELECTED) { 
                 String selectedType = (String) comboCottageType.getSelectedItem(); 
                 if (selectedType != null) {
-                    updateCottageNumbers(selectedType); 
+                    updateCottageNumbers(selectedType, Integer.toString(guestID));
+
+ 
                 }
             }
         });
@@ -228,121 +231,156 @@ public class AvailServices extends JFrame {
    
     }
     
-  private void confirmAction() {
-    StringBuilder services = new StringBuilder();
-    double totalCost = 0.0;   
+    private void confirmAction() {
+        // Prompt the user for confirmation
+        int response = JOptionPane.showConfirmDialog(
+                this, 
+                "Are you sure you want to confirm these services?", 
+                "Confirm Services", 
+                JOptionPane.YES_NO_OPTION, 
+                JOptionPane.QUESTION_MESSAGE);
 
-    checkIn.updateTotalCost(); 
+        // Check the user's response
+        if (response != JOptionPane.YES_OPTION) {
+            // If the user clicks "No", exit the method
+            return;
+        }
 
-    // Cottage
-    if (chkCottage.isSelected()) {
-        services.append("Cottage Type: ").append(comboCottageType.getSelectedItem()).append(", ");
-        services.append("Cottage Number: ").append(comboCottageNumber.getSelectedItem()).append("\n");
-        totalCost += getCottagePrice(comboCottageType.getSelectedItem().toString());
-    }
+        StringBuilder services = new StringBuilder();
+        double totalCost = 0.0;   
 
-    // Pool
-    if (chkPool.isSelected()) {
-        String poolType = chkKiddie.isSelected() ? "Kiddie" : (chkAdult.isSelected() ? "Adult" : "Infinity");
-        services.append("Pool: ").append(poolType).append("\n");
-        totalCost += getPoolPrice(); 
-    }
+        checkIn.updateTotalCost(); 
 
-    // Spa
-    if (chkSpa.isSelected()) {
-        services.append("Spa: Yes\n");
-        totalCost += getSpaPrice(); 
-    }
-
-    // Buffet
-    if (chkResto.isSelected()) {
-        services.append("Buffet: Yes\n");
-        totalCost += getBuffetPrice(); 
-    }
-
-    // Tour
-    if (chkTour.isSelected()) {
-        services.append("Tour: Yes\n");
-        totalCost += getTourPrice(); 
-    }
-
-    services.append("Total Cost: ").append(totalCost).append("\n");
-
-    try {
-        Conn conn = new Conn();
-        String query = "INSERT INTO services (guestID, serviceName, price) VALUES (?, ?, ?)";
-        PreparedStatement stmt = conn.c.prepareStatement(query);
-
-        // Cottage
         if (chkCottage.isSelected()) {
-            stmt.setInt(1, guestID);  
-            stmt.setString(2, "Cottage Type: " + comboCottageType.getSelectedItem() + ", Cottage Number: " + comboCottageNumber.getSelectedItem());
-            stmt.setDouble(3, getCottagePrice(comboCottageType.getSelectedItem().toString()));
-            stmt.executeUpdate();
+            String selectedCottageType = comboCottageType.getSelectedItem().toString();
+            String selectedCottageNumber = comboCottageNumber.getSelectedItem().toString();
+
+            try (Conn conn = new Conn()) {
+                // Update cottage availability
+                String updateQuery = "UPDATE cottage SET availability = 'Occupied' WHERE cottage_type = ? AND cottagenumber = ?";
+                try (PreparedStatement updateStmt = conn.c.prepareStatement(updateQuery)) {
+                    updateStmt.setString(1, selectedCottageType);
+                    updateStmt.setString(2, selectedCottageNumber);
+                    updateStmt.executeUpdate();
+                }
+
+                // Insert service details into the database
+                String insertQuery = "INSERT INTO services (guestID, serviceName, price) VALUES (?, ?, ?)";
+                try (PreparedStatement stmt = conn.c.prepareStatement(insertQuery)) {
+                    stmt.setInt(1, guestID);
+                    stmt.setString(2, "Cottage Type: " + selectedCottageType + ", Cottage Number: " + selectedCottageNumber);
+                    stmt.setDouble(3, getCottagePrice(selectedCottageType));
+                    stmt.executeUpdate();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+            // Append the cottage information to services
+            services.append("Cottage Type: ").append(selectedCottageType)
+                    .append(", Cottage Number: ").append(selectedCottageNumber)
+                    .append("\n");
+
+            // Update the total cost
+            totalCost += getCottagePrice(selectedCottageType);
         }
 
         // Pool
         if (chkPool.isSelected()) {
-            StringBuilder poolTypes = new StringBuilder();
-
-            // Check each checkbox and append the selected types
-            if (chkKiddie.isSelected()) {
-                poolTypes.append("Kiddie");
-            }
-            if (chkAdult.isSelected()) {
-                if (poolTypes.length() > 0) poolTypes.append(", "); // Add a comma if there's already a type
-                poolTypes.append("Adult");
-            }
-            if (chkInfinity.isSelected()) {
-                if (poolTypes.length() > 0) poolTypes.append(", "); // Add a comma if there's already a type
-                poolTypes.append("Infinity");
-            }
-
-            if (poolTypes.length() > 0) { // Proceed only if at least one type is selected
-                stmt.setInt(1, guestID);
-                stmt.setString(2, "Pool: " + poolTypes.toString()); // Combine types into a single string
-                stmt.setDouble(3, getPoolPrice());
-                stmt.executeUpdate();
-            }
+            String poolType = chkKiddie.isSelected() ? "Kiddie" : (chkAdult.isSelected() ? "Adult" : "Infinity");
+            services.append("Pool: ").append(poolType).append("\n");
+            totalCost += getPoolPrice(); 
         }
-
 
         // Spa
         if (chkSpa.isSelected()) {
-            stmt.setInt(1, guestID);  
-            stmt.setString(2, "Spa: Yes");
-            stmt.setDouble(3, getSpaPrice()); 
-            stmt.executeUpdate();
+            services.append("Spa: Yes\n");
+            totalCost += getSpaPrice(); 
         }
 
         // Buffet
         if (chkResto.isSelected()) {
-            stmt.setInt(1, guestID);  
-            stmt.setString(2, "Buffet: Yes");
-            stmt.setDouble(3, getBuffetPrice()); 
-            stmt.executeUpdate();
+            services.append("Buffet: Yes\n");
+            totalCost += getBuffetPrice(); 
         }
 
         // Tour
         if (chkTour.isSelected()) {
-            stmt.setInt(1, guestID); 
-            stmt.setString(2, "Tour: Yes");
-            stmt.setDouble(3, getTourPrice()); 
-            stmt.executeUpdate();
+            services.append("Tour: Yes\n");
+            totalCost += getTourPrice(); 
         }
 
-        JOptionPane.showMessageDialog(this, "Services and guest details successfully updated!");
+        services.append("Total Cost: ").append(totalCost).append("\n");
 
-        // Optionally display the updated services in CheckIn class
-        checkIn.displayServices(services.toString());
+        try {
+            Conn conn = new Conn();
+            String query = "INSERT INTO services (guestID, serviceName, price) VALUES (?, ?, ?)";
+            PreparedStatement stmt = conn.c.prepareStatement(query);
 
-    } catch (Exception ex) {
-        ex.printStackTrace();
-        JOptionPane.showMessageDialog(this, "An error occurred while saving the data.");
+            // Cottage
+            if (chkCottage.isSelected()) {
+                stmt.setInt(1, guestID);  
+                stmt.setString(2, "Cottage Type: " + comboCottageType.getSelectedItem() + ", Cottage Number: " + comboCottageNumber.getSelectedItem());
+                stmt.setDouble(3, getCottagePrice(comboCottageType.getSelectedItem().toString()));
+                stmt.executeUpdate();
+            }
+
+            // Pool
+            if (chkPool.isSelected()) {
+                StringBuilder poolTypes = new StringBuilder();
+
+                if (chkKiddie.isSelected()) poolTypes.append("Kiddie");
+                if (chkAdult.isSelected()) {
+                    if (poolTypes.length() > 0) poolTypes.append(", ");
+                    poolTypes.append("Adult");
+                }
+                if (chkInfinity.isSelected()) {
+                    if (poolTypes.length() > 0) poolTypes.append(", ");
+                    poolTypes.append("Infinity");
+                }
+
+                if (poolTypes.length() > 0) {
+                    stmt.setInt(1, guestID);
+                    stmt.setString(2, "Pool: " + poolTypes.toString());
+                    stmt.setDouble(3, getPoolPrice());
+                    stmt.executeUpdate();
+                }
+            }
+
+            // Spa
+            if (chkSpa.isSelected()) {
+                stmt.setInt(1, guestID);  
+                stmt.setString(2, "Spa: Yes");
+                stmt.setDouble(3, getSpaPrice()); 
+                stmt.executeUpdate();
+            }
+
+            // Buffet
+            if (chkResto.isSelected()) {
+                stmt.setInt(1, guestID);  
+                stmt.setString(2, "Buffet: Yes");
+                stmt.setDouble(3, getBuffetPrice()); 
+                stmt.executeUpdate();
+            }
+
+            // Tour
+            if (chkTour.isSelected()) {
+                stmt.setInt(1, guestID); 
+                stmt.setString(2, "Tour: Yes");
+                stmt.setDouble(3, getTourPrice()); 
+                stmt.executeUpdate();
+            }
+
+            JOptionPane.showMessageDialog(this, "Services and guest details successfully updated!");
+            checkIn.displayServices(services.toString());
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "An error occurred while saving the data.");
+        }
+
+        setVisible(false); // Close the AvailServices window
     }
-
-    setVisible(false); // Close the AvailServices window
-}
 
 
     
@@ -394,31 +432,69 @@ public class AvailServices extends JFrame {
             }
         }
        
- private void updateCottageNumbers(String roomType) {
-        comboCottageNumber.removeAllItems();  
+    private void updateCottageNumbers(String cottageType, String guestID) {
+    comboCottageNumber.removeAllItems(); // Clear previous items
+    try {
+        Conn conn = new Conn();
 
-        try {
-            Conn conn = new Conn();
-            String query = "SELECT cottagenumber FROM cottage WHERE cottage_type = ?";
-            PreparedStatement stmt = conn.c.prepareStatement(query);
-            stmt.setString(1, roomType);
-            ResultSet rs = stmt.executeQuery();
+        String getDatesQuery = "SELECT check_in_date, check_out_date FROM guest WHERE guestID = ?";
+        PreparedStatement stmt1 = conn.c.prepareStatement(getDatesQuery);
+        stmt1.setString(1, guestID);
+        ResultSet rs1 = stmt1.executeQuery();
 
-            while (rs.next()) {
-                comboCottageNumber.addItem(rs.getString("cottagenumber")); 
-            }
+        Date checkInDate = null;
+        Date checkOutDate = null;
 
-            // If there are rooms, set the first one as selected to update the room details
-            if (comboCottageNumber.getItemCount() > 0) {
-                updateCottagePrice((String) comboCottageNumber.getSelectedItem());
-            } else {
-                tfCottagePrice.setText("Not Available");
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        if (rs1.next()) {
+            checkInDate = rs1.getDate("check_in_date");
+            checkOutDate = rs1.getDate("check_out_date");
         }
- }
- 
+
+        // If no dates found for the guest, show an error
+        if (checkInDate == null || checkOutDate == null) {
+            JOptionPane.showMessageDialog(this, "No reservation dates found for the selected guest.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Query to check cottage availability, considering future reservations
+        String query = "SELECT cottageNumber FROM cottage WHERE cottageType = ? " +
+                       "AND cottagenumber NOT IN (" +
+                       "    SELECT cottageID FROM guest WHERE " +
+                       "    (check_in_date BETWEEN ? AND ?) OR " +
+                       "    (check_out_date BETWEEN ? AND ?) OR " +
+                       "    (check_in_date > ?)" +
+                       ")";
+        PreparedStatement stmt2 = conn.c.prepareStatement(query);
+        stmt2.setString(1, cottageType);
+        stmt2.setDate(2, new java.sql.Date(checkInDate.getTime())); // Reservation start date
+        stmt2.setDate(3, new java.sql.Date(checkOutDate.getTime())); // Reservation end date
+        stmt2.setDate(4, new java.sql.Date(checkInDate.getTime())); // Reservation start date
+        stmt2.setDate(5, new java.sql.Date(checkOutDate.getTime())); // Reservation end date
+        stmt2.setDate(6, new java.sql.Date(checkInDate.getTime())); // Checking for future availability
+
+        ResultSet rs2 = stmt2.executeQuery();
+        boolean hasCottages = false;
+
+        while (rs2.next()) {
+            hasCottages = true;
+            comboCottageNumber.addItem(rs2.getString("cottageNumber"));
+        }
+
+        if (!hasCottages) {
+            JOptionPane.showMessageDialog(this, "No cottages available for the selected type and dates.", "No Availability", JOptionPane.INFORMATION_MESSAGE);
+        }
+
+        rs1.close();
+        rs2.close();
+        stmt1.close();
+        stmt2.close();
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    }
+}
+
+
+
         private double getCottagePrice(String cottageType) {
             double price = 0.0;
             if (cottageType == null || cottageType.isEmpty()) {

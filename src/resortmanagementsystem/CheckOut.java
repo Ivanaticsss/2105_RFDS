@@ -196,67 +196,107 @@ public class CheckOut extends JFrame implements ActionListener {
         setLocationRelativeTo(null); 
         setVisible(true);
     }
-
-   public void actionPerformed(ActionEvent ae) {
-    if (ae.getSource() == searchButton) {
-        String searchID = searchField.getText().trim();
-        if (!searchID.isEmpty()) {
-            searchGuestByID(searchID);
+    
+    private String extractCottageNumber(String serviceName) {
+    try {
+        
+        if (serviceName.contains("Cottage Number:")) {
+            String[] parts = serviceName.split(","); 
+            for (String part : parts) {
+                if (part.trim().startsWith("Cottage Number:")) {
+                    return part.split(":")[1].trim(); 
+                }
+            }
         }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return null; 
+}
+
+
+    public void actionPerformed(ActionEvent ae) {
+     if (ae.getSource() == searchButton) {
+         String searchID = searchField.getText().trim();
+         if (!searchID.isEmpty()) {
+             searchGuestByID(searchID);
+         }
+     }
+
+      if (ae.getSource() == checkOut) {
+    String guestID = guestIDField.getText();
+    String roomNumber = roomNumberField.getText();
+
+    if (guestID.isEmpty()) {
+        JOptionPane.showMessageDialog(null, "Please search for a guest first!");
+        return;
     }
 
-    if (ae.getSource() == checkOut) {
-        String guestID = guestIDField.getText();
-        String roomNumber = roomNumberField.getText();
+    int confirm = JOptionPane.showConfirmDialog(
+        null, 
+        "Are you sure you want to check out this guest?", 
+        "Confirm Check-out", 
+        JOptionPane.YES_NO_OPTION
+    );
 
-        if (guestID.isEmpty() || roomNumber.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please search for a guest first!");
-            return;
-        }
+    if (confirm == JOptionPane.YES_OPTION) {
+        try {
+            Conn c = new Conn();
 
-        // Show confirmation prompt before proceeding with check-out
-        int confirm = JOptionPane.showConfirmDialog(null, 
-                                                    "Are you sure you want to check out this guest?", 
-                                                    "Confirm Check-out", 
-                                                    JOptionPane.YES_NO_OPTION);
+            // Update cottage availability if cottage services were availed
+            String checkCottageQuery = "SELECT serviceName FROM services WHERE guestID = ? AND serviceName LIKE 'Cottage%'";
+            PreparedStatement ps1 = c.c.prepareStatement(checkCottageQuery);
+            ps1.setString(1, guestID);
+            ResultSet rs = ps1.executeQuery();
 
-        if (confirm == JOptionPane.YES_OPTION) {
-            String deleteGuestQuery = "DELETE FROM guest WHERE guestID = ?";
-            String updateRoomAvailabilityQuery = "UPDATE room SET availability = 'Available' WHERE roomnumber = ?";
-            String updatePaymentStatusQuery = "UPDATE guest SET payment_status = 'Paid' WHERE guestID = ?";
-            
-            try {
-                Conn c = new Conn();
-                
-                // Delete guest
-                PreparedStatement ps1 = c.c.prepareStatement(deleteGuestQuery);
-                ps1.setString(1, guestID);
-                ps1.executeUpdate();
+            while (rs.next()) {
+                String serviceName = rs.getString("serviceName");
 
-                // Update room availability
-                PreparedStatement ps2 = c.c.prepareStatement(updateRoomAvailabilityQuery);
-                ps2.setString(1, roomNumber);
-                ps2.executeUpdate();
-                
-                // Update payment status to 'Paid'
-                PreparedStatement ps3 = c.c.prepareStatement(updatePaymentStatusQuery);
-                ps3.setString(1, guestID);
-                ps3.executeUpdate();
+                // Extract the cottage number from serviceName
+                String cottageNumber = extractCottageNumber(serviceName);
 
-                JOptionPane.showMessageDialog(null, "Check-out done");
-                
-                refreshGuestTable();
-                setVisible(false);
-                new Reception();  
-            } catch (SQLException e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(null, "An error occurred during check-out");
+                if (cottageNumber != null) {
+                    String updateCottageQuery = "UPDATE cottage SET availability = 'Available' WHERE cottagenumber = ?";
+                    PreparedStatement ps2 = c.c.prepareStatement(updateCottageQuery);
+                    ps2.setString(1, cottageNumber);
+                    ps2.executeUpdate();
+                }
             }
-        } else {
-            // If user selects "No", cancel the check-out process
-            JOptionPane.showMessageDialog(null, "Check-out canceled");
+
+            // Delete records from services table
+            String deleteServicesQuery = "DELETE FROM services WHERE guestID = ?";
+            PreparedStatement ps3 = c.c.prepareStatement(deleteServicesQuery);
+            ps3.setString(1, guestID);
+            ps3.executeUpdate();
+
+            // Delete guest record
+            String deleteGuestQuery = "DELETE FROM guest WHERE guestID = ?";
+            PreparedStatement ps4 = c.c.prepareStatement(deleteGuestQuery);
+            ps4.setString(1, guestID);
+            ps4.executeUpdate();
+
+            // Update room availability if a room is associated
+            if (!roomNumber.isEmpty()) {
+                String updateRoomQuery = "UPDATE room SET availability = 'Available' WHERE roomnumber = ?";
+                PreparedStatement ps5 = c.c.prepareStatement(updateRoomQuery);
+                ps5.setString(1, roomNumber);
+                ps5.executeUpdate();
+            }
+
+            JOptionPane.showMessageDialog(null, "Check-out completed successfully!");
+            refreshGuestTable();
+            setVisible(false);
+            new Reception();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "An error occurred during check-out");
         }
-    } else if (ae.getSource() == generateBill) {
+    } else {
+        JOptionPane.showMessageDialog(null, "Check-out canceled");
+    }
+}
+
+else if (ae.getSource() == generateBill) {
         String guestID = guestIDField.getText();
 
         if (guestID.isEmpty()) {
