@@ -432,11 +432,12 @@ public class AvailServices extends JFrame {
             }
         }
        
-    private void updateCottageNumbers(String cottageType, String guestID) {
+ private void updateCottageNumbers(String cottageType, String guestID) {
     comboCottageNumber.removeAllItems(); // Clear previous items
     try {
         Conn conn = new Conn();
 
+        // Query to fetch check-in and check-out dates for the current guest
         String getDatesQuery = "SELECT check_in_date, check_out_date FROM guest WHERE guestID = ?";
         PreparedStatement stmt1 = conn.c.prepareStatement(getDatesQuery);
         stmt1.setString(1, guestID);
@@ -445,41 +446,40 @@ public class AvailServices extends JFrame {
         Date checkInDate = null;
         Date checkOutDate = null;
 
+        // If dates found, set check-in and check-out dates
         if (rs1.next()) {
             checkInDate = rs1.getDate("check_in_date");
             checkOutDate = rs1.getDate("check_out_date");
         }
 
-        // If no dates found for the guest, show an error
+        // If no dates found, show error
         if (checkInDate == null || checkOutDate == null) {
             JOptionPane.showMessageDialog(this, "No reservation dates found for the selected guest.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        // Query to check cottage availability, considering future reservations
-        String query = "SELECT cottageNumber FROM cottage WHERE cottageType = ? " +
-                       "AND cottagenumber NOT IN (" +
-                       "    SELECT cottageID FROM guest WHERE " +
-                       "    (check_in_date BETWEEN ? AND ?) OR " +
-                       "    (check_out_date BETWEEN ? AND ?) OR " +
-                       "    (check_in_date > ?)" +
+        // Query to check availability of cottages of the selected type for both current check-ins and future reservations
+        String query = "SELECT cottageNumber FROM cottage WHERE cottage_type = ? " +
+                       "AND cottageNumber NOT IN (" +
+                       "    SELECT room FROM guest WHERE " +
+                       "    (check_in_date < ? AND check_out_date > ?) " +  // For future reservations and current check-ins
                        ")";
+
         PreparedStatement stmt2 = conn.c.prepareStatement(query);
         stmt2.setString(1, cottageType);
-        stmt2.setDate(2, new java.sql.Date(checkInDate.getTime())); // Reservation start date
-        stmt2.setDate(3, new java.sql.Date(checkOutDate.getTime())); // Reservation end date
-        stmt2.setDate(4, new java.sql.Date(checkInDate.getTime())); // Reservation start date
-        stmt2.setDate(5, new java.sql.Date(checkOutDate.getTime())); // Reservation end date
-        stmt2.setDate(6, new java.sql.Date(checkInDate.getTime())); // Checking for future availability
+        stmt2.setDate(2, new java.sql.Date(checkInDate.getTime())); // Requested check-in date
+        stmt2.setDate(3, new java.sql.Date(checkOutDate.getTime())); // Requested check-out date
 
         ResultSet rs2 = stmt2.executeQuery();
         boolean hasCottages = false;
 
+        // Add available cottages to the combo box
         while (rs2.next()) {
             hasCottages = true;
             comboCottageNumber.addItem(rs2.getString("cottageNumber"));
         }
 
+        // If no cottages are available, show a message
         if (!hasCottages) {
             JOptionPane.showMessageDialog(this, "No cottages available for the selected type and dates.", "No Availability", JOptionPane.INFORMATION_MESSAGE);
         }
@@ -492,6 +492,7 @@ public class AvailServices extends JFrame {
         ex.printStackTrace();
     }
 }
+
 
 
 

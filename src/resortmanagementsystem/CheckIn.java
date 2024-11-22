@@ -796,13 +796,20 @@ public class CheckIn extends JFrame implements ActionListener {
             stmt.setString(5, sex);
             stmt.setString(6, country);
             stmt.setString(7, room);
-            stmt.setString(8, formattedCheckInDate);  // Use formatted check-in date here
-            stmt.setString(9, checkOutDate);  // Use calculated check-out date here
-            stmt.setBigDecimal(10, new BigDecimal(totalCost));  // Total cost
-            stmt.setBigDecimal(11, new BigDecimal(deposit));  // Deposit amount
-            stmt.setString(12, paymentMethod);  // Payment method
-            stmt.setInt(13, stayLength);  // Length of stay
+            stmt.setString(8, formattedCheckInDate);
+            stmt.setString(9, checkOutDate);
+            stmt.setBigDecimal(10, new BigDecimal(totalCost));
+            stmt.setBigDecimal(11, new BigDecimal(deposit));
+            stmt.setString(12, paymentMethod);
+            stmt.setInt(13, stayLength);
             stmt.executeUpdate();
+
+            // Get the generated guestID
+            ResultSet generatedKeys = stmt.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                guestID = generatedKeys.getInt(1); // Fetch the generated guestID
+            }
+
             
             PreparedStatement stmt2 = conn.c.prepareStatement(query2);
             stmt2.setString(1, room);
