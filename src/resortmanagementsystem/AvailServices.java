@@ -437,7 +437,6 @@ public class AvailServices extends JFrame {
     try {
         Conn conn = new Conn();
 
-        // Query to fetch check-in and check-out dates for the current guest
         String getDatesQuery = "SELECT check_in_date, check_out_date FROM guest WHERE guestID = ?";
         PreparedStatement stmt1 = conn.c.prepareStatement(getDatesQuery);
         stmt1.setString(1, guestID);
@@ -459,18 +458,20 @@ public class AvailServices extends JFrame {
         }
 
         // Query to check availability of cottages of the selected type for both current check-ins and future reservations
-        String query = "SELECT cottageNumber FROM cottage WHERE cottage_type = ? " +
-                       "AND cottageNumber NOT IN (" +
-                       "    SELECT room FROM guest WHERE " +
-                       "    (check_in_date < ? AND check_out_date > ?) " +  // For future reservations and current check-ins
-                       ")";
+       String query = "SELECT cottageNumber FROM cottage WHERE cottage_type = ? " +
+               "AND availability = 'Available' " +
+               "AND cottageNumber NOT IN (" +
+               "    SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(serviceName, 'Cottage Number: ', -1), ',', 1) " +
+               "    FROM services WHERE serviceName LIKE ? " +
+               "    AND guestID != ? " +
+               ")";
 
         PreparedStatement stmt2 = conn.c.prepareStatement(query);
-        stmt2.setString(1, cottageType);
-        stmt2.setDate(2, new java.sql.Date(checkInDate.getTime())); // Requested check-in date
-        stmt2.setDate(3, new java.sql.Date(checkOutDate.getTime())); // Requested check-out date
-
+        stmt2.setString(1, cottageType); // Cottage type selected
+        stmt2.setString(2, "Cottage Type: " + cottageType + "%"); // Like pattern to match all services related to this cottage type
+        stmt2.setString(3, guestID); // Current guest ID to avoid excluding their own booking
         ResultSet rs2 = stmt2.executeQuery();
+
         boolean hasCottages = false;
 
         // Add available cottages to the combo box
