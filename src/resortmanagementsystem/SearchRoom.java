@@ -46,7 +46,7 @@ public class SearchRoom extends JFrame implements ActionListener {
         // Create JTable with a custom model
         table = new JTable();
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(0, 130, 1000, 150);
+        scrollPane.setBounds(0, 130, 1000, 300);
         add(scrollPane);
 
         // Load initial data
@@ -129,7 +129,7 @@ public class SearchRoom extends JFrame implements ActionListener {
                 });
             }
 
-            // Set the model to the table
+            
             table.setModel(model);
         } catch (Exception e) {
             e.printStackTrace();
