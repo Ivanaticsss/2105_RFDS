@@ -47,7 +47,7 @@ public class UpdateCheck extends JFrame implements ActionListener {
                 e.printStackTrace();
             }
 
-            // Initialize text fields here
+            
             JLabel lblroom = new JLabel("Room");
             lblroom.setBounds(30, 120, 100, 20);
             lblroom.setFont(labelFont); 
@@ -82,7 +82,7 @@ public class UpdateCheck extends JFrame implements ActionListener {
             add(tfpaid);
 
             
-            JLabel lblPending = new JLabel("Pending");
+            JLabel lblPending = new JLabel("Balance");
             lblPending.setBounds(30, 280, 100, 20);
             lblPending.setFont(labelFont); 
             add(lblPending);
@@ -211,7 +211,7 @@ public class UpdateCheck extends JFrame implements ActionListener {
 
 
             // Set up the table with guest data
-            String[] columnNames = {"Guest ID", "Name", "Room Number", "Check-In Time", "Check-Out Time", "Total Cost", "Deposit", "Payment Status"};
+            String[] columnNames = {"Guest ID", "Name", "Room Number", "Check-In Date", "Check-Out Date", "Total Cost", "Deposit", "Payment Status"};
             Object[][] data = fetchGuestData();
             guestTable = new JTable(data, columnNames);
             guestTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

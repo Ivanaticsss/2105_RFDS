@@ -200,7 +200,7 @@ public class AddRooms extends JFrame implements ActionListener, ItemListener {
         String roomType = (String) roomtypecombo.getSelectedItem();
         ImageIcon roomImageIcon = null;
 
-        // 
+        
         if (roomType.equals("Standard")) {
             roomImageIcon = new ImageIcon(ClassLoader.getSystemResource("icons/roombg.jpg"));
         } else if (roomType.equals("VIP")) {

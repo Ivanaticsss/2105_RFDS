@@ -114,7 +114,7 @@ public class CheckIn extends JFrame implements ActionListener {
         add(tfname);
         
         //Address input
-        lbladress = new JLabel("Full Address:");
+        lbladress = new JLabel("Address:");
         lbladress.setBounds(45, 190, 300, 30);
         lbladress.setFont(new Font("Helvetica", Font.PLAIN, 17));
         add(lbladress);

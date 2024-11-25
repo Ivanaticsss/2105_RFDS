@@ -87,7 +87,7 @@ public class CheckOut extends JFrame implements ActionListener {
         roomNumberField.setBorder(new LineBorder(Color.GRAY)); 
         add(roomNumberField);
 
-        JLabel lblCheckIn = new JLabel("Check-In Time");
+        JLabel lblCheckIn = new JLabel("Check-in Date");
         lblCheckIn.setBounds(30, 230, 150, 30);
         lblCheckIn.setFont(labelFont);  
         add(lblCheckIn);
@@ -99,7 +99,7 @@ public class CheckOut extends JFrame implements ActionListener {
         checkInField.setBorder(new LineBorder(Color.GRAY)); 
         add(checkInField);
 
-        JLabel lblCheckOut = new JLabel("Check-Out Time");
+        JLabel lblCheckOut = new JLabel("Check-out Date");
         lblCheckOut.setBounds(30, 270, 150, 30);
         lblCheckOut.setFont(labelFont);  
         add(lblCheckOut);
@@ -198,7 +198,7 @@ public class CheckOut extends JFrame implements ActionListener {
 
 
         // Set up the table with guest data
-        String[] columnNames = {"Guest ID", "Name", "Room Number", "Check-In Time", "Check-Out Time", "Payment Status"};
+        String[] columnNames = {"Guest ID", "Name", "Room Number", "Check-in Date", "Check-out Date", "Payment Status"};
         Object[][] data = fetchGuestData();
         guestTable = new JTable(data, columnNames);
         guestTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

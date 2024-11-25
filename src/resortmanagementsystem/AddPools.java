@@ -92,19 +92,18 @@ public class AddPools extends JFrame implements ActionListener {
         String availability = (String) availablecombo.getSelectedItem();
         String price = tfPrice.getText();
 
-        // Validate input fields
+      
         if (poolNumber.isEmpty() || poolType.isEmpty() || price.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Please fill in all required fields.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        // Prompt the user for confirmation before adding the pool
+      
         int confirm = JOptionPane.showConfirmDialog(null, 
             "Are you sure you want to add this pool?", 
             "Confirm Addition", 
             JOptionPane.YES_NO_OPTION);
 
-        // If the user selects "Yes", proceed with adding the pool
         if (confirm == JOptionPane.YES_OPTION) {
             try {
                 Conn conn = new Conn();
