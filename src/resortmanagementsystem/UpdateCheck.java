@@ -9,7 +9,8 @@ import javax.swing.border.LineBorder;
 public class UpdateCheck extends JFrame implements ActionListener {
 
     Choice ccustomer;
-    JTextField tfroom, tfname, tfcheckin, tfpaid, tfpending, tftotalCost, tfdeposit, tfchange;
+    JComboBox<String> searchOption; 
+    JTextField tfroom, tfname, tfcheckin, tfpaid, tfpending, tftotalCost, tfdeposit, tfchange, tfSearch;
     JButton check, update, back, generateBill, calculate, searchButton;
     JTable guestTable;
     JScrollPane scrollPane;
@@ -18,6 +19,8 @@ public class UpdateCheck extends JFrame implements ActionListener {
         setTitle("Payment Update");
             getContentPane().setBackground(Color.WHITE);
             setLayout(null);
+            
+           
 
             ImageIcon icon = new ImageIcon(getClass().getResource("/icons/updatestatusheader.png"));
             JLabel header = new JLabel(icon);
@@ -26,16 +29,21 @@ public class UpdateCheck extends JFrame implements ActionListener {
             
             Font labelFont = new Font("Tahoma", Font.BOLD, 13); 
             
+            JLabel lblSearchOption = new JLabel("Search by");
+            lblSearchOption.setBounds(30, 80, 100, 20);
+            lblSearchOption.setFont(new Font("Tahoma", Font.BOLD, 13)); 
+            add(lblSearchOption);
 
-            JLabel lblid = new JLabel("Guest ID");
-            lblid.setBounds(30, 80, 100, 20);
-            lblid.setFont(labelFont); 
-            add(lblid);
+            String[] options = {"Guest ID", "Guest Name"};
+            searchOption = new JComboBox<>(options);
+            searchOption.setBounds(150, 80, 150, 25);
+            searchOption.addActionListener(this); 
+            add(searchOption);
 
+      
             ccustomer = new Choice();
-            ccustomer.setBounds(150, 80, 150, 25);
+            ccustomer.setBounds(150, 120, 150, 25);
             add(ccustomer);
-
             // Load Guest IDs
             try {
                 Conn c = new Conn();
@@ -46,91 +54,105 @@ public class UpdateCheck extends JFrame implements ActionListener {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            
+           // TextField for Guest Name search
+        tfSearch = new JTextField();
+        tfSearch.setBounds(150, 120, 150, 25);
+        add(tfSearch);
+        
+   
+        tfSearch.setVisible(false);
+
+        JLabel lblSearch = new JLabel("Search");
+        lblSearch.setBounds(30, 120, 100, 20);
+        lblSearch.setFont(labelFont); 
+        add(lblSearch);
+
 
             
             JLabel lblroom = new JLabel("Room");
-            lblroom.setBounds(30, 120, 100, 20);
+            lblroom.setBounds(30, 160, 100, 20);
             lblroom.setFont(labelFont); 
             add(lblroom);
             tfroom = new JTextField();
-            tfroom.setBounds(150, 120, 150, 25);
+            tfroom.setBounds(150, 160, 150, 25);
             add(tfroom);
 
             JLabel lblname = new JLabel("Name");
-            lblname.setBounds(30, 160, 100, 20);
+            lblname.setBounds(30, 200, 100, 20);
             lblname.setFont(labelFont); 
             add(lblname);
             tfname = new JTextField();
-            tfname.setBounds(150, 160, 150, 25);
+            tfname.setBounds(150, 200, 150, 25);
             add(tfname);
 
             
             JLabel lblCheckIn = new JLabel("Check-In Date");
-            lblCheckIn.setBounds(30, 200, 100, 20);
+            lblCheckIn.setBounds(30, 240, 100, 20);
             lblCheckIn.setFont(labelFont); 
             add(lblCheckIn);
             tfcheckin = new JTextField();
-            tfcheckin.setBounds(150, 200, 150, 25);
+            tfcheckin.setBounds(150, 240, 150, 25);
             add(tfcheckin);
 
             JLabel lblPaid = new JLabel("Paid");
-            lblPaid.setBounds(30, 240, 100, 20);
+            lblPaid.setBounds(30, 280, 100, 20);
             lblPaid.setFont(labelFont); 
             add(lblPaid);
             tfpaid = new JTextField();
-            tfpaid.setBounds(150, 240, 150, 25);
+            tfpaid.setBounds(150, 280, 150, 25);
             add(tfpaid);
 
             
             JLabel lblPending = new JLabel("Balance");
-            lblPending.setBounds(30, 280, 100, 20);
+            lblPending.setBounds(30, 320, 100, 20);
             lblPending.setFont(labelFont); 
             add(lblPending);
             tfpending = new JTextField();
-            tfpending.setBounds(150, 280, 150, 25);
+            tfpending.setBounds(150, 320, 150, 25);
             tfpending.setEditable(false);  // To make it read-only
             add(tfpending);
 
             
             JLabel lblTotal = new JLabel("Total Cost");
-            lblTotal.setBounds(30, 320, 100, 20);
+            lblTotal.setBounds(30, 360, 100, 20);
             lblTotal.setFont(labelFont); 
             add(lblTotal);
             tftotalCost = new JTextField();
-            tftotalCost.setBounds(150, 320, 150, 25);
+            tftotalCost.setBounds(150, 360, 150, 25);
             add(tftotalCost);
             
             JLabel lblDeposit = new JLabel("New Deposit");
-            lblDeposit.setBounds(30, 360, 100, 20);
+            lblDeposit.setBounds(30, 400, 100, 20);
             lblDeposit.setFont(labelFont);
             add(lblDeposit);
             tfdeposit = new JTextField();
-            tfdeposit.setBounds(150, 360, 150, 25);
+            tfdeposit.setBounds(150, 400, 150, 25);
             add(tfdeposit);
             
             calculate = new JButton("Calculate");
             
-            calculate.setBounds(300, 360, 100, 25);
+            calculate.setBounds(300, 400, 100, 25);
             calculate.addActionListener(this);
             add(calculate);
 
             JLabel lblChange = new JLabel("Change");
-            lblChange.setBounds(30, 400, 100, 20);
+            lblChange.setBounds(30, 440, 100, 20);
             lblChange.setFont(labelFont);
             add(lblChange);
             tfchange = new JTextField();
-            tfchange.setBounds(150, 400, 150, 25);
+            tfchange.setBounds(150, 440, 150, 25);
             add(tfchange);
 
            
             searchButton = new JButton("");
-            searchButton.setBounds(310, 80, 100, 25); 
+            searchButton.setBounds(310, 120, 100, 25); 
             searchButton.setBackground(Color.WHITE);
             ImageIcon searchIcon = new ImageIcon(ClassLoader.getSystemResource("icons/search.png"));
             Image img = searchIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH); 
             searchIcon = new ImageIcon(img);
             searchButton.setIcon(searchIcon);
-            searchButton.setBounds(310, 80, searchIcon.getIconWidth(), searchIcon.getIconHeight()); // Adjust size based on icon size
+            searchButton.setBounds(310, 120, searchIcon.getIconWidth(), searchIcon.getIconHeight()); // Adjust size based on icon size
             searchButton.addActionListener(this);
             add(searchButton);
 
@@ -258,36 +280,82 @@ public class UpdateCheck extends JFrame implements ActionListener {
      }
 
 
-            public void actionPerformed(ActionEvent ae) {
-            if (ae.getSource() == searchButton) {
-        String id = ccustomer.getSelectedItem();
-        String query = "SELECT * FROM guest WHERE guestID = '" + id + "'";
-        try {
-            Conn c = new Conn();
-            ResultSet rs = c.s.executeQuery(query);
-            while (rs.next()) {
-                tfroom.setText(rs.getString("room"));
-                tfname.setText(rs.getString("name"));
-                tfcheckin.setText(rs.getString("check_in_date"));
-                tfpaid.setText(rs.getString("deposit"));
-                tftotalCost.setText(rs.getString("totalCost"));
+           public void actionPerformed(ActionEvent ae) {
+      
+        if (ae.getSource() == searchButton) {
+            String searchCriteria = searchOption.getSelectedItem().toString();
+            String query = "";
+            
+            if (searchCriteria.equals("Guest ID")) {
+                // Search by Guest ID
+                String id = ccustomer.getSelectedItem();
+                query = "SELECT * FROM guest WHERE guestID = '" + id + "'";
+            } else if (searchCriteria.equals("Guest Name")) {
+                // Search by Guest Name
+                String name = tfSearch.getText().trim();
+                if (name.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Please enter a name to search.");
+                    return;
+                }
+                query = "SELECT * FROM guest WHERE name LIKE '%" + name + "%'";
+            }
 
-                double cost = Double.parseDouble(rs.getString("totalCost"));
-                double paid = Double.parseDouble(rs.getString("deposit"));
-                double pending = cost - paid;
+            try {
+                Conn c = new Conn();
+                ResultSet rs = c.s.executeQuery(query);
+                while (rs.next()) {
+                    tfroom.setText(rs.getString("room"));
+                    tfname.setText(rs.getString("name"));
+                    tfcheckin.setText(rs.getString("check_in_date"));
+                    tfpaid.setText(rs.getString("deposit"));
+                    tftotalCost.setText(rs.getString("totalCost"));
+
+                    double cost = Double.parseDouble(rs.getString("totalCost"));
+                    double paid = Double.parseDouble(rs.getString("deposit"));
+                    double pending = cost - paid;
+
+                    if (pending > 0) {
+                        tfpending.setText(String.format("%.2f", pending));
+                        tfchange.setText("0.00");
+                    } else {
+                        tfpending.setText("0.00");
+                        tfchange.setText(String.format("%.2f", Math.abs(pending))); // Calculate change
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (ae.getSource() == searchOption) {
+            
+            String selectedOption = (String) searchOption.getSelectedItem();
+            if ("Guest ID".equals(selectedOption)) {
+                ccustomer.setVisible(true);
+                tfSearch.setVisible(false);
+            } else if ("Guest Name".equals(selectedOption)) {
+                ccustomer.setVisible(false);
+                tfSearch.setVisible(true);
+            }
+        
+        } else if (ae.getSource() == calculate) {
+            
+            try {
+                double cost = Double.parseDouble(tftotalCost.getText());
+                double newDeposit = Double.parseDouble(tfdeposit.getText());
+                double paid = Double.parseDouble(tfpaid.getText());
+                double totalPaid = paid + newDeposit;
+                double pending = cost - totalPaid;
 
                 if (pending > 0) {
                     tfpending.setText(String.format("%.2f", pending));
                     tfchange.setText("0.00");
                 } else {
-                    tfpending.setText("0.00");
+                    tfpending.setText("0.00"); // Ensure pending is 0 if fully paid
                     tfchange.setText(String.format("%.2f", Math.abs(pending))); // Calculate change
                 }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Invalid input! Please enter valid numbers.", "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-    }
  else if (ae.getSource() == calculate) {
             try {
                 double cost = Double.parseDouble(tftotalCost.getText());

@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.awt.event.*;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.Calendar;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
@@ -743,7 +744,7 @@ public class CheckIn extends JFrame implements ActionListener {
 
         
         
-      public void actionPerformed(ActionEvent ae) {
+   public void actionPerformed(ActionEvent ae) {
     if (ae.getSource() == availServices) {
         String name = tfname.getText();
         String address = tfaddress.getText();  
@@ -753,7 +754,7 @@ public class CheckIn extends JFrame implements ActionListener {
         String room = croom.getSelectedItem();  
         String country = tfcountry.getText();   
         String deposit = tfdeposit.getText();  
-        String paymentMethod = (String)comboPayment.getSelectedItem();  
+        String paymentMethod = (String) comboPayment.getSelectedItem();  
         String totalCost = tfTotalCost.getText();  
         
         // Get the length of stay (you can get it from user input or calculate it based on dates)
@@ -767,7 +768,7 @@ public class CheckIn extends JFrame implements ActionListener {
             Date checkInParsedDate = inputFormat.parse(checkInDate);
             SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String formattedCheckInDate = outputFormat.format(checkInParsedDate);
-           
+            
             // Calculate check-out date based on length of stay
             int stayLength = Integer.parseInt(lengthOfStay);  
             Calendar cal = Calendar.getInstance();
@@ -776,12 +777,14 @@ public class CheckIn extends JFrame implements ActionListener {
             String checkOutDate = outputFormat.format(cal.getTime());
             
             // Query to insert the new guest into the guest table
-            String query = "INSERT INTO guest (name, address, number, document, sex, country, room, check_in_date, check_out_date, totalCost, deposit, paymentMethod, length_of_stay) " +
-                           "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+           String query = "INSERT INTO guest (name, address, number, document, sex, country, room, check_in_date, check_out_date, totalCost, deposit, paymentMethod, length_of_stay) " +
+               "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
             String query2 = "UPDATE room SET availability = 'Occupied' WHERE roomnumber = ?";
 
             Conn conn = new Conn();
 
+            // Insert into the guest table
             PreparedStatement stmt = conn.c.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, name);
             stmt.setString(2, address);
@@ -804,19 +807,25 @@ public class CheckIn extends JFrame implements ActionListener {
                 guestID = generatedKeys.getInt(1); // Fetch the generated guestID
             }
 
-            
+
+            // Update room availability to "Occupied"
             PreparedStatement stmt2 = conn.c.prepareStatement(query2);
             stmt2.setString(1, room);
             stmt2.executeUpdate();
+            
+            // Show confirmation of successful check-in
             new AvailServices(this, guestID);
-            String statusUpdateQuery = "UPDATE guest SET status = 'Checked-In' WHERE check_in_date <= CURDATE()";
+
+            // Update guest status in guest table
+            String statusUpdateQuery = "UPDATE guest SET status = 'Checked-In' WHERE guestID = ?";
             PreparedStatement stmtStatusUpdate = conn.c.prepareStatement(statusUpdateQuery);
+            stmtStatusUpdate.setInt(1, guestID);
             stmtStatusUpdate.executeUpdate();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
     } else if (ae.getSource() == searchCottages) {
         new SearchCottages();
     } else if (ae.getSource() == searchRooms) {
@@ -830,64 +839,134 @@ public class CheckIn extends JFrame implements ActionListener {
         new Reception();
     } else if (ae.getSource() == reset) {
         resetForm();
-    } else if (ae.getSource() == add) {
-        // Show confirmation dialog to ask if user wants to add this customer
-        int confirm = JOptionPane.showConfirmDialog(this, 
-                                                    "Do you want to add this customer?", 
-                                                    "Confirm Add Customer", 
-                                                    JOptionPane.YES_NO_OPTION);
+    }else if (ae.getSource() == add) {
 
-        if (confirm == JOptionPane.YES_OPTION) {
+    int confirm = JOptionPane.showConfirmDialog(this, 
+                                               "Do you want to add this customer?", 
+                                               "Confirm Add Customer", 
+                                               JOptionPane.YES_NO_OPTION);
+
+    if (confirm == JOptionPane.YES_OPTION) {
+        try {
+            Conn conn = new Conn();
+            String services = textArea.getText();  
+            String totalCostText = tfTotalCost.getText().trim();
+            String depositText = tfdeposit.getText().trim();
+            
+            // Validate if the totalCost and deposit are valid numbers
+            double totalCost = 0.0;
+            double deposit = 0.0;
+            
             try {
-                Conn conn = new Conn();
-                String services = textArea.getText(); 
-                double totalCost = Double.parseDouble(tfTotalCost.getText().trim());
-                double deposit = Double.parseDouble(tfdeposit.getText().trim());
-
-                // Check if the deposit is at least 10% of the total cost
-                if (deposit < totalCost * 0.1) {
-                    throw new IllegalArgumentException("Deposit must be within the valid range.");
-                }
-
-                String paymentStatus = (deposit >= totalCost) ? "Paid" : "Pending";
-
-                // Update the guest table in the database
-                String query = "UPDATE guest SET totalCost = ?, deposit = ?, payment_status = ?, availedServices = ? WHERE guestID = ?";
-                PreparedStatement pstmt = conn.c.prepareStatement(query);
-                pstmt.setDouble(1, totalCost);
-                pstmt.setDouble(2, deposit);
-                pstmt.setString(3, paymentStatus);
-                pstmt.setString(4, services);
-                pstmt.setInt(5, guestID); 
-
-                int rowsUpdated = pstmt.executeUpdate();
-                if (rowsUpdated > 0) {
-                    JOptionPane.showMessageDialog(this, "Check-In Finalized Successfully!");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Guest not found. Check-In not finalized.");
-                }
-
-                setVisible(false);
-                new Reception();
+                totalCost = Double.parseDouble(totalCostText);
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "Please enter valid numeric values for total cost and deposit.");
-                return; // Stop 
-            } catch (IllegalArgumentException e) {
-                JOptionPane.showMessageDialog(this, e.getMessage());
-                return; // Stop 
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error finalizing Check-In.");
-                return; // Stop 
+                JOptionPane.showMessageDialog(this, "Please enter a valid total cost.");
+                return; // Exit early if totalCost is invalid
             }
-        } else {
-            // If the user selects 'No', cancel the action and show a message
-            JOptionPane.showMessageDialog(this, "Customer not added.");
+            
+            try {
+                deposit = Double.parseDouble(depositText);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Please enter a valid deposit amount.");
+                return; // Exit early if deposit is invalid
+            }
+
+            // Validate if deposit is at least 10% of the total cost
+            if (deposit < totalCost * 0.1) {
+                throw new IllegalArgumentException("Deposit must be at least 10% of the total cost.");
+            }
+
+            String paymentStatus = (deposit >= totalCost) ? "Paid" : "Pending";
+
+            // Define variables for guest details
+            String name = tfname.getText();
+            String address = tfaddress.getText();
+            String number = tfnumber.getText();
+            String id = (String) comboid.getSelectedItem();
+            String sex = rmale.isSelected() ? "Male" : "Female";
+            String country = tfcountry.getText();
+            String room = (String) croom.getSelectedItem();
+            String checkInDate = checkintime.getText();
+            int lengthOfStay = Integer.parseInt(tflength.getText());
+
+            // Parse check-in date and format it
+            SimpleDateFormat inputFormat = new SimpleDateFormat("EEE MMM dd yyyy HH:mm");
+            Date checkInParsedDate = inputFormat.parse(checkInDate);
+            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String formattedCheckInDate = outputFormat.format(checkInParsedDate);
+            
+            // Calculate check-out date based on length of stay
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(checkInParsedDate);  
+            cal.add(Calendar.DAY_OF_YEAR, lengthOfStay);  
+            String checkOutDate = outputFormat.format(cal.getTime());
+
+            // Update guest table with the new values
+            String updateQuery = "UPDATE guest SET totalCost = ?, deposit = ?, payment_status = ?, availedServices = ?, " +
+                                 "name = ?, address = ?, number = ?, document = ?, sex = ?, country = ?, room = ?, " +
+                                 "check_in_date = ?, length_of_stay = ? WHERE guestID = ?";
+            PreparedStatement pstmt = conn.c.prepareStatement(updateQuery);
+
+            pstmt.setDouble(1, totalCost);
+            pstmt.setDouble(2, deposit);
+            pstmt.setString(3, paymentStatus);
+            pstmt.setString(4, services);
+            pstmt.setString(5, name);
+            pstmt.setString(6, address);
+            pstmt.setString(7, number);
+            pstmt.setString(8, id);
+            pstmt.setString(9, sex);
+            pstmt.setString(10, country);
+            pstmt.setString(11, room);
+            pstmt.setString(12, formattedCheckInDate);
+            pstmt.setInt(13, lengthOfStay);
+            pstmt.setInt(14, guestID);  // Ensure guestID is properly set
+
+            int rowsUpdated = pstmt.executeUpdate();
+
+            if (rowsUpdated > 0) {
+                // Insert record into guest_records table
+                String insertGuestRecordQuery = "INSERT INTO guest_records " +
+                    "(name, address, number, document, sex, country, room, check_in_date, check_out_date, totalCost, deposit, paymentMethod, length_of_stay, payment_status, availedServices, status) " +
+                    "SELECT name, address, number, document, sex, country, room, check_in_date, ?, totalCost, deposit, ?, length_of_stay, payment_status, availedServices, 'Checked-In' " +
+                    "FROM guest WHERE guestID = ?";
+
+                PreparedStatement stmtInsertRecord = conn.c.prepareStatement(insertGuestRecordQuery);
+                stmtInsertRecord.setString(1, checkOutDate);  // Set the calculated check-out date
+                stmtInsertRecord.setString(2, paymentStatus); // Set the payment status
+                stmtInsertRecord.setInt(3, guestID);  // Ensure guestID is properly set
+
+                int rowsInserted = stmtInsertRecord.executeUpdate();
+
+                if (rowsInserted > 0) {
+                    JOptionPane.showMessageDialog(this, "Check-In Finalized/Updated Successfully!");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Failed to insert guest record.");
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Guest not found. Update not finalized.");
+            }
+
+            setVisible(false);
+            new Reception();
+
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error finalizing Check-In/Update.");
+        } catch (ParseException e) {
+            JOptionPane.showMessageDialog(this, "Invalid date format. Please use the correct date format.");
         }
+    } else {
+        // If the user selects 'No', cancel the action and show a message
+        JOptionPane.showMessageDialog(this, "Customer not added/updated.");
     }
 }
 
-
+   }
+   
     public static void main(String[] args) {
         new CheckIn();
     }

@@ -119,7 +119,7 @@ public class Performance extends JFrame {
     }
     
    private Map<String, Long> fetchDemographics(String field) {
-        String query = "SELECT " + field + ", COUNT(*) as count FROM guest GROUP BY " + field;
+        String query = "SELECT " + field + ", COUNT(*) as count FROM guest_records GROUP BY " + field;
         Map<String, Long> demographics = new HashMap<>();
 
         try (Conn conn = new Conn();
@@ -239,11 +239,11 @@ private void updateDemographicChart(String field) {
 
     // Define SQL query based on the selected filter
     if ("Last 7 Days".equals(selectedFilter)) {
-        query = "SELECT check_in_date, totalCost FROM guest WHERE check_in_date >= CURDATE() - INTERVAL 7 DAY";
+        query = "SELECT check_in_date, totalCost FROM guest_records WHERE check_in_date >= CURDATE() - INTERVAL 7 DAY";
     } else if ("This Month".equals(selectedFilter)) {
-        query = "SELECT check_in_date, totalCost FROM guest WHERE MONTH(check_in_date) = MONTH(CURDATE())";
+        query = "SELECT check_in_date, totalCost FROM guest_records WHERE MONTH(check_in_date) = MONTH(CURDATE())";
     } else if ("Last Year".equals(selectedFilter)) {
-        query = "SELECT check_in_date, totalCost FROM guest WHERE YEAR(check_in_date) = YEAR(CURDATE()) - 1";
+        query = "SELECT check_in_date, totalCost FROM guest_records WHERE YEAR(check_in_date) = YEAR(CURDATE()) - 1";
     }
 
     System.out.println("Executing query: " + query);
@@ -279,11 +279,11 @@ private void updateDemographicChart(String field) {
 private void updateChart(String filter) {
     String query = "";
     if ("Last 7 Days".equals(filter)) {
-        query = "SELECT check_in_date, SUM(totalCost) AS revenue FROM guest WHERE check_in_date >= CURDATE() - INTERVAL 7 DAY GROUP BY check_in_date";
+        query = "SELECT check_in_date, SUM(totalCost) AS revenue FROM guest_records WHERE check_in_date >= CURDATE() - INTERVAL 7 DAY GROUP BY check_in_date";
     } else if ("This Month".equals(filter)) {
-        query = "SELECT DATE(check_in_date) AS date, SUM(totalCost) AS revenue FROM guest WHERE MONTH(check_in_date) = MONTH(CURDATE()) GROUP BY date";
+        query = "SELECT DATE(check_in_date) AS date, SUM(totalCost) AS revenue FROM guest_records WHERE MONTH(check_in_date) = MONTH(CURDATE()) GROUP BY date";
     } else if ("Last Year".equals(filter)) {
-        query = "SELECT DATE(check_in_date) AS date, SUM(totalCost) AS revenue FROM guest WHERE YEAR(check_in_date) = YEAR(CURDATE()) - 1 GROUP BY date";
+        query = "SELECT DATE(check_in_date) AS date, SUM(totalCost) AS revenue FROM guest_records WHERE YEAR(check_in_date) = YEAR(CURDATE()) - 1 GROUP BY date";
     }
 
     System.out.println("Executing chart query: " + query);

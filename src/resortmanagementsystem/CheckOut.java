@@ -10,8 +10,9 @@ import javax.swing.border.LineBorder;
 public class CheckOut extends JFrame implements ActionListener {
 
     Choice ccustomer;
-    JTextField searchField, guestIDField, roomNumberField, checkInField, checkOutField, paymentField
+    JTextField searchField, guestIDField, roomNumberField, checkInField, checkOutField, tfSearch, paymentField
             ;
+      JComboBox<String> searchOption; 
     JButton checkOut, back, searchButton, generateBill;
     JTable guestTable;
     JScrollPane scrollPane;
@@ -30,16 +31,21 @@ public class CheckOut extends JFrame implements ActionListener {
 
         Font labelFont = new Font("Helvetica", Font.BOLD, 15);
 
-        JLabel lblSearch = new JLabel("Search Guest ID:");
-        lblSearch.setBounds(30, 105, 140, 30);
-        Font font = new Font("Helvetica", Font.BOLD, 17);
-        lblSearch.setFont(font);
-        add(lblSearch);
-       
-        ccustomer = new Choice();
-        ccustomer.setBounds(170, 110, 150, 40);
-            add(ccustomer);
+         JLabel lblSearchOption = new JLabel("Search by");
+            lblSearchOption.setBounds(30, 80, 100, 20);
+            lblSearchOption.setFont(new Font("Tahoma", Font.BOLD, 13)); 
+            add(lblSearchOption);
 
+            String[] options = {"Guest ID", "Guest Name"};
+            searchOption = new JComboBox<>(options);
+            searchOption.setBounds(170, 80, 150, 25);
+            searchOption.addActionListener(this); 
+            add(searchOption);
+
+      
+            ccustomer = new Choice();
+            ccustomer.setBounds(170, 120, 150, 25);
+            add(ccustomer);
             // Load Guest IDs
             try {
                 Conn c = new Conn();
@@ -50,16 +56,28 @@ public class CheckOut extends JFrame implements ActionListener {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            
+           // TextField for Guest Name search
+        tfSearch = new JTextField();
+        tfSearch.setBounds(170, 120, 150, 25);
+        add(tfSearch);
+        
+   
+        tfSearch.setVisible(false);
 
+        JLabel lblSearch = new JLabel("Search");
+        lblSearch.setBounds(30, 120, 100, 20);
+        lblSearch.setFont(labelFont); 
+        add(lblSearch);
 
         searchButton = new JButton("");
-        searchButton.setBounds(330, 100, 100, 25);
+        searchButton.setBounds(330, 120, 100, 25);
         searchButton.setBackground(Color.WHITE);
         ImageIcon searchIcon = new ImageIcon(ClassLoader.getSystemResource("icons/search.png"));
         Image img = searchIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH); 
         searchIcon = new ImageIcon(img);
         searchButton.setIcon(searchIcon);
-        searchButton.setBounds(330, 100, searchIcon.getIconWidth(), searchIcon.getIconHeight()); // Adjust size based on icon size
+        searchButton.setBounds(330, 120, searchIcon.getIconWidth(), searchIcon.getIconHeight()); // Adjust size based on icon size
         searchButton.addActionListener(this);
         add(searchButton);
 
@@ -231,15 +249,56 @@ public class CheckOut extends JFrame implements ActionListener {
 
 
     public void actionPerformed(ActionEvent ae) {
-     if (ae.getSource() == searchButton) {
-         String searchID =ccustomer.getSelectedItem();
-         if (!searchID.isEmpty()) {
-             searchGuestByID(searchID);
-         }
-     }
+   
+    if (ae.getSource() == searchButton) {
+        String searchCriteria = searchOption.getSelectedItem().toString();
+        String query = "";
+        
+        if (searchCriteria.equals("Guest ID")) {
+            // Search by Guest ID
+            String id = ccustomer.getSelectedItem();
+            query = "SELECT * FROM guest WHERE guestID = '" + id + "'";
+        } else if (searchCriteria.equals("Guest Name")) {
+            // Search by Guest Name
+            String name = tfSearch.getText().trim();
+            if (name.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please enter a name to search.");
+                return;
+            }
+            query = "SELECT * FROM guest WHERE name LIKE '%" + name + "%'";
+        }
+
+        // Execute the query and display results in the form
+        try {
+            Conn c = new Conn();
+            ResultSet rs = c.s.executeQuery(query);
+            if (rs.next()) {
+                guestIDField.setText(rs.getString("guestID"));
+                roomNumberField.setText(rs.getString("room"));
+                checkInField.setText(rs.getString("check_in_date"));
+                checkOutField.setText(rs.getString("check_out_date"));
+                paymentField.setText(rs.getString("payment_status"));
+            } else {
+                JOptionPane.showMessageDialog(this, "No guest found with the given search criteria.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+    } else if (ae.getSource() == searchOption) {
+        String selectedOption = (String) searchOption.getSelectedItem();
+        if ("Guest ID".equals(selectedOption)) {
+            ccustomer.setVisible(true);
+            tfSearch.setVisible(false);
+        } else if ("Guest Name".equals(selectedOption)) {
+            ccustomer.setVisible(false);
+            tfSearch.setVisible(true);
+        }
+    }
+
        
 
-      if (ae.getSource() == checkOut) {
+   if (ae.getSource() == checkOut) {
     String guestID = guestIDField.getText();
     String roomNumber = roomNumberField.getText();
 
@@ -259,7 +318,13 @@ public class CheckOut extends JFrame implements ActionListener {
         try {
             Conn c = new Conn();
 
-            // Update cottage availability if cottage services were availed
+           
+            String updateStatusQuery = "UPDATE guest_records SET status = 'Checked-Out', check_out_date = CURRENT_DATE WHERE guestID = ? AND status = 'Checked-In'";
+            PreparedStatement psUpdateStatus = c.c.prepareStatement(updateStatusQuery);
+            psUpdateStatus.setString(1, guestID);
+            psUpdateStatus.executeUpdate();
+
+            
             String checkCottageQuery = "SELECT serviceName FROM services WHERE guestID = ? AND serviceName LIKE 'Cottage%'";
             PreparedStatement ps1 = c.c.prepareStatement(checkCottageQuery);
             ps1.setString(1, guestID);
@@ -268,7 +333,6 @@ public class CheckOut extends JFrame implements ActionListener {
             while (rs.next()) {
                 String serviceName = rs.getString("serviceName");
 
-                // Extract the cottage number from serviceName
                 String cottageNumber = extractCottageNumber(serviceName);
 
                 if (cottageNumber != null) {
@@ -279,25 +343,25 @@ public class CheckOut extends JFrame implements ActionListener {
                 }
             }
 
-            // Delete records from services table
+            // Delete guest's services after check-out
             String deleteServicesQuery = "DELETE FROM services WHERE guestID = ?";
             PreparedStatement ps3 = c.c.prepareStatement(deleteServicesQuery);
             ps3.setString(1, guestID);
             ps3.executeUpdate();
 
-            // Delete guest record
-            String deleteGuestQuery = "DELETE FROM guest WHERE guestID = ?";
-            PreparedStatement ps4 = c.c.prepareStatement(deleteGuestQuery);
-            ps4.setString(1, guestID);
-            ps4.executeUpdate();
-
             // Update room availability if a room is associated
             if (!roomNumber.isEmpty()) {
                 String updateRoomQuery = "UPDATE room SET availability = 'Available' WHERE roomnumber = ?";
-                PreparedStatement ps5 = c.c.prepareStatement(updateRoomQuery);
-                ps5.setString(1, roomNumber);
-                ps5.executeUpdate();
+                PreparedStatement ps4 = c.c.prepareStatement(updateRoomQuery);
+                ps4.setString(1, roomNumber);
+                ps4.executeUpdate();
             }
+
+            
+            String deleteGuestQuery = "DELETE FROM guest WHERE guestID = ?";
+            PreparedStatement ps5 = c.c.prepareStatement(deleteGuestQuery);
+            ps5.setString(1, guestID);
+            ps5.executeUpdate();
 
             JOptionPane.showMessageDialog(null, "Check-out completed successfully!");
             refreshGuestTable();
@@ -312,6 +376,9 @@ public class CheckOut extends JFrame implements ActionListener {
     }
 }
 
+
+
+
 else if (ae.getSource() == generateBill) {
         String guestID = guestIDField.getText();
 
@@ -320,7 +387,7 @@ else if (ae.getSource() == generateBill) {
             return;
         }
 
-        // Show confirmation prompt before generating bill
+      
         int confirm = JOptionPane.showConfirmDialog(null, 
                                                     "Do you want to generate the bill for this guest?", 
                                                     "Confirm Bill Generation", 
@@ -330,11 +397,11 @@ else if (ae.getSource() == generateBill) {
             try {
                 Conn c = new Conn();
 
-                // Query to get all necessary guest details based on guestID
+               
                 String query = "SELECT g.name, g.address, g.number, g.country, g.document, g.room, g.length_of_stay, g.check_in_date, g.check_out_date, " +
                         "r.roomType, r.facilities, r.bed_type, r.price, g.availedServices, g.totalCost, g.deposit, g.payment_status " +
                         "FROM guest g " +
-                        "LEFT JOIN room r ON g.room = r.roomnumber " + // Use LEFT JOIN to handle guests who might not have a room
+                        "LEFT JOIN room r ON g.room = r.roomnumber " + 
                         "WHERE g.guestID = ?";
 
                 PreparedStatement ps = c.c.prepareStatement(query);

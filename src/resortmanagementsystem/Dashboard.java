@@ -61,11 +61,20 @@ public class Dashboard extends JFrame implements ActionListener{
         addService.addActionListener(this);
         admin.add(addService);
         
+        JMenu guest = new JMenu("GUEST RECORD");
+        guest.setForeground(Color.decode("#e9d29f"));
+        mb.add(Box.createHorizontalStrut(1100)); 
+        mb.add(guest);
+
+        JMenuItem guestItem = new JMenuItem("VIEW GUESTS");
+        guestItem.addActionListener(this);
+        guest.add(guestItem);
+        
          
        
         JMenu performance = new JMenu("PERFORMANCE");
         performance.setForeground(Color.decode("#e9d29f"));
-        mb.add(Box.createHorizontalStrut(1210)); 
+        mb.add(Box.createHorizontalStrut(3)); 
         mb.add(performance);
 
         JMenuItem performanceItem = new JMenuItem("VIEW PERFORMANCE");
@@ -94,6 +103,9 @@ public class Dashboard extends JFrame implements ActionListener{
         }
         else if (ae.getActionCommand().equals("VIEW PERFORMANCE")){
             new Performance();
+        }
+        else if (ae.getActionCommand().equals("VIEW GUESTS")){
+            new AllGuestRecord();
         }
         
         
