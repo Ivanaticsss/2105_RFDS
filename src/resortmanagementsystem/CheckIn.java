@@ -926,10 +926,11 @@ public class CheckIn extends JFrame implements ActionListener {
 
             if (rowsUpdated > 0) {
                 // Insert record into guest_records table
-                String insertGuestRecordQuery = "INSERT INTO guest_records " +
-                    "(name, address, number, document, sex, country, room, check_in_date, check_out_date, totalCost, deposit, paymentMethod, length_of_stay, payment_status, availedServices, status) " +
-                    "SELECT name, address, number, document, sex, country, room, check_in_date, ?, totalCost, deposit, ?, length_of_stay, payment_status, availedServices, 'Checked-In' " +
-                    "FROM guest WHERE guestID = ?";
+              String insertGuestRecordQuery = "INSERT INTO guest_records " +
+                "(guestID, name, address, number, document, sex, country, room, check_in_date, check_out_date, totalCost, deposit, paymentMethod, length_of_stay, payment_status, availedServices, status) " +
+                "SELECT guestID, name, address, number, document, sex, country, room, check_in_date, ?, totalCost, deposit, ?, length_of_stay, payment_status, availedServices, 'Checked-In' " +
+                "FROM guest WHERE guestID = ?";
+
 
                 PreparedStatement stmtInsertRecord = conn.c.prepareStatement(insertGuestRecordQuery);
                 stmtInsertRecord.setString(1, checkOutDate);  // Set the calculated check-out date
