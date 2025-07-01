@@ -5,6 +5,13 @@
 </p>
 
 #  Serenity Cove – Resort Management System
+![Build](https://img.shields.io/badge/build-passing-brightgreen)
+![License](https://img.shields.io/badge/license-MIT-blue)
+![Java](https://img.shields.io/badge/Made%20with-Java-orange)
+![UI](https://img.shields.io/badge/UI-JavaSwing-purple)
+![Database](https://img.shields.io/badge/Database-MySQL-blue)
+![Charting](https://img.shields.io/badge/Charts-XChart-yellow)
+
 
 A full-featured **Java Swing** application built to manage resort operations, bookings, and guest data for **Serenity Cove**. Designed for front desk receptionists and admins, the system handles guest check-ins, service availing, billing, and visual analytics.
 
