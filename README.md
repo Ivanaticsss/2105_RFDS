@@ -17,27 +17,27 @@ A full-featured **Java Swing** application built to manage resort operations, bo
 
 ---
 
-## 📑 Table of Contents
+## Table of Contents
 
-- [🧠 Overview](#-overview)
-- [🎯 Objectives](#-objectives)
-- [🛠️ Tech Stack](#-tech-stack)
-- [🗂️ System Features](#-system-features)
-- [📸 Screenshots](#-screenshots)
-- [📊 ERD & System Flow](#-erd--system-flow)
-- [🧪 How to Run](#-how-to-run)
-- [📬 Project Members](#-project-members)
-- [📄 License](#-license)
+- [Overview](#-overview)
+- [Objectives](#-objectives)
+- [Tech Stack](#-tech-stack)
+- [System Features](#-system-features)
+- [Screenshots](#-screenshots)
+- [ERD & System Flow](#-erd--system-flow)
+- [How to Run](#-how-to-run)
+- [Project Members](#-project-members)
+- [License](#-license)
 
 ---
 
-## 🧠 Overview
+## Overview
 
 **Serenity Cove Resort Management System** is a desktop-based system built with **Java Swing** to streamline front desk operations. It includes a user-friendly reception dashboard for real-time guest management, a robust admin backend for monitoring resort performance, and support for booking rooms, cottages, pools, and additional services.
 
 ---
 
-## 🎯 Objectives
+## Objectives
 
 - Manage guest bookings for rooms, cottages, and services  
 - Automate price computation based on room type, stay duration, and availed amenities  
@@ -60,9 +60,9 @@ A full-featured **Java Swing** application built to manage resort operations, bo
 
 ---
 
-## 🗂️ System Features
+## System Features
 
-### 🧾 Reception Dashboard (Front Desk)
+### Reception Dashboard (Front Desk)
 
 - View room list, cottages, pools, and services  
 - Add new guest via Guest Form  
@@ -72,7 +72,7 @@ A full-featured **Java Swing** application built to manage resort operations, bo
 - Generate and print bill receipt  
 - Log out of system
 
-### 🏨 Guest Form
+### Guest Form
 
 - Select room **type**: Standard, VIP, or VVIP  
 - Auto-fetch matching rooms and display **bed type, price, and facilities**  
@@ -80,7 +80,7 @@ A full-featured **Java Swing** application built to manage resort operations, bo
 - Add cottages, pools, and services to booking  
 - Accept deposit (10% minimum), and calculate remaining balance and change  
 
-### 📈 Admin Dashboard
+### Admin Dashboard
 
 - Add rooms (bed size, facilities, price), cottages, pools, and services  
 - View performance charts (via **XChart**) for:
@@ -91,7 +91,7 @@ A full-featured **Java Swing** application built to manage resort operations, bo
 
 ---
 
-## 📸 Screenshots
+## Screenshots
 
 <details>
 <summary>Click to view screenshots</summary>
@@ -135,7 +135,7 @@ A full-featured **Java Swing** application built to manage resort operations, bo
 
 ---
 
-## 📄 License
+## License
 
 This project was developed as part of a BSIT academic requirement at BatStateU.  
 Feel free to explore and use this code for learning purposes, and please give proper credit when reusing any part of it.
